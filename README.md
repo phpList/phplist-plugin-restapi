@@ -1,5 +1,5 @@
 #PHPLIST API
-REST API as a plugin to PHPlist
+REST API as a plugin to [PHPlist](https://www.phplist.com)
 
 Two plugins inside this repo: "api" and "api-test"
 
