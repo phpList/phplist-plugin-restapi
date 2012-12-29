@@ -1,5 +1,5 @@
-#PHPLIST API
-REST API as a plugin to [PHPlist](https://www.phplist.com)
+#phpList API
+REST API as a plugin to [phpList](https://www.phplist.com)
 
 Two plugins inside this repo: "api" and "api-test"
 
@@ -19,7 +19,7 @@ v.      Date        Description
 ```
 
 ##Installation
-###1. Activate plugins in PHPlist
+###1. Activate plugins in phpList
 Change the config-parameter for plugin folder in /config/config.php.
 
 Example of definition in config-file:
@@ -44,7 +44,7 @@ Click on left admin menu "api" for more information!
 Click on "api test" to test your installation of the API plugin!
 
 ##Access
-Autentication required as admin in PHPlist.
+Autentication required as admin in phpList.
 
 All requests to the API is made by method POST.
 
@@ -53,7 +53,7 @@ Example of API-Url:
 http://www.yoursite.com/lists/admin/?page=call&pi=api
 ```
 
-First login to PHPlist with *POST* method and body parameters: "login" and "password".
+First login to phpList with *POST* method and body parameters: "login" and "password".
 
 
 ##Client
@@ -73,7 +73,7 @@ Success response from the API
   "type":"List",
   "data":[{
     "id":"12",
-    "name":"A new list in PHPlist"
+    "name":"A new list in phpList"
   }]
 }
 ```
@@ -100,8 +100,8 @@ $url = 'http://www.yoursite.com/lists/admin/?page=call&pi=api';
 
 //initialize cUrl for remote content
 $c = curl_init();
-curl_setopt( $c, CURLOPT_COOKIEFILE, 'PHPlist_API_Helper' ); 
-curl_setopt( $c, CURLOPT_COOKIEJAR, 'PHPlist_API_Helper' ); 
+curl_setopt( $c, CURLOPT_COOKIEFILE, 'phpList_API_Helper' );
+curl_setopt( $c, CURLOPT_COOKIEJAR, 'phpList_API_Helper' );
 curl_setopt( $c, CURLOPT_RETURNTRANSFER, 1 );
 curl_setopt( $c, CURLOPT_POST, 1 );
 
@@ -112,7 +112,7 @@ $result = curl_exec( $c );
 $result = json_decode( $result );
 var_dump( $result->data ); 
 
-//Get all lists in PHPlist via /listsGet 
+//Get all lists in phpList via /listsGet
 curl_setopt( $c, CURLOPT_URL, 'http://www.yoursite.com/lists/admin/?page=call&pi=api' );
 curl_setopt( $c, CURLOPT_RETURNTRANSFER, 1 );
 curl_setopt( $c, CURLOPT_POST, 1 );
@@ -123,7 +123,7 @@ $result = json_decode( $result );
 //Now close the cUrl when finished 
 curl_close( $c );
 
-//Dump all lists in PHPlist via /listsGet 
+//Dump all lists in phpList via /listsGet
 var_dump( $result->data );
 
 ?>

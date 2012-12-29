@@ -1,6 +1,6 @@
 <?php
 /**
- * Tests the REST API in PHPlist with common functions
+ * Tests the REST API in phpList with common functions
  * The test is using a client rest approach with the Snoopy-object-class
  * Creating list, user, message
  * And cleaning up after
@@ -37,7 +37,7 @@ $url = apiUrl( $website );
     $result = $stmt->fetchAll(PDO::FETCH_OBJ);
     $admin = $result[0];
 
-    $api = new PHPlist_API_Helper( $url );
+    $api = new phpList_API_Helper( $url );
     $result = $api->login( $admin->loginname, $admin->password );
     if ($result->status != 'success'){
         echo $result->data->message;
@@ -271,7 +271,7 @@ $url = apiUrl( $website );
         echo $result->data->message;
         return;
     }
-    echo 'Messages in PHPlist: ' . count($result->data) . '.';
+    echo 'Messages in phpList: ' . count($result->data) . '.';
 
     ?>
 

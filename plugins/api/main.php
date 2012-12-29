@@ -5,31 +5,31 @@ include 'includes/common.php';
 
 $plugin = $GLOBALS["plugins"][$_GET["pi"]];
 
-$url = PHPlist_API_Common::apiUrl( $website );
+$url = phpList_API_Common::apiUrl( $website );
 
 ?>
 
 <h1>API</h1>
 
-    <h2>Version 0.2.3</h2>
-    <p>The plugin provides a REST API to PHPlist.<br/>
+    <h2>Version 0.2.4</h2>
+    <p>The plugin provides a REST API to phpList.<br/>
     Development by Flowcom AB, Andreas Ek (<a href="https://twitter.com/ekandreas">@EkAndreas</a>)</p>
 
     <p>
         <h2>Commands</h2>
         To discover all commands to this API just make a GET request or click here:<br/>
-        <a href="<?php echo $url; ?>">PHPlist API Command Reference list</a><br/>
+        <a href="<?php echo $url; ?>">phpList API Command Reference list</a><br/>
         The documentation is generated in realtime.
     </p>
     <p>
         <h2>Access</h2>
-        Autentication required as admin in PHPlist.<br/>
+        Autentication required as admin in phpList.<br/>
         All requests to the API is made by method POST.<br/>
         API-Url to this installation:<br/>
         <a href="<?php echo $url; ?>"><?php echo $url; ?></a>
     </p>
     <p>
-        First login to PHPlist with method POST and body parameters "login" and "password".<br/>
+        First login to phpList with method POST and body parameters "login" and "password".<br/>
     </p>
     <p>
         <h2>Client</h2>

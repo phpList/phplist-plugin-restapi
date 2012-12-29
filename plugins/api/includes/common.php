@@ -1,11 +1,11 @@
 <?php
 
-class PHPlist_API_Common{
+class phpList_API_Common{
 
     static function select( $type, $sql, $single=false ){
-        $response = new PHPlist_API_Response();
+        $response = new phpList_API_Response();
         try {
-            $db = PHPlist_API_PDO::getConnection();
+            $db = phpList_API_PDO::getConnection();
             $stmt = $db->query($sql);
             $result = $stmt->fetchAll(PDO::FETCH_OBJ);
             $db = null;

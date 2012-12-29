@@ -1,7 +1,7 @@
 <?php
 
 
-class PHPlist_API_Doc{
+class phpList_API_Doc{
 
     private $classes;
 
@@ -68,7 +68,7 @@ class PHPlist_API_Doc{
         <!DOCTYPE html>
         <html>
             <head>
-                <title>API Plugin to PHPlist</title>
+                <title>API Plugin to phpList</title>
                 <!-- Bootstrap -->
                 <link href="http://netdna.bootstrapcdn.com/bootswatch/2.1.1/cerulean/bootstrap.min.css" rel="stylesheet" media="screen">
             </head>
@@ -80,7 +80,7 @@ class PHPlist_API_Doc{
                     <header class="jumbotron subhead" id="overview">
                         <div class="row">
                             <div class="span6">
-                                <h1>API Plugin to PHPlist</h1>
+                                <h1>API Plugin to phpList</h1>
                                 <p class="lead">Documentation generated <?php echo date('Y-m-d H:i:s'); ?></p>
                             </div>
                         </div>

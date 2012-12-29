@@ -4,7 +4,7 @@
  * Andreas Ek, 2012-12-26
  */
 
-class PHPlist_API_Response{
+class phpList_API_Response{
 
     private $result;
 
@@ -83,25 +83,25 @@ class PHPlist_API_Response{
     }
 
     static function outputError($e){
-        $response = new PHPlist_API_Response();
+        $response = new phpList_API_Response();
         $response->setError( $e->getCode(), $e->getMessage() );
         $response->output();
     }
 
     static function outputErrorMessage( $message ){
-        $response = new PHPlist_API_Response();
+        $response = new phpList_API_Response();
         $response->setError( 0, $message );
         $response->output();
     }
 
     static function outputDeleted( $type, $id ){
-        $response = new PHPlist_API_Response();
+        $response = new phpList_API_Response();
         $response->setData( $type, 'Item with ' . $id . ' is successfully deleted!' );
         $response->output();
     }
 
     static function outputMessage( $message ){
-        $response = new PHPlist_API_Response();
+        $response = new phpList_API_Response();
         $response->setData( 'SystemMessage', $message );
         $response->output();
     }
