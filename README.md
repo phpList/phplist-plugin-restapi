@@ -21,14 +21,16 @@ v.      Date        Description
 ##Installation
 ###1. Activate plugins in PHPlist
 Change the config-parameter for plugin folder in /config/config.php.
-Eg,
+
+Example of definition in config-file:
 ```
 define("PLUGIN_ROOTDIR","/var/www/yoursite.com/plugins");
 ```
 
 ###2. Copy plugin files
-Copy the files under "plugins" to the plugins folder!, eg /admin/plugins/
-Eg,
+Copy the files under "plugins" to the plugins folder!
+
+Example of destination:
 ```
 /var/www/yoursite.com/plugins
 ```
