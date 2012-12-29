@@ -9,9 +9,10 @@ License: GPLv2
 
 ##History
 ```
-v.    Date        Description
-0.2   2012-12-28  Slim Framework removed
-0.1   2012-12-26  Created
+v.      Date        Description
+0.2.1   2012-12-29  Documentation generator started
+0.2     2012-12-28  Slim Framework removed
+0.1     2012-12-26  Created
 ```
 
 ##Installation

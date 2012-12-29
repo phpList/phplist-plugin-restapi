@@ -11,10 +11,16 @@ $url = PHPlist_API_Common::apiUrl( $website );
 
 <h1>API</h1>
 
-    <h2>Version 0.2</h2>
+    <h2>Version 0.2.1</h2>
     <p>The plugin provides a REST API to PHPlist.<br/>
     Development by Flowcom AB, Andreas Ek (<a href="">@EkAndreas</a>)</p>
 
+    <p>
+        <h2>Commands</h2>
+        To discover all commands to this API just make a GET request or click here:<br/>
+        <a href="<?php echo $url; ?>">PHPlist API Command Reference list</a><br/>
+        The documentation is generated in realtime.
+    </p>
     <p>
         <h2>Access</h2>
         Autentication required as admin in PHPlist.<br/>

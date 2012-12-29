@@ -17,14 +17,25 @@ include 'includes/users.php';
 include 'includes/templates.php';
 include 'includes/messages.php';
 
+include 'doc/doc.php';
+
+
 //Check if this is called outside PHPlist auth, this should never occur!
 if ( empty( $plugin->coderoot ) ){
-    PHPlist_API_Response::outputMessage('Not authorized! Please login with [login] and [password] as admin first!');
+    PHPlist_API_Response::outputErrorMessage( 'Not authorized! Please login with [login] and [password] as admin first!' );
 }
 
-//Only POST request methods allowed
+//If other than POST then assume documentation report
 if ( strcmp( $_SERVER['REQUEST_METHOD'], "POST")  ){
-    PHPlist_API_Response::outputMessage('Only requests method POST is allowed here!');
+
+    $doc = new PHPlist_API_Doc();
+    $doc->addClass( 'PHPlist_API_Actions' );
+    $doc->addClass( 'PHPlist_API_Lists' );
+    $doc->addClass( 'PHPlist_API_Users' );
+    $doc->addClass( 'PHPlist_API_Templates' );
+    $doc->addClass( 'PHPlist_API_Messages' );
+    $doc->output();
+
 }
 
 //Check if command is empty!

@@ -2,10 +2,23 @@
 
 class PHPlist_API_Actions{
 
+    /**
+     * Function to call for login.<br/>
+     * <p>Parameters<br/>
+     * [*login] loginname as an admin to PHPlist<br/>
+     * [*password] the password
+     * </p>
+     */
     static function login(){
         PHPlist_API_Response::outputMessage( 'Welcome!' );
     }
 
+    /**
+     * Processes the Message Queue in PHPlist.<br/>
+     * Perhaps this is done via CRON or manually through the admin interface?
+     * <p>Parameters<br/>
+     *
+     */
     static function processQueue( ){
 
         $admin_id = $_SESSION["logindetails"]["id"];
