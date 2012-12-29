@@ -39,6 +39,8 @@ class PHPlist_API_Doc{
                 $comment = str_replace( '[*', '<span class="label label-warning">', $comment );
                 $comment = str_replace( '[', '<span class="label label-success">', $comment );
                 $comment = str_replace( ']', '</span>', $comment );
+                $comment = str_replace( '{', '<span class="badge">', $comment );
+                $comment = str_replace( '}', '</span>', $comment );
                 $comment = str_replace( '*', '', $comment );
                 //$comment = str_replace( '<br><br>', '', $comment );
 
@@ -90,6 +92,7 @@ class PHPlist_API_Doc{
                                 <p>
                                     <span class="label label-warning">Required body parameter</span><br/>
                                     <span class="label label-success">Optional body parameter</span><br/>
+                                    <span class="badge">Datatype</span><br/>
                                 </p>
                             </div>
                         </div>

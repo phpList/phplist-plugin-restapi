@@ -6,15 +6,24 @@
 class PHPlist_API_Lists{
 
     /**
-     * All lists returned
+     * <p>Gets all lists in PHPlist as an array.</p>
+     * <p><strong>Parameters:</strong><br/>
+     * (none)
+     * <p><strong>Returns:</strong><br/>
+     * Array of lists.
+     * </p>
      */
     static function listsGet() {
         PHPlist_API_Common::select( 'Lists', "SELECT * FROM " . $GLOBALS['table_prefix'] . "list ORDER BY listorder;" );
     }
 
     /**
-     * Get one list
-     * @param int $id
+     * <p>Gets one (1) list.</p>
+     * <p><strong>Parameters:</strong><br/>
+     * [*id] {integer} the ID of the list.
+     * <p><strong>Returns:</strong><br/>
+     * One list.
+     * </p>
      */
     static function listGet( $id=0 ) {
         if ( $id==0 ) $id = $_REQUEST['id'];
@@ -22,7 +31,17 @@ class PHPlist_API_Lists{
     }
 
     /**
-     * Add a new list
+     * <p>Adds a new list.</p>
+     * <p><strong>Parameters:</strong><br/>
+     * [*name] {string} the name of the list.<br/>
+     * [description] {string} adds a description to the list.<br/>
+     * [listorder] {integer} an expression to sortorder, eg 100.<br/>
+     * [prefix] {string} adds a prefix to the list (?).<br/>
+     * [rssfeed] {string} the url to the feed for this list (?).<br/>
+     * [active] {integer} if list should be active set this one to 1, otherwise it will be disabled.<br/>
+     * <p><strong>Returns:</strong><br/>
+     * The list added.
+     * </p>
      */
     static function listAdd(){
 
@@ -46,6 +65,20 @@ class PHPlist_API_Lists{
         die(0);
     }
 
+    /**
+     * <p>Updates existing list.</p>
+     * <p><strong>Parameters:</strong><br/>
+     * [*id] {integer} the ID of the list.<br/>
+     * [*name] {string} the name of the list.<br/>
+     * [description] {string} adds a description to the list.<br/>
+     * [listorder] {integer} an expression to sortorder, eg 100.<br/>
+     * [prefix] {string} adds a prefix to the list (?).<br/>
+     * [rssfeed] {string} the url to the feed for this list (?).<br/>
+     * [active] {integer} if list should be active set this one to 1, otherwise it will be disabled.<br/>
+     * <p><strong>Returns:</strong><br/>
+     * The list updated.
+     * </p>
+     */
     static function listUpdate(){
 
         $sql = "UPDATE " . $GLOBALS['table_prefix'] . "list SET name=:name, description=:description, listorder=:listorder, prefix=:prefix, rssfeed=:rssfeed, active=:active WHERE id=:id;";
@@ -69,6 +102,14 @@ class PHPlist_API_Lists{
         die(0);
     }
 
+    /**
+     * <p>Deletes a list.</p>
+     * <p><strong>Parameters:</strong><br/>
+     * [*id] {integer} the ID of the list.
+     * <p><strong>Returns:</strong><br/>
+     * System message of action.
+     * </p>
+     */
     static function listDelete(){
 
         $sql = "DELETE FROM " . $GLOBALS['table_prefix'] . "list WHERE id=:id;";
@@ -85,6 +126,14 @@ class PHPlist_API_Lists{
         die(0);
     }
 
+    /**
+     * <p>Lists assigned to User.</p>
+     * <p><strong>Parameters:</strong><br/>
+     * [*user_id] {integer} the User-ID.
+     * <p><strong>Returns:</strong><br/>
+     * Array of lists where the user is assigned to.
+     * </p>
+     */
     static function listsUser( $user_id=0 ) {
         $response = new PHPlist_API_Response();
         if ( $user_id==0 ) $user_id = $_REQUEST['user_id'];
@@ -102,6 +151,16 @@ class PHPlist_API_Lists{
         die(0);
     }
 
+    /**
+     * <p>Adds a user to a list.</p>
+     * <p>The user then subscribes to the list.</p>
+     * <p><strong>Parameters:</strong><br/>
+     * [*list_id] {integer} the ID of the list.<br/>
+     * [*user_id] {integer} the ID of the user.<br/>
+     * <p><strong>Returns:</strong><br/>
+     * Array of lists where the user is assigned to.
+     * </p>
+     */
     static function listUserAdd( $list_id=0, $user_id=0 ){
         if ( $list_id==0 ) $list_id = $_REQUEST['list_id'];
         if ( $user_id==0 ) $user_id = $_REQUEST['user_id'];
@@ -113,13 +172,22 @@ class PHPlist_API_Lists{
             $stmt->bindParam("list_id", $list_id );
             $stmt->execute();
             $db = null;
-            PHPlist_API_Lists::listGet( $list_id );
+            PHPlist_API_Lists::listsUser( $user_id );
         } catch(PDOException $e) {
             PHPlist_API_Response::outputError($e);
         }
         die(0);
     }
 
+    /**
+     * <p>UnassignsAdds a user to a list.</p>
+     * <p><strong>Parameters:</strong><br/>
+     * [*list_id] {integer} the ID of the list.<br/>
+     * [*user_id] {integer} the ID of the user.
+     * <p><strong>Returns:</strong><br/>
+     * System message of action.
+     * </p>
+     */
     static function listUserDelete( $list_id=0, $user_id=0 ){
         if ( $list_id==0 ) $list_id = $_REQUEST['list_id'];
         if ( $user_id==0 ) $user_id = $_REQUEST['user_id'];
@@ -138,6 +206,15 @@ class PHPlist_API_Lists{
         die(0);
     }
 
+    /**
+     * <p>Assigns a list to a message.</p>
+     * <p><strong>Parameters:</strong><br/>
+     * [*list_id] {integer} the ID of the list.<br/>
+     * [*message_id] {integer} the ID of the message.
+     * <p><strong>Returns:</strong><br/>
+     * The list assigned.
+     * </p>
+     */
     static function listMessageAdd( $list_id=0, $message_id=0 ){
         if ( $list_id==0 ) $list_id = $_REQUEST['list_id'];
         if ( $message_id==0 ) $message_id = $_REQUEST['message_id'];
@@ -156,6 +233,15 @@ class PHPlist_API_Lists{
         die(0);
     }
 
+    /**
+     * <p>Unassigns a list from a message.</p>
+     * <p><strong>Parameters:</strong><br/>
+     * [*list_id] {integer} the ID of the list.<br/>
+     * [*message_id] {integer} the ID of the message.
+     * <p><strong>Returns:</strong><br/>
+     * System message of action.
+     * </p>
+     */
     static function listMessageDelete( $list_id=0, $message_id=0 ){
         if ( $list_id==0 ) $list_id = $_REQUEST['list_id'];
         if ( $message_id==0 ) $message_id = $_REQUEST['message_id'];
