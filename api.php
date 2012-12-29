@@ -6,9 +6,9 @@
 class api extends phplistPlugin {
 
     var $name = "API";
-    var $coderoot = "plugins/api/";
 
     function api() {
+        $this->coderoot = dirname(__FILE__) . '/api/';
     }
 
     function adminmenu() {
