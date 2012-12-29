@@ -45,11 +45,11 @@ if ( empty($cmd) ){
 }
 
 //Now bind the commands with static functions
-call_user_func( array( 'PHPlist_API_Actions',     $cmd ) );
-call_user_func( array( 'PHPlist_API_Lists',       $cmd ) );
-call_user_func( array( 'PHPlist_API_Users',       $cmd ) );
-call_user_func( array( 'PHPlist_API_Templates',   $cmd ) );
-call_user_func( array( 'PHPlist_API_Messages',    $cmd ) );
+if ( is_callable( array( 'PHPlist_API_Lists',       $cmd ) ) ) PHPlist_API_Lists::$cmd();
+if ( is_callable( array( 'PHPlist_API_Actions',     $cmd ) ) ) PHPlist_API_Actions::$cmd();
+if ( is_callable( array( 'PHPlist_API_Users',       $cmd ) ) ) PHPlist_API_Users::$cmd();
+if ( is_callable( array( 'PHPlist_API_Templates',   $cmd ) ) ) PHPlist_API_Templates::$cmd();
+if ( is_callable( array( 'PHPlist_API_Messages',    $cmd ) ) ) PHPlist_API_Messages::$cmd();
 
 //If no command found, return error message!
 PHPlist_API_Response::outputErrorMessage( 'No function for provided [cmd] found!' );

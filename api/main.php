@@ -11,7 +11,7 @@ $url = PHPlist_API_Common::apiUrl( $website );
 
 <h1>API</h1>
 
-    <h2>Version 0.2.1</h2>
+    <h2>Version 0.2.3</h2>
     <p>The plugin provides a REST API to PHPlist.<br/>
     Development by Flowcom AB, Andreas Ek (<a href="">@EkAndreas</a>)</p>
 
