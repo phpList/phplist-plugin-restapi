@@ -21,10 +21,17 @@ v.      Date        Description
 ##Installation
 ###1. Activate plugins in PHPlist
 Change the config-parameter for plugin folder in /config/config.php.
-Eg, define("PLUGIN_ROOTDIR","plugins");
+Eg,
+```
+define("PLUGIN_ROOTDIR","/var/www/yoursite.com/plugins");
+```
 
 ###2. Copy plugin files
-Place the two root-files and two folders in your plugin folder, eg /admin/plugins/
+Copy the files under "plugins" to the plugins folder!, eg /admin/plugins/
+Eg,
+```
+/var/www/yoursite.com/plugins
+```
 
 ###3. Log in
 Log in to /admin and there should be two menues added; "api" and "api test".
@@ -41,7 +48,7 @@ All requests to the API is made by method POST.
 
 Example of API-Url:
 ```
-http://phplist.local/admin/?page=call&pi=api
+http://www.yoursite.com/lists/admin/?page=call&pi=api
 ```
 
 First login to PHPlist with *POST* method and body parameters: "login" and "password".
