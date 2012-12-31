@@ -113,7 +113,7 @@ $result = json_decode( $result );
 var_dump( $result->data ); 
 
 //Get all lists in phpList via /listsGet
-curl_setopt( $c, CURLOPT_URL, 'http://www.yoursite.com/lists/admin/?page=call&pi=api' );
+curl_setopt( $c, CURLOPT_URL, $url );
 curl_setopt( $c, CURLOPT_RETURNTRANSFER, 1 );
 curl_setopt( $c, CURLOPT_POST, 1 );
 curl_setopt( $c, CURLOPT_POSTFIELDS, 'cmd=listsGet' );
