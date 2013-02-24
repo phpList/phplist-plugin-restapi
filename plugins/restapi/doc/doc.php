@@ -1,7 +1,7 @@
 <?php
 
 
-class phpList_API_Doc{
+class phpList_RESTAPI_Doc{
 
     private $classes;
 

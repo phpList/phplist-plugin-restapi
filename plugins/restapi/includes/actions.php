@@ -1,6 +1,6 @@
 <?php
 
-class phpList_API_Actions{
+class phpList_RESTAPI_Actions{
 
     /**
      * <p>Function to call for login.<p>
@@ -10,7 +10,7 @@ class phpList_API_Actions{
      * </p>
      */
     static function login(){
-        phpList_API_Response::outputMessage( 'Welcome!' );
+        phpList_RESTAPI_Response::outputMessage( 'Welcome!' );
     }
 
     /**
@@ -26,7 +26,7 @@ class phpList_API_Actions{
         $admin_id = $_SESSION["logindetails"]["id"];
 
         //Get the password from db!
-        $db = phpList_API_PDO::getConnection();
+        $db = phpList_RESTAPI_PDO::getConnection();
 
         $sql = "SELECT * FROM " . $GLOBALS['table_prefix'] . "admin WHERE id = :id;";
         $stmt = $db->prepare($sql);
@@ -37,8 +37,8 @@ class phpList_API_Actions{
         $login = $result[0]->loginname;
         $password = $result[0]->password;
 
-        $url = phpList_API_Common::apiUrl( $_SERVER['HTTP_HOST'] );
-        $url = str_replace( 'page=call&pi=api', 'page=processqueue&login=' . $login . '&password=' . $password . '&ajax=1', $url );
+        $url = phpList_RESTAPI_Common::apiUrl( $_SERVER['HTTP_HOST'] );
+        $url = str_replace( 'page=call&pi=restapi', 'page=processqueue&login=' . $login . '&password=' . $password . '&ajax=1', $url );
 
         //open connection
         //ob_start();
@@ -51,7 +51,7 @@ class phpList_API_Actions{
 
         //ob_end_clean();
 
-        phpList_API_Response::outputMessage( 'Queue is processed!' );
+        phpList_RESTAPI_Response::outputMessage( 'Queue is processed!' );
 
     }
 

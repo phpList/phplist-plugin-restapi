@@ -3,7 +3,7 @@
  * Class to communicate with phpList via API REST
  *
  **/
-class phpList_API_Helper {
+class phpList_RESTAPI_Helper {
 
     private $session = null;
     private $url = '';
@@ -461,8 +461,8 @@ class phpList_API_Helper {
         curl_setopt($c, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($c, CURLOPT_POST,           1);
         curl_setopt($c, CURLOPT_POSTFIELDS,     $post_params);
-        curl_setopt($c, CURLOPT_COOKIEFILE,     'phpList_API_Helper');
-        curl_setopt($c, CURLOPT_COOKIEJAR,      'phpList_API_Helper');
+        curl_setopt($c, CURLOPT_COOKIEFILE,     'phpList_RESTAPI_Helper');
+        curl_setopt($c, CURLOPT_COOKIEJAR,      'phpList_RESTAPI_Helper');
         curl_setopt($c, CURLOPT_HTTPHEADER,     array( 'Connection: Keep-Alive', 'Keep-Alive: 60' ));
 
         $result = curl_exec($c);

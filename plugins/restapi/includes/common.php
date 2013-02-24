@@ -1,11 +1,11 @@
 <?php
 
-class phpList_API_Common{
+class phpList_RESTAPI_Common{
 
     static function select( $type, $sql, $single=false ){
-        $response = new phpList_API_Response();
+        $response = new phpList_RESTAPI_Response();
         try {
-            $db = phpList_API_PDO::getConnection();
+            $db = phpList_RESTAPI_PDO::getConnection();
             $stmt = $db->query($sql);
             $result = $stmt->fetchAll(PDO::FETCH_OBJ);
             $db = null;
@@ -29,8 +29,8 @@ class phpList_API_Common{
         else
             $url = 'http://'; //http
 
-        $api_url = str_replace( 'page=main&pi=api_test', 'page=call&pi=api', $_SERVER['REQUEST_URI'] );
-        $api_url = str_replace( 'page=main&pi=api', 'page=call&pi=api', $api_url );
+        $api_url = str_replace( 'page=main&pi=restapi_test', 'page=call&pi=restapi', $_SERVER['REQUEST_URI'] );
+        $api_url = str_replace( 'page=main&pi=restapi', 'page=call&pi=restapi', $api_url );
 
         $url = $url . $website . $api_url;
         $url = rtrim($url,'/');

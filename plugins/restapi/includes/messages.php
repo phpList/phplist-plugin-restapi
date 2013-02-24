@@ -1,21 +1,21 @@
 <?php
 
-class phpList_API_Messages{
+class phpList_RESTAPI_Messages{
 
     static function messageGet( $id=0 ) {
         if ( $id==0 ) $id = $_REQUEST['id'];
-        phpList_API_Common::select( 'Message', "SELECT * FROM " . $GLOBALS['table_prefix'] . "message WHERE id=" . $id . ";", true );
+        phpList_RESTAPI_Common::select( 'Message', "SELECT * FROM " . $GLOBALS['table_prefix'] . "message WHERE id=" . $id . ";", true );
     }
 
     static function messagesGet() {
-        phpList_API_Common::select( 'Messages', "SELECT * FROM " . $GLOBALS['table_prefix'] . "message ORDER BY Modified DESC;" );
+        phpList_RESTAPI_Common::select( 'Messages', "SELECT * FROM " . $GLOBALS['table_prefix'] . "message ORDER BY Modified DESC;" );
     }
 
     static function messageAdd(){
 
         $sql = "INSERT INTO " . $GLOBALS['table_prefix'] . "message (subject, fromfield, replyto, message, textmessage, footer, entered, status, sendformat, template, embargo, rsstemplate, owner ) VALUES ( :subject, :fromfield, :replyto, :message, :textmessage, :footer, now(), :status, :sendformat, :template, :embargo, :rsstemplate, :owner );";
         try {
-            $db = phpList_API_PDO::getConnection();
+            $db = phpList_RESTAPI_PDO::getConnection();
             $stmt = $db->prepare($sql);
             $stmt->bindParam("subject", $_REQUEST['subject'] );
             $stmt->bindParam("fromfield", $_REQUEST['fromfield'] );
@@ -32,9 +32,9 @@ class phpList_API_Messages{
             $stmt->execute();
             $id = $db->lastInsertId();
             $db = null;
-            phpList_API_Messages::messageGet( $id );
+            phpList_RESTAPI_Messages::messageGet( $id );
         } catch(PDOException $e) {
-            phpList_API_Response::outputError($e);
+            phpList_RESTAPI_Response::outputError($e);
         }
 
     }
@@ -44,7 +44,7 @@ class phpList_API_Messages{
         if ( $id == 0 ) $id = $_REQUEST['id'];
         $sql = "UPDATE " . $GLOBALS['table_prefix'] . "message SET subject=:subject, fromfield=:fromfield, replyto=:replyto, message=:message, textmessage=:textmessage, footer=:footer, status=:status, sendformat=:sendformat, template=:template, sendstart=:sendstart, rsstemplate=:rsstemplate, owner=:owner WHERE id=:id;";
         try {
-            $db = phpList_API_PDO::getConnection();
+            $db = phpList_RESTAPI_PDO::getConnection();
             $stmt = $db->prepare($sql);
             $stmt->bindParam("id", $id );
             $stmt->bindParam("subject", $_REQUEST['subject'] );
@@ -61,9 +61,9 @@ class phpList_API_Messages{
             $stmt->bindParam("owner", $_REQUEST['owner'] );
             $stmt->execute();
             $db = null;
-            phpList_API_Messages::messageGet( $id );
+            phpList_RESTAPI_Messages::messageGet( $id );
         } catch(PDOException $e) {
-            phpList_API_Response::outputError($e);
+            phpList_RESTAPI_Response::outputError($e);
         }
 
     }

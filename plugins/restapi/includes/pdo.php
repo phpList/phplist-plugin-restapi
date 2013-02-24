@@ -1,6 +1,6 @@
 <?php
 
-class phpList_API_PDO{
+class phpList_RESTAPI_PDO{
 
     static function getConnection() {
         $dbhost = $GLOBALS['database_host'];

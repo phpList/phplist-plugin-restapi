@@ -1,17 +1,16 @@
 <?php
 
-include 'phplist_api_helper.php';
 include 'includes/common.php';
 
 $plugin = $GLOBALS["plugins"][$_GET["pi"]];
 
-$url = phpList_API_Common::apiUrl( $website );
+$url = phpList_RESTAPI_Common::apiUrl( $website );
 
 ?>
 
-<h1>API</h1>
+<h1>RESTAPI</h1>
 
-    <h2>Version 0.2.4</h2>
+    <h2>Version 0.2.5</h2>
     <p>The plugin provides a REST API to phpList.<br/>
     Development by Flowcom AB, Andreas Ek (<a href="https://twitter.com/ekandreas">@EkAndreas</a>)</p>
 
@@ -24,8 +23,8 @@ $url = phpList_API_Common::apiUrl( $website );
     <p>
         <h2>Access</h2>
         Autentication required as admin in phpList.<br/>
-        All requests to the API is made by method POST.<br/>
-        API-Url to this installation:<br/>
+        All requests to the RESTAPI is made by method POST.<br/>
+        RESTAPI-Url to this installation:<br/>
         <a href="<?php echo $url; ?>"><?php echo $url; ?></a>
     </p>
     <p>
@@ -33,9 +32,9 @@ $url = phpList_API_Common::apiUrl( $website );
     </p>
     <p>
         <h2>Client</h2>
-        To try the API, please use a client like CocaRestClient or eqvivalent!<br/>
-        There is an example class in api-test/phplist_api_helper.php if you like to try it in PHP.<br/>
-        For examples check commands in api-test/main.php
+        To try the RESTAPI, please use a client like CocaRestClient or eqvivalent!<br/>
+        There is an example class in restapi-test/phplist_restapi_helper.php if you like to try it in PHP.<br/>
+        For examples check commands in restapi-test/main.php
     </p>
 
     <p>
@@ -46,7 +45,7 @@ $url = phpList_API_Common::apiUrl( $website );
 
     <p>
         <h2>Issues</h2>
-        All issues regarding the API is handled at Github!
+        All issues regarding the RESTAPI is handled at Github!
         <a href="https://github.com/EkAndreas/phplistapi">https://github.com/EkAndreas/phplistapi</a>
     </p>
 

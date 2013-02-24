@@ -6,7 +6,7 @@
  * And cleaning up after
  */
 
-include 'phplist_api_helper.php';
+include 'phplist_restapi_helper.php';
 
 $plugin = $GLOBALS["plugins"][$_GET["pi"]];
 
@@ -15,7 +15,7 @@ $url = apiUrl( $website );
 ?>
 
 <html>
-    <h1>API TEST</h1>
+    <h1>RESTAPI TEST</h1>
 
     <h2>Step 1 - Login</h2>
 
@@ -37,7 +37,7 @@ $url = apiUrl( $website );
     $result = $stmt->fetchAll(PDO::FETCH_OBJ);
     $admin = $result[0];
 
-    $api = new phpList_API_Helper( $url );
+    $api = new phpList_RESTAPI_Helper( $url );
     $result = $api->login( $admin->loginname, $admin->password );
     if ($result->status != 'success'){
         echo $result->data->message;
@@ -127,7 +127,7 @@ $url = apiUrl( $website );
             return;
         }
         $user_id = $result->data->id;
-        echo "Admin Email is in Users now with id = " . $user_id . '<br/>';
+        echo "Admin Email (" . $admin->email . ") is in Users now with id = " . $user_id . '<br/>';
     }
 
     echo "Admin Email id = " . $user_id;
@@ -291,6 +291,8 @@ $url = apiUrl( $website );
 
     $result = $api->processQueue( $admin->loginname, $admin->password, true );
 
+    sleep(5);
+
     ?>
 
     <h2>Step 18 - Unassign user from list</h2>
@@ -359,8 +361,8 @@ $url = apiUrl( $website );
         else
             $url = 'http://'; //http
 
-        $api_url = str_replace( 'page=main&pi=api_test', 'page=call&pi=api', $_SERVER['REQUEST_URI'] );
-        $api_url = str_replace( 'page=main&pi=api', 'page=call&pi=api', $api_url );
+        $api_url = str_replace( 'page=main&pi=restapi_test', 'page=call&pi=restapi', $_SERVER['REQUEST_URI'] );
+        $api_url = str_replace( 'page=main&pi=restapi', 'page=call&pi=restapi', $api_url );
 
         $url = $url . $website . $api_url;
         $url = rtrim($url,'/');

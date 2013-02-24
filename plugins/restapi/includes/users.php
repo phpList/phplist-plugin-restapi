@@ -1,26 +1,64 @@
 <?php
 
-class phpList_API_Users{
+class phpList_RESTAPI_Users{
 
+    /**
+     * <p>Get all the users in the system.</p>
+     * <p><strong>Returns:</strong><br/>
+     * List of users.
+     * </p>
+     */
     static function usersGet() {
-        phpList_API_Common::select( 'Users', "SELECT * FROM " . $GLOBALS['usertable_prefix'] . "user ORDER BY id;" );
+        phpList_RESTAPI_Common::select( 'Users', "SELECT * FROM " . $GLOBALS['usertable_prefix'] . "user ORDER BY id;" );
     }
 
+    /**
+     * <p>Gets one given user.</p>
+     * <p><strong>Parameters:</strong><br/>
+     * [*id] {integer} the ID of the user.<br/>
+     * </p>
+     * <p><strong>Returns:</strong><br/>
+     * One user only.
+     * </p>
+     */
     static function userGet( $id=0 ) {
         if ( $id==0 ) $id = $_REQUEST['id'];
-        phpList_API_Common::select( 'User', "SELECT * FROM " . $GLOBALS['usertable_prefix'] . "user WHERE id = $id;", true );
+        phpList_RESTAPI_Common::select( 'User', "SELECT * FROM " . $GLOBALS['usertable_prefix'] . "user WHERE id = $id;", true );
     }
 
+    /**
+     * <p>Gets one user via email address.</p>
+     * <p><strong>Parameters:</strong><br/>
+     * [*email] {string} the email address of the user.<br/>
+     * </p>
+     * <p><strong>Returns:</strong><br/>
+     * One user only.
+     * </p>
+     */
     static function userGetByEmail( $email ) {
         if ( empty( $email ) ) $email = $_REQUEST['email'];
-        phpList_API_Common::select( 'User', "SELECT * FROM " . $GLOBALS['usertable_prefix'] . "user WHERE email = '$email';", true );
+        phpList_RESTAPI_Common::select( 'User', "SELECT * FROM " . $GLOBALS['usertable_prefix'] . "user WHERE email = '$email';", true );
     }
 
+    /**
+     * <p>Adds one user to the system.</p>
+     * <p><strong>Parameters:</strong><br/>
+     * [*email] {string} the email address of the user.<br/>
+     * [*confirmed] {integer} 1=confirmed, 0=unconfirmed.<br/>
+     * [*htmlemail] {integer} 1=html emails, 0=no html emails.<br/>
+     * [*rssfrequency] {integer}<br/>
+     * [*password] {string} The password to this user.<br/>
+     * [*disabled] {integer} 1=disabled, 0=enabled<br/>
+     * </p>
+     * <p><strong>Returns:</strong><br/>
+     * The added user.
+     * </p>
+     */
     static function userAdd(){
 
         $sql = "INSERT INTO " . $GLOBALS['usertable_prefix'] . "user (email, confirmed, htmlemail, rssfrequency, password, passwordchanged, disabled, entered, uniqid) VALUES (:email, :confirmed, :htmlemail, :rssfrequency, :password, now(), :disabled, now(), :uniqid);";
         try {
-            $db = phpList_API_PDO::getConnection();
+            $db = phpList_RESTAPI_PDO::getConnection();
             $stmt = $db->prepare($sql);
             $stmt->bindParam("email", $_REQUEST['email']);
             $stmt->bindParam("confirmed", $_REQUEST['confirmed']);
@@ -32,9 +70,9 @@ class phpList_API_Users{
             $stmt->execute();
             $id = $db->lastInsertId();
             $db = null;
-            phpList_API_Users::userGet( $id );
+            phpList_RESTAPI_Users::userGet( $id );
         } catch(PDOException $e) {
-            phpList_API_Response::outputError($e);
+            phpList_RESTAPI_Response::outputError($e);
         }
 
     }
@@ -44,7 +82,7 @@ class phpList_API_Users{
         $sql = "UPDATE " . $GLOBALS['usertable_prefix'] . "user SET email=:email, confirmed=:confirmed, htmlemail=:htmlemail, rssfrequency=:rssfrequency, password=:password, passwordchanged=now(), disabled=:disabled WHERE id=:id;";
 
         try {
-            $db = phpList_API_PDO::getConnection();
+            $db = phpList_RESTAPI_PDO::getConnection();
             $stmt = $db->prepare($sql);
             $stmt->bindParam("id", $_REQUEST['id']);
             $stmt->bindParam("email", $_REQUEST['email'] );
@@ -55,9 +93,9 @@ class phpList_API_Users{
             $stmt->bindParam("disabled", $_REQUEST['disabled'] );
             $stmt->execute();
             $db = null;
-            phpList_API_Users::userGet( $_REQUEST['id'] );
+            phpList_RESTAPI_Users::userGet( $_REQUEST['id'] );
         } catch(PDOException $e) {
-            phpList_API_Response::outputError($e);
+            phpList_RESTAPI_Response::outputError($e);
         }
 
     }
@@ -66,14 +104,14 @@ class phpList_API_Users{
 
         $sql = "DELETE FROM " . $GLOBALS['usertable_prefix'] . "user WHERE id=:id;";
         try {
-            $db = phpList_API_PDO::getConnection();
+            $db = phpList_RESTAPI_PDO::getConnection();
             $stmt = $db->prepare($sql);
             $stmt->bindParam("id", $_REQUEST['id']);
             $stmt->execute();
             $db = null;
-            phpList_API_Response::outputDeleted( 'User', $_REQUEST['id'] );
+            phpList_RESTAPI_Response::outputDeleted( 'User', $_REQUEST['id'] );
         } catch(PDOException $e) {
-            phpList_API_Response::outputError($e);
+            phpList_RESTAPI_Response::outputError($e);
         }
 
     }
