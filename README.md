@@ -37,32 +37,32 @@ Example of destination:
 ```
 
 ###3. Log in
-Log in to /admin and there should be two menues added; "api" and "api test".
+Log in to /admin and there should be two menues added; "restapi" and "restapi test".
 
-Click on left admin menu "api" for more information!
+Click on left admin menu "restapi" for more information!
 
 ###4. Test
-Click on "api test" to test your installation of the API plugin!
+Click on "restapi test" to test your installation of the API plugin!
 
 ##Access
 Autentication required as admin in phpList.
 
-All requests to the API is made by method POST.
+All requests to the RESTAPI is made by method POST.
 
-Example of API-Url:
+Example of RESTAPI-Url:
 ```
-http://www.yoursite.com/lists/admin/?page=call&pi=api
+http://www.yoursite.com/lists/admin/?page=call&pi=restapi
 ```
 
 First login to phpList with *POST* method and body parameters: "login" and "password".
 
 
 ##Client
-To try the API, please use a client like CocaRestClient or eqvivalent!
+To try the RESTAPI, please use a client like CocaRestClient or eqvivalent!
 
-There is an example class in api-test/phplist_api_helper.php if you like to try it in PHP.
+There is an example class in restapi-test/phplist_restapi_helper.php if you like to try it in PHP.
 
-For examples check commands in api-test/main.php
+For examples check commands in restapi-test/main.php
 
 ##Standard reponse
 All responses is returned in json and encoded to UTF-8.
@@ -97,12 +97,12 @@ The following code log
 ```php
 <?php
 
-$url = 'http://www.yoursite.com/lists/admin/?page=call&pi=api';
+$url = 'http://www.yoursite.com/lists/admin/?page=call&pi=restapi';
 
 //initialize cUrl for remote content
 $c = curl_init();
-curl_setopt( $c, CURLOPT_COOKIEFILE, 'phpList_API_Helper' );
-curl_setopt( $c, CURLOPT_COOKIEJAR, 'phpList_API_Helper' );
+curl_setopt( $c, CURLOPT_COOKIEFILE, 'phpList_RESTAPI_Helper' );
+curl_setopt( $c, CURLOPT_COOKIEJAR, 'phpList_RESTAPI_Helper' );
 curl_setopt( $c, CURLOPT_RETURNTRANSFER, 1 );
 curl_setopt( $c, CURLOPT_POST, 1 );
 
