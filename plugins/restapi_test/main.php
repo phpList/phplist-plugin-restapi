@@ -12,6 +12,15 @@ $plugin = $GLOBALS["plugins"][$_GET["pi"]];
 
 $url = apiUrl( $website );
 
+$login = getConfig('restapi_test_login');
+$password = getConfig('restapi_test_password');
+
+if (empty($login)) {
+  print Error(s('Please configure the login details in the settings page'));
+  return;
+}
+
+
 ?>
 
 <html>
@@ -24,21 +33,8 @@ $url = apiUrl( $website );
     //Get the loginname and password!
     $id = $_SESSION["logindetails"]["id"];
 
-    $dbhost = $GLOBALS['database_host'];
-    $dbuser = $GLOBALS['database_user'];
-    $dbpass = $GLOBALS['database_password'];
-    $dbname = $GLOBALS['database_name'];
-    $db = new PDO("mysql:host=$dbhost;dbname=$dbname", $dbuser, $dbpass);
-    $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-
-    $sql = "SELECT * FROM " . $GLOBALS['table_prefix'] . "admin WHERE id=:id;";
-    $stmt = $db->prepare($sql);
-    $stmt->execute( array( ':id' => $id ) );
-    $result = $stmt->fetchAll(PDO::FETCH_OBJ);
-    $admin = $result[0];
-
     $api = new phpList_RESTAPI_Helper( $url );
-    $result = $api->login( $admin->loginname, $admin->password );
+    $result = $api->login( $login, $password );
     if ($result->status != 'success'){
         echo $result->data->message;
         return;
