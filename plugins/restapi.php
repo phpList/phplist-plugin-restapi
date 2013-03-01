@@ -5,10 +5,15 @@
  */
 class restapi extends phplistPlugin {
 
-    var $name = "RESTAPI";
+    public $name = "RESTAPI";
+    public $description = 'Implements a REST API interface to phpList';
+    public $topMenuLinks = array(
+      'main' => array('category' => 'system'),
+    ); 
 
     function restapi() {
-        $this->coderoot = dirname(__FILE__) . '/restapi/';
+      parent::phplistplugin();
+      $this->coderoot = dirname(__FILE__) . '/restapi/';
     }
 
     function adminmenu() {
@@ -18,4 +23,3 @@ class restapi extends phplistPlugin {
     }
 
 }
-?>
