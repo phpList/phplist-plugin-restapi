@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * Class phpList_RESTAPI_Messages
+ * Manage phplist Messages
+ */
 class phpList_RESTAPI_Messages{
 
     static function messageGet( $id=0 ) {

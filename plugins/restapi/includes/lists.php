@@ -1,7 +1,8 @@
 <?php
 
 /**
- * Common functions to manage lists in phpList
+ * Class phpList_RESTAPI_Lists
+ * Getting lists, adding and removing its users and messages
  */
 class phpList_RESTAPI_Lists{
 

@@ -1,5 +1,8 @@
 <?php
 
+/**
+ * Class phpList_RESTAPI_PDO
+ */
 class phpList_RESTAPI_PDO{
 
     static function getConnection() {
