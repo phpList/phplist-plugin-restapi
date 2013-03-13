@@ -461,8 +461,8 @@ class phpList_RESTAPI_Helper {
         curl_setopt($c, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($c, CURLOPT_POST,           1);
         curl_setopt($c, CURLOPT_POSTFIELDS,     $post_params);
-        curl_setopt($c, CURLOPT_COOKIEFILE,     'phpList_RESTAPI_Helper');
-        curl_setopt($c, CURLOPT_COOKIEJAR,      'phpList_RESTAPI_Helper');
+        curl_setopt($c, CURLOPT_COOKIEFILE,     $GLOBALS['tmpdir'].'/phpList_RESTAPI_Helper_cookiejar.txt');
+        curl_setopt($c, CURLOPT_COOKIEJAR,      $GLOBALS['tmpdir'].'/phpList_RESTAPI_Helper_cookiejar.txt');
         curl_setopt($c, CURLOPT_HTTPHEADER,     array( 'Connection: Keep-Alive', 'Keep-Alive: 60' ));
 
         $result = curl_exec($c);
@@ -475,4 +475,3 @@ class phpList_RESTAPI_Helper {
 
 }
 
-?>
