@@ -20,6 +20,15 @@ class phpList_RESTAPI_Templates{
         phpList_RESTAPI_Common::select( 'Template', "SELECT * FROM " . $GLOBALS['table_prefix'] . "template WHERE title='" . $title . "';", true );
     }
 
+    /**
+     * <p>Adds a new template.</p>
+     * <p><strong>Parameters:</strong><br/>
+     * [*title] {string} the name of the list.<br/>
+     * [template] {string} adds a description to the list.<br/>
+     * <p><strong>Returns:</strong><br/>
+     * The template added.
+     * </p>
+     */
     static function templateAdd(){
 
         $sql = "INSERT INTO " . $GLOBALS['table_prefix'] . "template (title, template) VALUES (:title, :template);";

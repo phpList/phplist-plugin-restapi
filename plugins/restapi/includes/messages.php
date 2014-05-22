@@ -15,6 +15,24 @@ class phpList_RESTAPI_Messages{
         phpList_RESTAPI_Common::select( 'Messages', "SELECT * FROM " . $GLOBALS['table_prefix'] . "message ORDER BY Modified DESC;" );
     }
 
+    /**
+     * <p>Adds a new message/campaing.</p>
+     * <p><strong>Parameters:</strong><br/>
+     * [*subject] {string} <br/>
+     * [*fromfield] {string} <br/>
+     * [*replyto] {string} <br/>
+     * [*textmessage] {string} <br/>
+     * [*footer] {string} <br/>
+     * [*status] {string} <br/>
+     * [*sendformat] {string} <br/>
+     * [*template] {string} <br/>
+     * [*embargo] {string} <br/>
+     * [*rsstemplate] {string} <br/>
+     * [*owner] {string} <br/>
+     * <p><strong>Returns:</strong><br/>
+     * The message added.
+     * </p>
+     */
     static function messageAdd(){
 
         $sql = "INSERT INTO " . $GLOBALS['table_prefix'] . "message (subject, fromfield, replyto, message, textmessage, footer, entered, status, sendformat, template, embargo, rsstemplate, owner ) VALUES ( :subject, :fromfield, :replyto, :message, :textmessage, :footer, now(), :status, :sendformat, :template, :embargo, :rsstemplate, :owner );";
@@ -43,6 +61,25 @@ class phpList_RESTAPI_Messages{
 
     }
 
+    /**
+     * <p>Updates existing message/campaing.</p>
+     * <p><strong>Parameters:</strong><br/>
+     * [*id] {integer} <br/>
+     * [*subject] {string} <br/>
+     * [*fromfield] {string} <br/>
+     * [*replyto] {string} <br/>
+     * [*textmessage] {string} <br/>
+     * [*footer] {string} <br/>
+     * [*status] {string} <br/>
+     * [*sendformat] {string} <br/>
+     * [*template] {string} <br/>
+     * [*embargo] {string} <br/>
+     * [*rsstemplate] {string} <br/>
+     * [owner] {string} <br/>
+     * <p><strong>Returns:</strong><br/>
+     * The message added.
+     * </p>
+     */
     static function messageUpdate( $id = 0 ){
 
         if ( $id == 0 ) $id = $_REQUEST['id'];
