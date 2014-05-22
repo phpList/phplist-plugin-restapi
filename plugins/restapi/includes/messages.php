@@ -109,7 +109,18 @@ class phpList_RESTAPI_Messages{
 
     }
 
-
+	static function imageAdd(){
+		if($_POST['image'] and $_POST['name']){
+			$imageDirectory = "/var/www/phplist/content/c/";
+			$dest = tempnam($imageDirectory,date("ymd_his"));
+			$pi = pathinfo($_POST['name']);
+			$dest.= $pi['extension'];
+			file_put_contents($dest,base64_decode($_POST['image']));
+			$response = new phpList_RESTAPI_Response();
+			$response->setData('Filename', $dest);
+			$response->output();
+		}
+	}
 }
 
 
