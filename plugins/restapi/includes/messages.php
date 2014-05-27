@@ -116,10 +116,8 @@ class phpList_RESTAPI_Messages{
 			$pi = pathinfo($_POST['name']);
 			$dest.= '.'.$pi['extension'];
 			file_put_contents($dest,base64_decode($_POST['image']));
-			$ret = rename($dest,$imageDirectory);
 			$response = new phpList_RESTAPI_Response();
 			$response->setData('Filename', basename($dest));
-			$response->setData('ret', $ret);
 			$response->output();
 		}
 	}
