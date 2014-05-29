@@ -21,6 +21,7 @@ class phpList_RESTAPI_Messages{
      * [*subject] {string} <br/>
      * [*fromfield] {string} <br/>
      * [*replyto] {string} <br/>
+     * [*message] {string} <br/>
      * [*textmessage] {string} <br/>
      * [*footer] {string} <br/>
      * [*status] {string} <br/>
@@ -68,6 +69,7 @@ class phpList_RESTAPI_Messages{
      * [*subject] {string} <br/>
      * [*fromfield] {string} <br/>
      * [*replyto] {string} <br/>
+     * [*message] {string} <br/>
      * [*textmessage] {string} <br/>
      * [*footer] {string} <br/>
      * [*status] {string} <br/>
