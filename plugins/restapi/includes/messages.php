@@ -30,13 +30,14 @@ class phpList_RESTAPI_Messages{
      * [*embargo] {string} <br/>
      * [*rsstemplate] {string} <br/>
      * [*owner] {string} <br/>
+     * [htmlformatted] {string} <br/>
      * <p><strong>Returns:</strong><br/>
      * The message added.
      * </p>
      */
     static function messageAdd(){
 
-        $sql = "INSERT INTO " . $GLOBALS['table_prefix'] . "message (subject, fromfield, replyto, message, textmessage, footer, entered, status, sendformat, template, embargo, rsstemplate, owner ) VALUES ( :subject, :fromfield, :replyto, :message, :textmessage, :footer, now(), :status, :sendformat, :template, :embargo, :rsstemplate, :owner );";
+        $sql = "INSERT INTO " . $GLOBALS['table_prefix'] . "message (subject, fromfield, replyto, message, textmessage, footer, entered, status, sendformat, template, embargo, rsstemplate, owner, htmlformatted ) VALUES ( :subject, :fromfield, :replyto, :message, :textmessage, :footer, now(), :status, :sendformat, :template, :embargo, :rsstemplate, :owner, :htmlformatted );";
         try {
             $db = phpList_RESTAPI_PDO::getConnection();
             $stmt = $db->prepare($sql);
@@ -52,6 +53,7 @@ class phpList_RESTAPI_Messages{
             $stmt->bindParam("embargo", $_REQUEST['embargo'] );
             $stmt->bindParam("rsstemplate", $_REQUEST['rsstemplate'] );
             $stmt->bindParam("owner", $_REQUEST['owner'] );
+            $stmt->bindParam("htmlformatted", $_REQUEST['htmlformatted'] );
             $stmt->execute();
             $id = $db->lastInsertId();
             $db = null;
@@ -78,6 +80,7 @@ class phpList_RESTAPI_Messages{
      * [*embargo] {string} <br/>
      * [*rsstemplate] {string} <br/>
      * [owner] {string} <br/>
+     * [htmlformatted] {string} <br/>
      * <p><strong>Returns:</strong><br/>
      * The message added.
      * </p>
@@ -85,7 +88,7 @@ class phpList_RESTAPI_Messages{
     static function messageUpdate( $id = 0 ){
 
         if ( $id == 0 ) $id = $_REQUEST['id'];
-        $sql = "UPDATE " . $GLOBALS['table_prefix'] . "message SET subject=:subject, fromfield=:fromfield, replyto=:replyto, message=:message, textmessage=:textmessage, footer=:footer, status=:status, sendformat=:sendformat, template=:template, sendstart=:sendstart, rsstemplate=:rsstemplate, owner=:owner WHERE id=:id;";
+        $sql = "UPDATE " . $GLOBALS['table_prefix'] . "message SET subject=:subject, fromfield=:fromfield, replyto=:replyto, message=:message, textmessage=:textmessage, footer=:footer, status=:status, sendformat=:sendformat, template=:template, sendstart=:sendstart, rsstemplate=:rsstemplate, owner=:owner, htmlformatted=:htmlformatted WHERE id=:id;";
         try {
             $db = phpList_RESTAPI_PDO::getConnection();
             $stmt = $db->prepare($sql);
@@ -102,6 +105,7 @@ class phpList_RESTAPI_Messages{
             $stmt->bindParam("sendstart", $_REQUEST['sendstart'] );
             $stmt->bindParam("rsstemplate", $_REQUEST['rsstemplate'] );
             $stmt->bindParam("owner", $_REQUEST['owner'] );
+            $stmt->bindParam("htmlformatted", $_REQUEST['htmlformatted'] );
             $stmt->execute();
             $db = null;
             phpList_RESTAPI_Messages::messageGet( $id );
