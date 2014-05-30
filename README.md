@@ -3,13 +3,14 @@ REST API as a plugin to [phpList](https://www.phplist.com)
 
 Two plugins inside this repo: "restapi" and "restapi-test"
 
-Development by Flowcom AB, Andreas Ek ([@EkAndreas](https://twitter.com/ekandreas))
+Original development by Flowcom AB, Andreas Ek ([@EkAndreas](https://twitter.com/ekandreas))
 
 License: GPLv2
 
 ##History
 ```
 v.      Date        Description
+0.3     2014-05-31  Moved to phpList organisation and renamed phplist-plugin-restapi
 0.2.5   2013-02-24  New name: RESTAPI and some documentation updates. No new functionality.
 0.2.4   2012-12-29  API-location "coderoot" dynamically routed, recommended by Bramley
 0.2.3   2012-12-29  Corrections to static calls, recommended by Bramley
