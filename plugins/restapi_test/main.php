@@ -20,6 +20,8 @@ if (empty($login)) {
   return;
 }
 
+$admin = new stdClass();
+$admin->email =  getConfig('admin_address');
 
 ?>
 
@@ -106,6 +108,8 @@ if (empty($login)) {
 
     <h2>Step 6 - Check if your admin address is in users</h2>
     <?php
+    
+    var_dump($admin->email);
 
     $result = $api->userGetByEmail( $admin->email );
     if ($result->status != 'success'){
