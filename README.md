@@ -41,9 +41,9 @@ Example of destination:
 ```
 
 ###3. Log in
-Log in to /admin and there should be two menues added; "restapi" and "restapi test".
+Log in to /admin and the collapsed "Plugins" menu should have two links added: "RESTAPI" and "Test RESTAPI".
 
-Click on left admin menu "restapi" for more information!
+Click on the item "RESTAPI" item for more information!
 
 ###4. Test
 Click on "restapi test" to test your installation of the API plugin!
