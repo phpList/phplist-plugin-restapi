@@ -30,7 +30,7 @@ class phpList_RESTAPI_Response{
     }
 
     function output(){
-
+        header('Content-Type: application/json');
         echo $this->json_encode2( $this->result );
         die(0);
 
