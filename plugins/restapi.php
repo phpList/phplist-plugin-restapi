@@ -1,7 +1,17 @@
 <?php
 /**
- * Plugin that tests the REST API
- * Andreas Ek, 2012-12-26
+ * Plugin that implements a REST API
+ * 
+ * Documentation: http://resources.phplist.com/plugin/restapi
+ * 
+ * version history:
+ * 
+ * v 2 * phpList Api Team https://github.com/orgs/phpList/teams/api
+ * - renamed plugin repository to phplist-plugin-restapi
+ * - https://github.com/phpList/phplist-plugin-restapi
+ * 
+ * v 1 * Andreas Ek, 2012-12-26
+ * https://github.com/EkAndreas/phplistapi
  */
 class restapi extends phplistPlugin {
 
