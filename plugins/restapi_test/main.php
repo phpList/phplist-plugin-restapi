@@ -345,26 +345,33 @@ if (empty($login)) {
 
 <?php
 
+    /**
+     * @return $trimmedUrl
+     */
     function apiUrl( $website ){
 
         $url = '';
+        
         if( !empty( $_SERVER["HTTPS"] ) ){
-            if($_SERVER["HTTPS"]!=="off")
+            
+            // Check which protocol to use
+            if($_SERVER["HTTPS"]!=="off") {
                 $url = 'https://'; //https
-            else
+            } else {
                 $url = 'http://'; //http
-        }
-        else
+            }
+        } else {
             $url = 'http://'; //http
-
+        }
+        
         $api_url = str_replace( 'page=main&pi=restapi_test', 'page=call&pi=restapi', $_SERVER['REQUEST_URI'] );
-        $api_url = str_replace( 'page=main&pi=restapi', 'page=call&pi=restapi', $api_url );
+        $api_url1 = str_replace( 'page=main&pi=restapi', 'page=call&pi=restapi', $api_url );
 
-        $url = $url . $website . $api_url;
-        $url = rtrim($url,'/');
+        $concatenatedUrl = $url . $website . $api_url1;
+        $trimmedUrl = rtrim($concatenatedUrl,'/');
 
-        return $url;
+        return $trimmedUrl;
 
     }
-
+    
 ?>
