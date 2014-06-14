@@ -30,9 +30,10 @@ Example of definition in config-file:
 ```
 define("PLUGIN_ROOTDIR","/var/www/yoursite.com/plugins");
 ```
+Paths can be relative or absolute. The default plugins folder is in ```public_html/lists/admin/plugins```, and the relative path to that file is ```plugins```.
 
-###2. Copy plugin files
-Copy the files under "plugins" to the plugins folder!
+###2. Move the plugin files
+Move the directory containing this readme file into your master plugins folder, defined above. PHPList will automatically detect the individual plugins within the subdirectories. This plugin contains two sub-plugins; the rest plugin itself and also a plugin for testing rest functionality. Both should be automatically detected and appear in the plugin manager.
 
 Example of destination:
 ```
