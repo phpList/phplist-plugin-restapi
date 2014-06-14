@@ -13,14 +13,14 @@ class restapi_test extends phplistPlugin {
   public $settings = array(
     "restapi_test_login" => array (
       'value' => 'admin',
-      'description' => 'Login name for testing',
+      'description' => 'Login name for REST API testing',
       'type' => "text",
       'allowempty' => 0,
       'category'=> 'develop',
     ),
     "restapi_test_password" => array (
       'value' => 'phplist',
-      'description' => 'Login password for testing',
+      'description' => 'Login password for REST API testing',
       'type' => "text",
       'category'=> 'develop',
     ),
