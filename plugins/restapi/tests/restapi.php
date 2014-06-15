@@ -13,8 +13,8 @@ class TestRestapi extends \PHPUnit_Framework_TestCase
 
     function setUp() 
     {
-        $this->loginName = 'admin';
-        $this->password = 'phplist';
+        $this->loginName = API_LOGIN_USERNAME;
+        $this->password = API_LOGIN_PASSWORD;
         // Set URL from constant stored in phpunit.xml
         $this->url = API_URL_BASE_PATH;
     }
