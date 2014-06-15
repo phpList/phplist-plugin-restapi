@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * Class phpList_RESTAPI_Templates
+ * Handling templates at phplist
+ */
 class phpList_RESTAPI_Templates{
 
     static function templatesGet() {

@@ -10,25 +10,44 @@ include 'phplist_restapi_helper.php';
 
 $plugin = $GLOBALS["plugins"][$_GET["pi"]];
 
+if ( isset( $_POST['restapi_test_login'] ) ){
+	$login = $_POST['restapi_test_login'];
+	$password = $_POST['restapi_test_password'];
+	if ( !empty($login) && !empty($password) ){
+		Sql_Query( sprintf( "UPDATE %s SET value='%s' WHERE item='restapi_test_login'", $tables["config"], $login ) );
+		Sql_Query( sprintf( "UPDATE %s SET value='%s' WHERE item='restapi_test_password'", $tables["config"], $password ) );
+	}
+}
+
 $url = apiUrl( $website );
 
 $login = getConfig('restapi_test_login');
 $password = getConfig('restapi_test_password');
 
 if (empty($login)) {
-  print Error(s('Please configure the login details in the settings page'));
+  print Error('Please configure the login details in the settings page<br/>Parameters: <strong>restapi_test_login</strong> and <strong>restapi_test_password</strong> for admin login.');
+	?>
+		<form method="POST">
+			<input type="text" placeholder="restapi_test_login" name="restapi_test_login" /><br/>
+			<input type="password" placeholder="restapi_test_password" name="restapi_test_password" /><br/>
+			<input type="submit" value="Save" />
+		</form>
+	<?php
+
   return;
 }
 
 $admin = new stdClass();
 $admin->email =  getConfig('admin_address');
 
+$step = 1;
+
 ?>
 
 <html>
     <h1>RESTAPI TEST</h1>
 
-    <h2>Step 1 - Login</h2>
+    <h2>Step <?php echo $step++; ?> - Login</h2>
 
     <?php
 
@@ -45,7 +64,7 @@ $admin->email =  getConfig('admin_address');
     ?>
 
 
-    <h2>Step 2 - Count existing lists</h2>
+    <h2>Step <?php echo $step++; ?> - Count existing lists</h2>
     <?php
 
     $result = $api->listsGet();
@@ -65,7 +84,7 @@ $admin->email =  getConfig('admin_address');
 
     ?>
 
-    <h2>Step 3 - Create a new list</h2>
+    <h2>Step <?php echo $step++; ?> - Create a new list</h2>
     <?php
 
     $result = $api->listAdd( 'Testlist', 'This is just a test');
@@ -79,7 +98,7 @@ $admin->email =  getConfig('admin_address');
 
     ?>
 
-    <h2>Step 4 - Change the name of the list</h2>
+    <h2>Step <?php echo $step++; ?> - Change the name of the list</h2>
     <?php
 
     $result = $api->listUpdate( $list_id, 'Testlist ' . date('Y-m-d H:i:s'));
@@ -92,7 +111,7 @@ $admin->email =  getConfig('admin_address');
 
     ?>
 
-    <h2>Step 5 - Count users / subscribers</h2>
+    <h2>Step <?php echo $step++; ?> - Count users / subscribers</h2>
     <?php
 
     $result = $api->usersGet();
@@ -106,12 +125,14 @@ $admin->email =  getConfig('admin_address');
 
     ?>
 
-    <h2>Step 6 - Check if your admin address is in users</h2>
+    <h2>Step <?php echo $step++; ?> - Check if your admin address is in users</h2>
     <?php
     
     var_dump($admin->email);
 
-    $result = $api->userGetByEmail( $admin->email );
+		$admin_address = getConfig("admin_address");
+
+    $result = $api->userGetByEmail( $admin_address );
     if ($result->status != 'success'){
         echo $result->data->message;
         return;
@@ -121,33 +142,33 @@ $admin->email =  getConfig('admin_address');
 
     if (!$user_id){
         //Add admin email to users
-        $result = $api->userAdd( $admin->email, 1, 1, '#PasswordNotSet#' );
+        $result = $api->userAdd( $admin_address, 1, 1, '#PasswordNotSet#' );
         if ($result->status != 'success'){
             echo $result->data->message;
             return;
         }
         $user_id = $result->data->id;
-        echo "Admin Email (" . $admin->email . ") is in Users now with id = " . $user_id . '<br/>';
+        echo "Admin Email (" . $admin_address . ") is in Users now with id = " . $user_id . '<br/>';
     }
 
-    echo "Admin Email id = " . $user_id;
+    echo "Added a new User with the Admin Email Address, id = " . $user_id;
 
     ?>
 
-    <h2>Step 7 - Change user password</h2>
+    <h2>Step <?php echo $step++; ?> - Change user password</h2>
     <?php
 
-    $result = $api->userUpdate( $user_id, $admin->email, 1, 1, '#NewPassword#' );
+    $result = $api->userUpdate( $user_id, $admin_address, 1, 1, '#NewPassword#' );
     if ($result->status != 'success'){
         echo $result->data->message;
         return;
     }
 
-    echo 'The Admin User password is changed!';
+    echo '"The Admin as a User" password has changed!';
 
     ?>
 
-    <h2>Step 8 - Add User to list</h2>
+    <h2>Step <?php echo $step++; ?> - Add User to list</h2>
     <?php
 
     $result = $api->listUserAdd( $list_id, $user_id );
@@ -156,11 +177,25 @@ $admin->email =  getConfig('admin_address');
         return;
     }
 
-    echo 'The Admin User is assigned to the new list created. ';
+    echo 'The User is assigned to the new list created. ';
 
     ?>
 
-    <h2>Step 9 - Lists where the user is assigned</h2>
+		<h2>Step <?php echo $step++; ?> - Count users / subscribers AGAIN!</h2>
+		<?php
+
+		$result = $api->usersGet();
+		if ($result->status != 'success'){
+			echo $result->data->message;
+			return;
+		}
+
+		//Present the lists fetched
+		echo "Total number of users: " . count($result->data);
+
+		?>
+
+    <h2>Step <?php echo $step++; ?> - Lists where the user is assigned</h2>
     <?php
 
     $result = $api->listsUser( $user_id );
@@ -176,7 +211,7 @@ $admin->email =  getConfig('admin_address');
 
     ?>
 
-    <h2>Step 10 - Check if template for test exists (create)</h2>
+    <h2>Step <?php echo $step++; ?> - Check if template for test exists (create)</h2>
     <?php
 
     $result = $api->templateGetByTitle( 'API Test' );
@@ -209,7 +244,7 @@ $admin->email =  getConfig('admin_address');
 
     ?>
 
-    <h2>Step 11 - Update template title</h2>
+    <h2>Step <?php echo $step++; ?> - Update template title</h2>
     <?php
 
     $template_content = file_get_contents(__DIR__ . '/template.html');
@@ -222,7 +257,7 @@ $admin->email =  getConfig('admin_address');
 
     ?>
 
-    <h2>Step 12 - List all templates</h2>
+    <h2>Step <?php echo $step++; ?> - List all templates</h2>
     <?php
 
     $result = $api->templatesGet();
@@ -238,10 +273,10 @@ $admin->email =  getConfig('admin_address');
 
     ?>
 
-    <h2>Step 13 - Create a message</h2>
+    <h2>Step <?php echo $step++; ?> - Create a message</h2>
     <?php
 
-    $result = $api->messageAdd( 'Test API from plugin', $admin->email, $admin->email, 'TEST API', 'TEST API', $template_id, date('Y-m-d H:i:s'));
+    $result = $api->messageAdd( 'Test API from plugin', $admin_address, $admin_address, 'TEST API', 'TEST API', $template_id, date('Y-m-d H:i:s'));
     if ($result->status != 'success'){
         echo $result->data->message;
         return;
@@ -251,10 +286,10 @@ $admin->email =  getConfig('admin_address');
 
     ?>
 
-    <h2>Step 14 - Update message</h2>
+    <h2>Step <?php echo $step++; ?> - Update message</h2>
     <?php
 
-    $result = $api->messageUpdate( $message_id, 'Test API from plugin updated ' .date('Y-m-d H:i:s'), $admin->email, $admin->email, 'TEST API', 'TEST API', $template_id, date('Y-m-d H:i:s'), 'submitted', $user_id );
+    $result = $api->messageUpdate( $message_id, 'Test API from plugin updated ' .date('Y-m-d H:i:s'), $admin_address, $admin_address, 'TEST API', 'TEST API', $template_id, date('Y-m-d H:i:s'), 'submitted', $user_id );
     if ($result->status != 'success'){
         echo $result->data->message;
         return;
@@ -263,7 +298,7 @@ $admin->email =  getConfig('admin_address');
 
     ?>
 
-    <h2>Step 15 - Messages count</h2>
+    <h2>Step <?php echo $step++; ?> - Messages count</h2>
     <?php
 
     $result = $api->messagesGet();
@@ -275,7 +310,7 @@ $admin->email =  getConfig('admin_address');
 
     ?>
 
-    <h2>Step 16 - Assign message to list</h2>
+    <h2>Step <?php echo $step++; ?> - Assign message to list</h2>
     <?php
 
     $result = $api->listMessageAdd( $list_id, $message_id );
@@ -286,16 +321,16 @@ $admin->email =  getConfig('admin_address');
     echo 'Message assigned to the created list.';
     ?>
 
-    <h2>Step 17 - Process Queue</h2>
+    <h2>Step <?php echo $step++; ?> - Process Queue</h2>
     <?php
 
-    $result = $api->processQueue( $admin->loginname, $admin->password, true );
+    $result = $api->processQueue( $login, $password, true );
 
     sleep(5);
 
     ?>
 
-    <h2>Step 18 - Unassign user from list</h2>
+    <h2>Step <?php echo $step++; ?> - Unassign user from list</h2>
     <?php
 
     $result = $api->listUserDelete( $list_id, $user_id );
@@ -308,7 +343,7 @@ $admin->email =  getConfig('admin_address');
 
     ?>
 
-    <h2>Step 19 - Delete the user</h2>
+    <h2>Step <?php echo $step++; ?> - Delete the user</h2>
     <?php
 
     $result = $api->userDelete( $user_id );
@@ -321,7 +356,7 @@ $admin->email =  getConfig('admin_address');
 
     ?>
 
-    <h2>Step 20 - Delete the list</h2>
+    <h2>Step <?php echo $step++; ?> - Delete the list</h2>
     <?php
 
     $api->listDelete( $list_id );
@@ -333,7 +368,7 @@ $admin->email =  getConfig('admin_address');
 
     ?>
 
-    <h2>Step 21 - Delete template</h2>
+    <h2>Step <?php echo $step++; ?> - Delete template</h2>
     <?php
 
     $api->templateDelete( $template_id );
@@ -344,6 +379,8 @@ $admin->email =  getConfig('admin_address');
     echo 'The template is now deleted';
 
     ?>
+
+		<h2>The test completed successfully!</h2>
 
 </html>
 
