@@ -129,8 +129,10 @@ class TestRestapi extends \PHPUnit_Framework_TestCase
         #$this->assertEquals( '2014-06-15 15:27:22', $result->data->modified );
         $this->assertEquals( '1', $result->data->active );
         
+        $listId = $result->data->id;
+        
         // Pass on the new list ID so other tests can reuse it
-        return $result->data->id;
+        return $listId;
     }
     
     /**
@@ -187,6 +189,56 @@ class TestRestapi extends \PHPUnit_Framework_TestCase
         // Check if the list was deleted successfully
         $this->assertEquals( 'success', $result->status );
         $this->assertEquals( 'Item with ' . $listId . ' is successfully deleted!', $result->data );
+    }
+    
+    /**
+     * Test adding a new subscriber
+     * @todo add another test to delete the user later on
+     * @depends testListAdd
+     */
+    public function testUserAdd( $listId ) 
+    {
+        // Set the user details as parameters
+        $post_params = array(
+            'email' => 'test_' . rand( 100, 999 ), // rand() works around 'email' being a primary key and therefore unique
+            'confirmed' => 1,
+            'htmlemail' => 1,
+            'password' => 'password',
+            'disabled' => 0,
+            'rssfrequency' => 1
+        );
+
+        // Execute the api call
+        $result = $this->callAPI( 'userAdd', $post_params);
+        
+        // Test if the user was created successfully
+        $this->assertEquals( 'success', $result->status );
+        
+        $userId = $result->data->id;
+        
+        // Pass on the newly created userid to other tests
+        return $userId;
+    }
+
+    /**
+     * Test adding a subscriber to an existing list
+     * @todo check subscriber is actually added, don't trust return status
+     * @depends testListAdd
+     * @depends testUserAdd
+     */
+    public function testListUserAdd( $listId, $userId ) 
+    {
+        // Set list and subscriber vars
+        $post_params = array(
+            'list_id' => $listId,
+            'user_id' => $userId
+        );
+
+        // Execute the api call
+        $result = $this->callAPI( 'listUserAdd', $post_params);
+        
+        // Test if the user was added to the list successfully
+        $this->assertEquals( 'success', $result->status );
     }
 }
 
