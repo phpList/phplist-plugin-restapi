@@ -97,18 +97,18 @@ class TestRestapi extends \PHPUnit_Framework_TestCase
     
     /**
      * Test creation of a new list
-     * @note Currently the created list is not deleted
+     * @note Currently the created list is not deletedx
      */
     public function testListAdd() 
     {
         // Create minimal params for api call
         $post_params = array(
             'name' => 'testList',
-            'description' => 'creted by unit testing',
-            'listorder' => 0,
+            'description' => 'listDescription',
+            'listorder' => '0',
             'prefix' => '',
             'rssfeed' => '',
-            'active' => 1
+            'active' => '1'
         );
 
         // Execute the api call
@@ -122,12 +122,50 @@ class TestRestapi extends \PHPUnit_Framework_TestCase
         
         // Check the new list data is what we requested
         $this->assertEquals( 'testList', $result->data->name );
-        $this->assertEquals( 'creted by unit testing', $result->data->description );
+        $this->assertEquals( 'listDescription', $result->data->description );
         $this->assertEquals( '0', $result->data->listorder );
         $this->assertEquals( '', $result->data->prefix );
         $this->assertEquals( '', $result->data->rssfeed );
         #$this->assertEquals( '2014-06-15 15:27:22', $result->data->modified );
         $this->assertEquals( '1', $result->data->active );
+        
+        // Pass on the new list ID so other tests can reuse it
+        return $result->data->id;
+    }
+    
+    /**
+     * Test updating an existing list
+     * @depends testListAdd
+     */
+    public function testListUpdate( $listId ) 
+    {
+        // Create minimal params for api call
+        $post_params = array(
+            'id' => $listId,
+            'name' => 'updatedTestList',
+            'description' => 'updatedListDescription',
+            'listorder' => '1',
+            'prefix' => '_',
+            'rssfeed' => '1',
+            'active' => '0'
+        );
+
+        $result = $this->callAPI( 'listUpdate', $post_params);
+
+        // Check if the list was updated successfully
+        $this->assertEquals( 'success', $result->status );
+        
+        // Check that the list has a numeric ID
+        $this->assertTrue( is_numeric( $result->data->id ) );
+        
+        // Check the new list data is what we requested
+        $this->assertEquals( 'updatedTestList', $result->data->name );
+        $this->assertEquals( 'updatedListDescription', $result->data->description );
+        $this->assertEquals( '1', $result->data->listorder );
+        $this->assertEquals( '_', $result->data->prefix );
+        $this->assertEquals( '1', $result->data->rssfeed );
+        #$this->assertEquals( '2014-06-15 15:27:22', $result->data->modified );
+        $this->assertEquals( '0', $result->data->active );
     }
 }
 
