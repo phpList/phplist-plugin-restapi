@@ -85,10 +85,11 @@ class TestRestapi extends \PHPUnit_Framework_TestCase
      */
     public function testListsGet() 
     {
-        //Post Data
+        // Create empty params array
         $post_params = array();
 
-        $result = $this->callApi( 'listsGet', $post_params);
+        // Execute the api call
+        $result = $this->callApi( 'listsGet', $post_params );
 
         // Check if the lists were fetched successfully
         $this->assertEquals( 'success', $result->status );
