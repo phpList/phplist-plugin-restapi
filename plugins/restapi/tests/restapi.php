@@ -10,13 +10,15 @@ class TestRestapi extends \PHPUnit_Framework_TestCase
     public $loginName;
     public $password;
     public $url;
+    public $tmpPath;
 
     function setUp() 
     {
+        // Set values from constants stored in phpunit.xml
         $this->loginName = API_LOGIN_USERNAME;
         $this->password = API_LOGIN_PASSWORD;
-        // Set URL from constant stored in phpunit.xml
         $this->url = API_URL_BASE_PATH;
+        $this->tmpPath = TMP_PATH;
     }
 
     function tearDown() {
@@ -41,8 +43,8 @@ class TestRestapi extends \PHPUnit_Framework_TestCase
         curl_setopt( $c, CURLOPT_POST,           1 );
         curl_setopt( $c, CURLOPT_POSTFIELDS,     $post_params);
         // FIXME: this tmp path mustn't be hardcoded
-        curl_setopt( $c, CURLOPT_COOKIEFILE,     '/tmp'.'/phpList_RESTAPI_Helper_cookiejar.txt');
-        curl_setopt( $c, CURLOPT_COOKIEJAR,      '/tmp'.'/phpList_RESTAPI_Helper_cookiejar.txt');
+        curl_setopt( $c, CURLOPT_COOKIEFILE,     $this->tmpPath.'/phpList_RESTAPI_Helper_cookiejar.txt');
+        curl_setopt( $c, CURLOPT_COOKIEJAR,      $this->tmpPath.'/phpList_RESTAPI_Helper_cookiejar.txt');
         curl_setopt( $c, CURLOPT_HTTPHEADER,     array( 'Connection: Keep-Alive', 'Keep-Alive: 60' ) );
         
         // Execute the call
