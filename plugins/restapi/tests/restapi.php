@@ -94,7 +94,41 @@ class TestRestapi extends \PHPUnit_Framework_TestCase
         // Check if the lists were fetched successfully
         $this->assertEquals( 'success', $result->status );
     }
+    
+    /**
+     * Test creation of a new list
+     * @note Currently the created list is not deleted
+     */
+    public function testListAdd() 
+    {
+        // Create minimal params for api call
+        $post_params = array(
+            'name' => 'testList',
+            'description' => 'creted by unit testing',
+            'listorder' => 0,
+            'prefix' => '',
+            'rssfeed' => '',
+            'active' => 1
+        );
 
+        // Execute the api call
+        $result = $this->callAPI( 'listAdd', $post_params );
+
+        // Check if the list was created successfully
+        $this->assertEquals( 'success', $result->status );
+        
+        // Check that the list has a numeric ID
+        $this->assertTrue( is_numeric( $result->data->id ) );
+        
+        // Check the new list data is what we requested
+        $this->assertEquals( 'testList', $result->data->name );
+        $this->assertEquals( 'creted by unit testing', $result->data->description );
+        $this->assertEquals( '0', $result->data->listorder );
+        $this->assertEquals( '', $result->data->prefix );
+        $this->assertEquals( '', $result->data->rssfeed );
+        #$this->assertEquals( '2014-06-15 15:27:22', $result->data->modified );
+        $this->assertEquals( '1', $result->data->active );
+    }
 }
 
 ?>
