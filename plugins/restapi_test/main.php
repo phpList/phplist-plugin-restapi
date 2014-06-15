@@ -350,7 +350,7 @@ $admin->email =  getConfig('admin_address');
 <?php
 
     /**
-     * @return $trimmedUrl
+     * @return $trimmedUrl like http://phplist.com/admin/?page=call&pi=restapi
      */
     function apiUrl( $website ){
 
