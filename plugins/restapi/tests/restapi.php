@@ -97,7 +97,7 @@ class TestRestapi extends \PHPUnit_Framework_TestCase
     
     /**
      * Test creation of a new list
-     * @note Currently the created list is not deletedx
+     * @note Created list is deleted in later test, barring errors
      */
     public function testListAdd() 
     {
