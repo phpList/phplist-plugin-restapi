@@ -150,6 +150,7 @@ class TestRestapi extends \PHPUnit_Framework_TestCase
             'active' => '0'
         );
 
+        // Execute the api call
         $result = $this->callAPI( 'listUpdate', $post_params);
 
         // Check if the list was updated successfully
@@ -166,6 +167,26 @@ class TestRestapi extends \PHPUnit_Framework_TestCase
         $this->assertEquals( '1', $result->data->rssfeed );
         #$this->assertEquals( '2014-06-15 15:27:22', $result->data->modified );
         $this->assertEquals( '0', $result->data->active );
+    }
+    
+    /**
+     * Test deleting an existing list
+     * @note Simply trusts the status returned from the API. Deeper testing required
+     * @depends testListAdd
+     */
+    public function testListDelete( $listId ) 
+    {
+        // Create minimal params for api call
+        $post_params = array(
+            'id' => $listId
+        );
+        
+        // Execute the api call
+        $result = $this->callAPI( 'listDelete', $post_params);
+
+        // Check if the list was deleted successfully
+        $this->assertEquals( 'success', $result->status );
+        $this->assertEquals( 'Item with ' . $listId . ' is successfully deleted!', $result->data );
     }
 }
 
