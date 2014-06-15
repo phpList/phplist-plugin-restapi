@@ -12,7 +12,7 @@ class TestRestapi extends \PHPUnit_Framework_TestCase
     public $url;
     public $tmpPath;
 
-    function setUp() 
+    public function setUp() 
     {
         // Set values from constants stored in phpunit.xml
         $this->loginName = API_LOGIN_USERNAME;
@@ -21,7 +21,7 @@ class TestRestapi extends \PHPUnit_Framework_TestCase
         $this->tmpPath = TMP_PATH;
     }
 
-    function tearDown() {
+    public function tearDown() {
     }
     
     /**
@@ -63,7 +63,7 @@ class TestRestapi extends \PHPUnit_Framework_TestCase
      * Use a real login to test login api call
      * @return bool true if user exists and login successful
      */
-    function testLogin() 
+    public function testLogin() 
     {
         // Set the username and pwd to login with
         $post_params = array(
@@ -72,11 +72,26 @@ class TestRestapi extends \PHPUnit_Framework_TestCase
         );
 
         // Execute the login with the credentials as params
-        $result = $this->callAPI( 'login', $post_params );
+        $result = $this->callApi( 'login', $post_params );
         
         // Check if the login was successful
         $this->assertEquals( 'success', $result->status );
         
+    }
+    
+    /**
+     * Test for simple success of fetching of all lists
+     * @note Only the 'status' property is tested
+     */
+    public function testListsGet() 
+    {
+        //Post Data
+        $post_params = array();
+
+        $result = $this->callApi( 'listsGet', $post_params);
+
+        // Check if the lists were fetched successfully
+        $this->assertEquals( 'success', $result->status );
     }
 
 }
