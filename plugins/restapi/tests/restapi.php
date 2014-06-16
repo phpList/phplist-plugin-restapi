@@ -196,7 +196,7 @@ class TestRestapi extends \PHPUnit_Framework_TestCase
      * @todo add another test to delete the user later on
      * @depends testListAdd
      */
-    public function testUserAdd( $listId ) 
+    public function testSubscriberAdd( $listId ) 
     {
         // Set the user details as parameters
         $post_params = array(
@@ -209,33 +209,33 @@ class TestRestapi extends \PHPUnit_Framework_TestCase
         );
 
         // Execute the api call
-        $result = $this->callAPI( 'userAdd', $post_params);
+        $result = $this->callAPI( 'subscriberAdd', $post_params);
         
         // Test if the user was created successfully
         $this->assertEquals( 'success', $result->status );
         
-        $userId = $result->data->id;
+        $subscriberId = $result->data->id;
         
         // Pass on the newly created userid to other tests
-        return $userId;
+        return $subscriberId;
     }
 
     /**
      * Test adding a subscriber to an existing list
      * @todo check subscriber is actually added, don't trust return status
      * @depends testListAdd
-     * @depends testUserAdd
+     * @depends testSubscriberAdd
      */
-    public function testListUserAdd( $listId, $userId ) 
+    public function testListSubscriberAdd( $listId, $subscriberId ) 
     {
         // Set list and subscriber vars
         $post_params = array(
             'list_id' => $listId,
-            'user_id' => $userId
+            'subscriber_id' => $subscriberId
         );
 
         // Execute the api call
-        $result = $this->callAPI( 'listUserAdd', $post_params);
+        $result = $this->callAPI( 'listSubscriberAdd', $post_params);
         
         // Test if the user was added to the list successfully
         $this->assertEquals( 'success', $result->status );
