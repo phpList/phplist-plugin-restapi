@@ -83,8 +83,8 @@ class Subscribers {
             // fails on strict
 #            $stmt->bindParam("uniqid", md5(uniqid(mt_rand())));
             
-            $uniq = uniqid(mt_rand());
-            $stmt->bindParam("uniqid", md5($uniq));
+            $uniq = md5(uniqid(mt_rand()));
+            $stmt->bindParam("uniqid", $uniq);
             $stmt->execute();
             $id = $db->lastInsertId();
             $db = null;
