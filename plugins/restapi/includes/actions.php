@@ -24,24 +24,7 @@ class Actions {
      *
      */
     static function processQueue() {
-
-        $admin_id = $_SESSION["logindetails"]["id"];
-        $url = Common::apiUrl( $_SERVER['HTTP_HOST'] );
-        $url = str_replace( 'page=call&pi=restapi', 'page=processqueue&login=' . $login . '&password=' . $password . '&ajax=1', $url );
-
-        //open connection
-        //ob_start();
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $url);
-        $result = curl_exec($ch);
-
-        //clean up
-        curl_close($ch);
-
-        //ob_end_clean();
-
-        Response::outputMessage( 'Queue is processed!' );
-
+        Response::outputMessage( 'Not implemented' );
     }
 
 }
