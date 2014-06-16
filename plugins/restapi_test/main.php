@@ -2,7 +2,7 @@
 /**
  * Tests the REST API in phpList with common functions
  * The test is using a client rest approach with the Snoopy-object-class
- * Creating list, user, message
+ * Creating list, subscriber, message
  * And cleaning up after
  */
 namespace phpListRestapi;
@@ -102,94 +102,94 @@ $step = 1;
 
     ?>
 
-    <h2>Step <?php echo $step++; ?> - Count users / subscribers</h2>
+    <h2>Step <?php echo $step++; ?> - Count subscribers / subscribers</h2>
     <?php
 
-    $result = $api->usersGet();
+    $result = $api->subscribersGet();
     if ($result->status != 'success'){
         echo $result->data->message;
         return;
     }
 
     //Present the lists fetched
-    echo "Total number of users: " . count($result->data);
+    echo "Total number of subscribers: " . count($result->data);
 
     ?>
 
-    <h2>Step <?php echo $step++; ?> - Check if your admin address is in users</h2>
+    <h2>Step <?php echo $step++; ?> - Check if your admin address is in subscribers</h2>
     <?php
     
     var_dump($admin->email);
 
 		$admin_address = getConfig("admin_address");
 
-    $result = $api->userGetByEmail( $admin_address );
+    $result = $api->subscriberGetByEmail( $admin_address );
     if ($result->status != 'success'){
         echo $result->data->message;
         return;
     }
 
-    $user_id = $result->data->id;
+    $subscriber_id = $result->data->id;
 
-    if (!$user_id){
-        //Add admin email to users
-        $result = $api->userAdd( $admin_address, 1, 1, '#PasswordNotSet#' );
+    if (!$subscriber_id){
+        //Add admin email to subscribers
+        $result = $api->subscriberAdd( $admin_address, 1, 1, '#PasswordNotSet#' );
         if ($result->status != 'success'){
             echo $result->data->message;
             return;
         }
-        $user_id = $result->data->id;
-        echo "Admin Email (" . $admin_address . ") is in Users now with id = " . $user_id . '<br/>';
+        $subscriber_id = $result->data->id;
+        echo "Admin Email (" . $admin_address . ") is in subscribers now with id = " . $subscriber_id . '<br/>';
     }
 
-    echo "Added a new User with the Admin Email Address, id = " . $user_id;
+    echo "Added a new subscriber with the Admin Email Address, id = " . $subscriber_id;
 
     ?>
 
-    <h2>Step <?php echo $step++; ?> - Change user password</h2>
+    <h2>Step <?php echo $step++; ?> - Change subscriber password</h2>
     <?php
 
-    $result = $api->userUpdate( $user_id, $admin_address, 1, 1, '#NewPassword#' );
+    $result = $api->subscriberUpdate( $subscriber_id, $admin_address, 1, 1, '#NewPassword#' );
     if ($result->status != 'success'){
         echo $result->data->message;
         return;
     }
 
-    echo '"The Admin as a User" password has changed!';
+    echo '"The Admin as a subscriber" password has changed!';
 
     ?>
 
-    <h2>Step <?php echo $step++; ?> - Add User to list</h2>
+    <h2>Step <?php echo $step++; ?> - Add subscriber to list</h2>
     <?php
 
-    $result = $api->listUserAdd( $list_id, $user_id );
+    $result = $api->listSubscriberAdd( $list_id, $subscriber_id );
     if ($result->status != 'success'){
         echo $result->data->message;
         return;
     }
 
-    echo 'The User is assigned to the new list created. ';
+    echo 'The subscriber is assigned to the new list created. ';
 
     ?>
 
-		<h2>Step <?php echo $step++; ?> - Count users / subscribers AGAIN!</h2>
+		<h2>Step <?php echo $step++; ?> - Count subscribers / subscribers AGAIN!</h2>
 		<?php
 
-		$result = $api->usersGet();
+		$result = $api->subscribersGet();
 		if ($result->status != 'success'){
 			echo $result->data->message;
 			return;
 		}
 
 		//Present the lists fetched
-		echo "Total number of users: " . count($result->data);
+		echo "Total number of subscribers: " . count($result->data);
 
 		?>
 
-    <h2>Step <?php echo $step++; ?> - Lists where the user is assigned</h2>
+    <h2>Step <?php echo $step++; ?> - Lists where the subscriber is assigned</h2>
     <?php
 
-    $result = $api->listsUser( $user_id );
+    $result = $api->listsSubscriber( $subscriber_id );
     if ($result->status != 'success'){
         echo $result->data->message;
         return;
@@ -280,7 +280,7 @@ $step = 1;
     <h2>Step <?php echo $step++; ?> - Update message</h2>
     <?php
 
-    $result = $api->messageUpdate( $message_id, 'Test API from plugin updated ' .date('Y-m-d H:i:s'), $admin_address, $admin_address, 'TEST API', 'TEST API', $template_id, date('Y-m-d H:i:s'), 'submitted', $user_id );
+    $result = $api->messageUpdate( $message_id, 'Test API from plugin updated ' .date('Y-m-d H:i:s'), $admin_address, $admin_address, 'TEST API', 'TEST API', $template_id, date('Y-m-d H:i:s'), 'submitted', $subscriber_id );
     if ($result->status != 'success'){
         echo $result->data->message;
         return;
@@ -321,10 +321,10 @@ $step = 1;
 
     ?>
 
-    <h2>Step <?php echo $step++; ?> - Unassign user from list</h2>
+    <h2>Step <?php echo $step++; ?> - Unassign subscriber from list</h2>
     <?php
 
-    $result = $api->listUserDelete( $list_id, $user_id );
+    $result = $api->listSubscriberDelete( $list_id, $subscriber_id );
     if ($result->status != 'success'){
         echo $result->data->message;
         return;
@@ -334,16 +334,16 @@ $step = 1;
 
     ?>
 
-    <h2>Step <?php echo $step++; ?> - Delete the user</h2>
+    <h2>Step <?php echo $step++; ?> - Delete the subscriber</h2>
     <?php
 
-    $result = $api->userDelete( $user_id );
+    $result = $api->subscriberDelete( $subscriber_id );
     if ($result->status != 'success'){
         echo $result->data->message;
         return;
     }
 
-    echo 'Admin deleted from Users.';
+    echo 'Admin deleted from subscribers.';
 
     ?>
 

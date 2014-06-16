@@ -136,7 +136,7 @@ class Lists {
      * Array of lists where the subscriber is assigned to.
      * </p>
      */
-    static function listsSubscriber $user_id=0 ) {
+    static function listsSubscriber ( $subscriber_id=0 ) {
         $response = new Response();
         if ( $subscriber_id==0 ) $subscriber_id = $_REQUEST['subscriber_id'];
         $sql = "SELECT * FROM " . $GLOBALS['table_prefix'] . "list WHERE id IN (SELECT listid FROM " . $GLOBALS['table_prefix'] . "listuser WHERE userid=" . $subscriber_id . ") ORDER BY listorder;";
@@ -163,7 +163,7 @@ class Lists {
      * Array of lists where the subscriber is assigned to.
      * </p>
      */
-    static function listUserAdd( $list_id=0, $subscriber_id=0 ){
+    static function listSubscriberAdd( $list_id=0, $subscriber_id=0 ){
         if ( $list_id==0 ) $list_id = $_REQUEST['list_id'];
         if ( $subscriber_id==0 ) $subscriber_id = $_REQUEST['subscriber_id'];
         $sql = "INSERT INTO " . $GLOBALS['table_prefix'] . "listuser (userid, listid, entered) VALUES (:subscriber_id, :list_id, now());";
@@ -174,7 +174,7 @@ class Lists {
             $stmt->bindParam("list_id", $list_id );
             $stmt->execute();
             $db = null;
-            Lists::listsUser( $subscriber_id );
+            Lists::listsSubscriber( $subscriber_id );
         } catch(PDOException $e) {
             Response::outputError($e);
         }
@@ -190,7 +190,7 @@ class Lists {
      * System message of action.
      * </p>
      */
-    static function listUserDelete( $list_id=0, $subscriber_id=0 ){
+    static function listSubscriberDelete( $list_id=0, $subscriber_id=0 ){
         if ( $list_id==0 ) $list_id = $_REQUEST['list_id'];
         if ( $subscriber_id==0 ) $subscriber_id = $_REQUEST['subscriber_id'];
         $sql = "DELETE FROM " . $GLOBALS['table_prefix'] . "listuser WHERE listid=:list_id AND userid=:subscriber_id;";

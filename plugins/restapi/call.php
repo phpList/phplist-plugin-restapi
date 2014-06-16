@@ -51,7 +51,7 @@ if ( empty($cmd) ){
 //Now bind the commands with static functions
 if ( is_callable( array( 'phpListRestapi\Lists',       $cmd ) ) ) Lists::$cmd();
 if ( is_callable( array( 'phpListRestapi\Actions',     $cmd ) ) ) Actions::$cmd();
-if ( is_callable( array( 'phpListRestapi\Users',       $cmd ) ) ) Users::$cmd();
+if ( is_callable( array( 'phpListRestapi\Subscribers', $cmd ) ) ) Subscribers::$cmd();
 if ( is_callable( array( 'phpListRestapi\Templates',   $cmd ) ) ) Templates::$cmd();
 if ( is_callable( array( 'phpListRestapi\Messages',    $cmd ) ) ) Messages::$cmd();
 

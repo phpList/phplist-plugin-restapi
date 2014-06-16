@@ -143,40 +143,40 @@ class Helper {
         return $result;
     }
 
-    public function listsUser( $user_id ) {
+    public function listsSubscriber( $subscriber_id ) {
 
         //Post Data
         $post_params = array(
-            'user_id' => $user_id
+            'subscriber_id' => $subscriber_id
         );
 
-        $result = $this->callAPI( 'listsUser', $post_params);
+        $result = $this->callAPI( 'listsSubscriber', $post_params);
 
         return $result;
     }
 
-    public function listUserAdd( $list_id, $user_id ) {
+    public function listSubscriberAdd( $list_id, $subscriber_id ) {
 
         //Post Data
         $post_params = array(
             'list_id' => $list_id,
-            'user_id' => $user_id
+            'subscriber_id' => $subscriber_id
         );
 
-        $result = $this->callAPI( 'listUserAdd', $post_params);
+        $result = $this->callAPI( 'listSubscriberAdd', $post_params);
 
         return $result;
     }
 
-    public function listUserDelete( $list_id, $user_id ) {
+    public function listSubscriberDelete( $list_id, $subscriber_id ) {
 
         //Post Data
         $post_params = array(
             'list_id' => $list_id,
-            'user_id' => $user_id
+            'subscriber_id' => $subscriber_id
         );
 
-        $result = $this->callAPI( 'listUserDelete', $post_params);
+        $result = $this->callAPI( 'listSubscriberDelete', $post_params);
 
         return $result;
     }
@@ -209,45 +209,45 @@ class Helper {
 
 
     /************************************************************
-     * Users
+     * subscribers
      ************************************************************/
 
-    public function userGet( $id ) {
+    public function subscriberGet( $id ) {
 
         //Post Data
         $post_params = array(
             'id' => $id
         );
 
-        $result = $this->callAPI( 'userGet', $post_params);
+        $result = $this->callAPI( 'subscriberGet', $post_params);
 
         return $result;
     }
 
-    public function userGetByEmail( $email ) {
+    public function subscriberGetByEmail( $email ) {
 
         //Post Data
         $post_params = array(
             'email' => $email
         );
 
-        $result = $this->callAPI( 'userGetByEmail', $post_params);
+        $result = $this->callAPI( 'subscriberGetByEmail', $post_params);
 
         return $result;
     }
 
-    public function usersGet( ) {
+    public function subscribersGet( ) {
 
         //Post Data
         $post_params = array(
         );
 
-        $result = $this->callAPI( 'usersGet', $post_params);
+        $result = $this->callAPI( 'subscribersGet', $post_params);
 
         return $result;
     }
 
-    public function userAdd( $email, $confirmed, $htmlemail, $password='', $disabled=0, $rssfrequency=''  ) {
+    public function subscriberAdd( $email, $confirmed, $htmlemail, $password='', $disabled=0, $rssfrequency=''  ) {
 
         //Post Data
         $post_params = array(
@@ -259,12 +259,12 @@ class Helper {
             'rssfrequency' => $rssfrequency
         );
 
-        $result = $this->callAPI( 'userAdd', $post_params);
+        $result = $this->callAPI( 'subscriberAdd', $post_params);
 
         return $result;
     }
 
-    public function userUpdate( $id, $email, $confirmed, $htmlemail, $password='', $disabled=0, $rssfrequency='' ) {
+    public function subscriberUpdate( $id, $email, $confirmed, $htmlemail, $password='', $disabled=0, $rssfrequency='' ) {
 
         //Post Data
         $post_params = array(
@@ -277,19 +277,19 @@ class Helper {
             'rssfrequency' => $rssfrequency
         );
 
-        $result = $this->callAPI( 'userUpdate', $post_params);
+        $result = $this->callAPI( 'subscriberUpdate', $post_params);
 
         return $result;
     }
 
-    public function userDelete( $id ) {
+    public function subscriberDelete( $id ) {
 
         //Post Data
         $post_params = array(
             'id' => $id
         );
 
-        $result = $this->callAPI( 'userDelete', $post_params);
+        $result = $this->callAPI( 'subscriberDelete', $post_params);
 
         return $result;
     }
