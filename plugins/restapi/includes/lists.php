@@ -5,7 +5,7 @@ namespace phpListRestapi;
  * Class phpList_RESTAPI_Lists
  * Getting lists, adding and removing its users and messages
  */
-class Lists{
+class Lists {
 
     /**
      * <p>Gets all lists in phpList as an array.</p>
@@ -129,17 +129,17 @@ class Lists{
     }
 
     /**
-     * <p>Lists assigned to User.</p>
+     * <p>Lists assigned to Subscriber.</p>
      * <p><strong>Parameters:</strong><br/>
-     * [*user_id] {integer} the User-ID.
+     * [*user_id] {integer} the Subscriber-ID.
      * <p><strong>Returns:</strong><br/>
-     * Array of lists where the user is assigned to.
+     * Array of lists where the subscriber is assigned to.
      * </p>
      */
-    static function listsUser( $user_id=0 ) {
+    static function listsSubscriber $user_id=0 ) {
         $response = new Response();
-        if ( $user_id==0 ) $user_id = $_REQUEST['user_id'];
-        $sql = "SELECT * FROM " . $GLOBALS['table_prefix'] . "list WHERE id IN (SELECT listid FROM " . $GLOBALS['table_prefix'] . "listuser WHERE userid=" . $user_id . ") ORDER BY listorder;";
+        if ( $subscriber_id==0 ) $subscriber_id = $_REQUEST['subscriber_id'];
+        $sql = "SELECT * FROM " . $GLOBALS['table_prefix'] . "list WHERE id IN (SELECT listid FROM " . $GLOBALS['table_prefix'] . "listuser WHERE userid=" . $subscriber_id . ") ORDER BY listorder;";
         try {
             $db = PDO::getConnection();
             $stmt = $db->query($sql);
@@ -154,27 +154,27 @@ class Lists{
     }
 
     /**
-     * <p>Adds a user to a list.</p>
-     * <p>The user then subscribes to the list.</p>
+     * <p>Adds a subscriber to a list.</p>
+     * <p>The subscriber then subscribes to the list.</p>
      * <p><strong>Parameters:</strong><br/>
      * [*list_id] {integer} the ID of the list.<br/>
-     * [*user_id] {integer} the ID of the user.<br/>
+     * [*subscriber_id] {integer} the ID of the subscriber.<br/>
      * <p><strong>Returns:</strong><br/>
-     * Array of lists where the user is assigned to.
+     * Array of lists where the subscriber is assigned to.
      * </p>
      */
-    static function listUserAdd( $list_id=0, $user_id=0 ){
+    static function listUserAdd( $list_id=0, $subscriber_id=0 ){
         if ( $list_id==0 ) $list_id = $_REQUEST['list_id'];
-        if ( $user_id==0 ) $user_id = $_REQUEST['user_id'];
-        $sql = "INSERT INTO " . $GLOBALS['table_prefix'] . "listuser (userid, listid, entered) VALUES (:user_id, :list_id, now());";
+        if ( $subscriber_id==0 ) $subscriber_id = $_REQUEST['subscriber_id'];
+        $sql = "INSERT INTO " . $GLOBALS['table_prefix'] . "listuser (userid, listid, entered) VALUES (:subscriber_id, :list_id, now());";
         try {
             $db = PDO::getConnection();
             $stmt = $db->prepare($sql);
-            $stmt->bindParam("user_id", $user_id );
+            $stmt->bindParam("subscriber_id", $subscriber_id );
             $stmt->bindParam("list_id", $list_id );
             $stmt->execute();
             $db = null;
-            Lists::listsUser( $user_id );
+            Lists::listsUser( $subscriber_id );
         } catch(PDOException $e) {
             Response::outputError($e);
         }
@@ -182,26 +182,26 @@ class Lists{
     }
 
     /**
-     * <p>Unassigns a user from a list.</p>
+     * <p>Unassigns a subscriber from a list.</p>
      * <p><strong>Parameters:</strong><br/>
      * [*list_id] {integer} the ID of the list.<br/>
-     * [*user_id] {integer} the ID of the user.
+     * [*subscriber_id] {integer} the ID of the subscriber.
      * <p><strong>Returns:</strong><br/>
      * System message of action.
      * </p>
      */
-    static function listUserDelete( $list_id=0, $user_id=0 ){
+    static function listUserDelete( $list_id=0, $subscriber_id=0 ){
         if ( $list_id==0 ) $list_id = $_REQUEST['list_id'];
-        if ( $user_id==0 ) $user_id = $_REQUEST['user_id'];
-        $sql = "DELETE FROM " . $GLOBALS['table_prefix'] . "listuser WHERE listid=:list_id AND userid=:user_id;";
+        if ( $subscriber_id==0 ) $subscriber_id = $_REQUEST['subscriber_id'];
+        $sql = "DELETE FROM " . $GLOBALS['table_prefix'] . "listuser WHERE listid=:list_id AND userid=:subscriber_id;";
         try {
             $db = PDO::getConnection();
             $stmt = $db->prepare($sql);
-            $stmt->bindParam("user_id", $user_id );
+            $stmt->bindParam("subscriber_id", $subscriber_id );
             $stmt->bindParam("list_id", $list_id );
             $stmt->execute();
             $db = null;
-            Response::outputMessage( 'User ' . $user_id . ' is unassigned from list ' . $list_id );
+            Response::outputMessage( 'Subscriber ' . $subscriber_id . ' is unassigned from list ' . $list_id );
         } catch(PDOException $e) {
             Response::outputError($e);
         }
