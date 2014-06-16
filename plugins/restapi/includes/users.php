@@ -2,20 +2,20 @@
 
 namespace phpListRestapi;
 
-class Users{
+class Subscribers {
 
     /**
-     * <p>Get all the users in the system.</p>
+     * <p>Get all the Subscribers in the system.</p>
 		 * <p><strong>Parameters:</strong><br/>
 		 * [order_by] {string} name of column to sort, default "id".<br/>
 		 * [order] {string} sort order asc or desc, default: asc.<br/>
 		 * [limit] {integer} limit the result, default 100.<br/>
 		 * </p>
      * <p><strong>Returns:</strong><br/>
-     * List of users.
+     * List of Subscribers.
      * </p>
      */
-    static function usersGet( $order_by='id', $order='asc', $limit=100 ) {
+    static function subscribersGet( $order_by='id', $order='asc', $limit=100 ) {
 
 				//getting optional values
 				if ( isset( $_REQUEST['order_by'] ) && !empty( $_REQUEST['order_by'] ) ) $order_by = $_REQUEST['order_by'];
@@ -26,48 +26,48 @@ class Users{
     }
 
     /**
-     * <p>Gets one given user.</p>
+     * <p>Gets one given Subscriber.</p>
      * <p><strong>Parameters:</strong><br/>
-     * [*id] {integer} the ID of the user.<br/>
+     * [*id] {integer} the ID of the Subscriber.<br/>
      * </p>
      * <p><strong>Returns:</strong><br/>
-     * One user only.
+     * One Subscriber only.
      * </p>
      */
-    static function userGet( $id=0 ) {
+    static function subscriberGet( $id=0 ) {
         if ( $id==0 ) $id = $_REQUEST['id'];
         Common::select( 'User', "SELECT * FROM " . $GLOBALS['usertable_prefix'] . "user WHERE id = $id;", true );
     }
 
     /**
-     * <p>Gets one user via email address.</p>
+     * <p>Gets one Subscriber via email address.</p>
      * <p><strong>Parameters:</strong><br/>
-     * [*email] {string} the email address of the user.<br/>
+     * [*email] {string} the email address of the Subscriber.<br/>
      * </p>
      * <p><strong>Returns:</strong><br/>
-     * One user only.
+     * One Subscriber only.
      * </p>
      */
-    static function userGetByEmail( $email = "") {
+    static function subscriberGetByEmail( $email = "") {
         if ( empty( $email ) ) $email = $_REQUEST['email'];
         Common::select( 'User', "SELECT * FROM " . $GLOBALS['usertable_prefix'] . "user WHERE email = '$email';", true );
     }
 
     /**
-     * <p>Adds one user to the system.</p>
+     * <p>Adds one Subscriber to the system.</p>
      * <p><strong>Parameters:</strong><br/>
-     * [*email] {string} the email address of the user.<br/>
+     * [*email] {string} the email address of the Subscriber.<br/>
      * [*confirmed] {integer} 1=confirmed, 0=unconfirmed.<br/>
      * [*htmlemail] {integer} 1=html emails, 0=no html emails.<br/>
      * [*rssfrequency] {integer}<br/>
-     * [*password] {string} The password to this user.<br/>
+     * [*password] {string} The password to this Subscriber.<br/>
      * [*disabled] {integer} 1=disabled, 0=enabled<br/>
      * </p>
      * <p><strong>Returns:</strong><br/>
-     * The added user.
+     * The added Subscriber.
      * </p>
      */
-    static function userAdd(){
+    static function subscriberAdd(){
 
         $sql = "INSERT INTO " . $GLOBALS['usertable_prefix'] . "user (email, confirmed, htmlemail, rssfrequency, password, passwordchanged, disabled, entered, uniqid) VALUES (:email, :confirmed, :htmlemail, :rssfrequency, :password, now(), :disabled, now(), :uniqid);";
         try {
@@ -88,7 +88,7 @@ class Users{
             $stmt->execute();
             $id = $db->lastInsertId();
             $db = null;
-            Users::userGet( $id );
+            Subscribers::SubscriberGet( $id );
         } catch(PDOException $e) {
             Response::outputError($e);
         }
@@ -96,21 +96,21 @@ class Users{
     }
 
 		/**
-		 * <p>Updates one user to the system.</p>
+		 * <p>Updates one Subscriber to the system.</p>
 		 * <p><strong>Parameters:</strong><br/>
-		 * [*id] {integer} the ID of the user.<br/>
-		 * [*email] {string} the email address of the user.<br/>
+		 * [*id] {integer} the ID of the Subscriber.<br/>
+		 * [*email] {string} the email address of the Subscriber.<br/>
 		 * [*confirmed] {integer} 1=confirmed, 0=unconfirmed.<br/>
 		 * [*htmlemail] {integer} 1=html emails, 0=no html emails.<br/>
 		 * [*rssfrequency] {integer}<br/>
-		 * [*password] {string} The password to this user.<br/>
+		 * [*password] {string} The password to this Subscriber.<br/>
 		 * [*disabled] {integer} 1=disabled, 0=enabled<br/>
 		 * </p>
 		 * <p><strong>Returns:</strong><br/>
-		 * The updated user.
+		 * The updated Subscriber.
 		 * </p>
 		 */
-    static function userUpdate(){
+    static function subscriberUpdate(){
 
         $sql = "UPDATE " . $GLOBALS['usertable_prefix'] . "user SET email=:email, confirmed=:confirmed, htmlemail=:htmlemail, rssfrequency=:rssfrequency, password=:password, passwordchanged=now(), disabled=:disabled WHERE id=:id;";
 
@@ -126,7 +126,7 @@ class Users{
             $stmt->bindParam("disabled", $_REQUEST['disabled'] );
             $stmt->execute();
             $db = null;
-            Users::userGet( $_REQUEST['id'] );
+            Subscribers::SubscriberGet( $_REQUEST['id'] );
         } catch(PDOException $e) {
             Response::outputError($e);
         }
@@ -134,15 +134,15 @@ class Users{
     }
 
 		/**
-		 * <p>Deletes a user.</p>
+		 * <p>Deletes a Subscriber.</p>
 		 * <p><strong>Parameters:</strong><br/>
-		 * [*id] {integer} the ID of the user.<br/>
+		 * [*id] {integer} the ID of the Subscriber.<br/>
 		 * </p>
 		 * <p><strong>Returns:</strong><br/>
-		 * The deleted user ID.
+		 * The deleted Subscriber ID.
 		 * </p>
 		 */
-    static function userDelete(){
+    static function subscriberDelete(){
 
         $sql = "DELETE FROM " . $GLOBALS['usertable_prefix'] . "user WHERE id=:id;";
         try {
@@ -151,7 +151,7 @@ class Users{
             $stmt->bindParam("id", $_REQUEST['id']);
             $stmt->execute();
             $db = null;
-            Response::outputDeleted( 'User', $_REQUEST['id'] );
+            Response::outputDeleted( 'Subscriber', $_REQUEST['id'] );
         } catch(PDOException $e) {
             Response::outputError($e);
         }
