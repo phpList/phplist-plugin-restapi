@@ -181,7 +181,7 @@ class phpList_RESTAPI_Lists{
     }
 
     /**
-     * <p>UnassignsAdds a user to a list.</p>
+     * <p>Unassigns a user from a list.</p>
      * <p><strong>Parameters:</strong><br/>
      * [*list_id] {integer} the ID of the list.<br/>
      * [*user_id] {integer} the ID of the user.
