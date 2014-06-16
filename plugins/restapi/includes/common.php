@@ -1,15 +1,17 @@
 <?php
 
-class phpList_RESTAPI_Common{
+namespace phpListRestapi;
+
+class Common {
 
     static function select( $type, $sql, $single=false ){
-        $response = new phpList_RESTAPI_Response();
+        $response = new Response();
         try {
-            $db = phpList_RESTAPI_PDO::getConnection();
+            $db = PDO::getConnection();
             $stmt = $db->query($sql);
             $result = $stmt->fetchAll(PDO::FETCH_OBJ);
             $db = null;
-            if ($single && is_array($result)) $result = $result[0];
+            if ($single && is_array($result) && isset($result[0])) $result = $result[0];
             $response->setData($type, $result);
         } catch( PDOException $e ) {
             $response->setError( $e->getCode(), $e->getMessage() );

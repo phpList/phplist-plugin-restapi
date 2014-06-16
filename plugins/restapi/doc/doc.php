@@ -1,7 +1,6 @@
 <?php
 
-
-class phpList_RESTAPI_Doc{
+class phpListRestapiDoc {
 
     private $classes;
 
@@ -11,7 +10,7 @@ class phpList_RESTAPI_Doc{
 
     function addClass( $classname ){
 
-        $this->classes[] = $classname;
+        $this->classes[] = "phpListRestapi\\$classname";
 
     }
 
@@ -21,7 +20,7 @@ class phpList_RESTAPI_Doc{
 
         foreach( $this->classes as $class ){
 
-            $reflect = new ReflectionClass( $class );
+            $reflect = new \ReflectionClass( $class );
             $methods = $reflect->getMethods();
             foreach( $methods as $method ){
 
@@ -117,6 +116,3 @@ class phpList_RESTAPI_Doc{
 
 
 }
-
-
-?>

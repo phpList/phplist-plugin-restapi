@@ -1,6 +1,8 @@
 <?php
 
-class phpList_RESTAPI_Users{
+namespace phpListRestapi;
+
+class Users{
 
     /**
      * <p>Get all the users in the system.</p>
@@ -20,7 +22,7 @@ class phpList_RESTAPI_Users{
 				if ( isset( $_REQUEST['order'] ) && !empty( $_REQUEST['order'] ) ) $order = $_REQUEST['order'];
 				if ( isset( $_REQUEST['limit'] ) && !empty( $_REQUEST['limit'] ) ) $limit = $_REQUEST['limit'];
 
-        phpList_RESTAPI_Common::select( 'Users', "SELECT * FROM " . $GLOBALS['usertable_prefix'] . "user ORDER BY $order_by $order LIMIT $limit;" );
+        Common::select( 'Users', "SELECT * FROM " . $GLOBALS['usertable_prefix'] . "user ORDER BY $order_by $order LIMIT $limit;" );
     }
 
     /**
@@ -34,7 +36,7 @@ class phpList_RESTAPI_Users{
      */
     static function userGet( $id=0 ) {
         if ( $id==0 ) $id = $_REQUEST['id'];
-        phpList_RESTAPI_Common::select( 'User', "SELECT * FROM " . $GLOBALS['usertable_prefix'] . "user WHERE id = $id;", true );
+        Common::select( 'User', "SELECT * FROM " . $GLOBALS['usertable_prefix'] . "user WHERE id = $id;", true );
     }
 
     /**
@@ -46,9 +48,9 @@ class phpList_RESTAPI_Users{
      * One user only.
      * </p>
      */
-    static function userGetByEmail( $email ) {
+    static function userGetByEmail( $email = "") {
         if ( empty( $email ) ) $email = $_REQUEST['email'];
-        phpList_RESTAPI_Common::select( 'User', "SELECT * FROM " . $GLOBALS['usertable_prefix'] . "user WHERE email = '$email';", true );
+        Common::select( 'User', "SELECT * FROM " . $GLOBALS['usertable_prefix'] . "user WHERE email = '$email';", true );
     }
 
     /**
@@ -69,7 +71,7 @@ class phpList_RESTAPI_Users{
 
         $sql = "INSERT INTO " . $GLOBALS['usertable_prefix'] . "user (email, confirmed, htmlemail, rssfrequency, password, passwordchanged, disabled, entered, uniqid) VALUES (:email, :confirmed, :htmlemail, :rssfrequency, :password, now(), :disabled, now(), :uniqid);";
         try {
-            $db = phpList_RESTAPI_PDO::getConnection();
+            $db = PDO::getConnection();
             $stmt = $db->prepare($sql);
             $stmt->bindParam("email", $_REQUEST['email']);
             $stmt->bindParam("confirmed", $_REQUEST['confirmed']);
@@ -77,13 +79,18 @@ class phpList_RESTAPI_Users{
             $stmt->bindParam("rssfrequency", $_REQUEST['rssfrequency']);
             $stmt->bindParam("password", $_REQUEST['password']);
             $stmt->bindParam("disabled", $_REQUEST['disabled']);
-            $stmt->bindParam("uniqid", md5(uniqid(mt_rand())));
+            
+            // fails on strict
+#            $stmt->bindParam("uniqid", md5(uniqid(mt_rand())));
+            
+            $uniq = uniqid(mt_rand());
+            $stmt->bindParam("uniqid", md5($uniq));
             $stmt->execute();
             $id = $db->lastInsertId();
             $db = null;
-            phpList_RESTAPI_Users::userGet( $id );
+            Users::userGet( $id );
         } catch(PDOException $e) {
-            phpList_RESTAPI_Response::outputError($e);
+            Response::outputError($e);
         }
 
     }
@@ -108,7 +115,7 @@ class phpList_RESTAPI_Users{
         $sql = "UPDATE " . $GLOBALS['usertable_prefix'] . "user SET email=:email, confirmed=:confirmed, htmlemail=:htmlemail, rssfrequency=:rssfrequency, password=:password, passwordchanged=now(), disabled=:disabled WHERE id=:id;";
 
         try {
-            $db = phpList_RESTAPI_PDO::getConnection();
+            $db = PDO::getConnection();
             $stmt = $db->prepare($sql);
             $stmt->bindParam("id", $_REQUEST['id']);
             $stmt->bindParam("email", $_REQUEST['email'] );
@@ -119,9 +126,9 @@ class phpList_RESTAPI_Users{
             $stmt->bindParam("disabled", $_REQUEST['disabled'] );
             $stmt->execute();
             $db = null;
-            phpList_RESTAPI_Users::userGet( $_REQUEST['id'] );
+            Users::userGet( $_REQUEST['id'] );
         } catch(PDOException $e) {
-            phpList_RESTAPI_Response::outputError($e);
+            Response::outputError($e);
         }
 
     }
@@ -139,20 +146,16 @@ class phpList_RESTAPI_Users{
 
         $sql = "DELETE FROM " . $GLOBALS['usertable_prefix'] . "user WHERE id=:id;";
         try {
-            $db = phpList_RESTAPI_PDO::getConnection();
+            $db = PDO::getConnection();
             $stmt = $db->prepare($sql);
             $stmt->bindParam("id", $_REQUEST['id']);
             $stmt->execute();
             $db = null;
-            phpList_RESTAPI_Response::outputDeleted( 'User', $_REQUEST['id'] );
+            Response::outputDeleted( 'User', $_REQUEST['id'] );
         } catch(PDOException $e) {
-            phpList_RESTAPI_Response::outputError($e);
+            Response::outputError($e);
         }
 
     }
 
 }
-
-
-
-?>

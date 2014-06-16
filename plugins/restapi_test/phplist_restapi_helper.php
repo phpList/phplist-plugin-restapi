@@ -1,9 +1,12 @@
 <?php
+
+namespace phpListRestapi;
+
 /**
  * Class to communicate with phpList via API REST
  *
  **/
-class phpList_RESTAPI_Helper {
+class Helper {
 
     private $session = null;
     private $url = '';
@@ -449,7 +452,7 @@ class phpList_RESTAPI_Helper {
      * Remote Requests via cUrl or other
      ************************************************************/
 
-    private function callAPI($command, $post_params, $no_decode=false ) {
+    private function callAPI($command, $post_params, $no_decode = false ) {
 
         $post_params['cmd'] = $command;
 

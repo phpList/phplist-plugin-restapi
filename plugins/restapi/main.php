@@ -1,10 +1,12 @@
 <?php
 
+namespace phpListRestapi;
+
 include 'includes/common.php';
 
 $plugin = $GLOBALS["plugins"][$_GET["pi"]];
 
-$url = phpList_RESTAPI_Common::apiUrl( $website );
+$url = Common::apiUrl( $website );
 
 ?>
 
@@ -48,8 +50,4 @@ $url = phpList_RESTAPI_Common::apiUrl( $website );
         All issues regarding the RESTAPI is handled at Github!
         <a href="https://github.com/EkAndreas/phplistapi">https://github.com/EkAndreas/phplistapi</a>
     </p>
-
-<?php
-
-?>
 

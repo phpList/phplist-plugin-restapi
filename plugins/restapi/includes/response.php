@@ -1,10 +1,13 @@
 <?php
+
+namespace phpListRestapi;
+
 /**
  * Common response as success and error
  * Andreas Ek, 2012-12-26
  */
 
-class phpList_RESTAPI_Response{
+class Response{
 
     private $result;
 
@@ -83,30 +86,27 @@ class phpList_RESTAPI_Response{
     }
 
     static function outputError($e){
-        $response = new phpList_RESTAPI_Response();
+        $response = new Response();
         $response->setError( $e->getCode(), $e->getMessage() );
         $response->output();
     }
 
     static function outputErrorMessage( $message ){
-        $response = new phpList_RESTAPI_Response();
+        $response = new Response();
         $response->setError( 0, $message );
         $response->output();
     }
 
     static function outputDeleted( $type, $id ){
-        $response = new phpList_RESTAPI_Response();
+        $response = new Response();
         $response->setData( $type, 'Item with ' . $id . ' is successfully deleted!' );
         $response->output();
     }
 
     static function outputMessage( $message ){
-        $response = new phpList_RESTAPI_Response();
+        $response = new Response();
         $response->setData( 'SystemMessage', $message );
         $response->output();
     }
 
 }
-
-
-?>

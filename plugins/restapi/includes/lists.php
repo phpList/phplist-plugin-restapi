@@ -1,10 +1,11 @@
 <?php
+namespace phpListRestapi;
 
 /**
  * Class phpList_RESTAPI_Lists
  * Getting lists, adding and removing its users and messages
  */
-class phpList_RESTAPI_Lists{
+class Lists{
 
     /**
      * <p>Gets all lists in phpList as an array.</p>
@@ -15,7 +16,7 @@ class phpList_RESTAPI_Lists{
      * </p>
      */
     static function listsGet() {
-        phpList_RESTAPI_Common::select( 'Lists', "SELECT * FROM " . $GLOBALS['table_prefix'] . "list ORDER BY listorder;" );
+        Common::select( 'Lists', "SELECT * FROM " . $GLOBALS['table_prefix'] . "list ORDER BY listorder;" );
     }
 
     /**
@@ -28,7 +29,7 @@ class phpList_RESTAPI_Lists{
      */
     static function listGet( $id=0 ) {
         if ( $id==0 ) $id = $_REQUEST['id'];
-        phpList_RESTAPI_Common::select( 'List', "SELECT * FROM " . $GLOBALS['table_prefix'] . "list WHERE id = $id;", true );
+        Common::select( 'List', "SELECT * FROM " . $GLOBALS['table_prefix'] . "list WHERE id = $id;", true );
     }
 
     /**
@@ -48,7 +49,7 @@ class phpList_RESTAPI_Lists{
 
         $sql = "INSERT INTO " . $GLOBALS['table_prefix'] . "list (name, description, listorder, prefix, rssfeed, active) VALUES (:name, :description, :listorder, :prefix, :rssfeed, :active);";
         try {
-            $db = phpList_RESTAPI_PDO::getConnection();
+            $db = PDO::getConnection();
             $stmt = $db->prepare($sql);
             $stmt->bindParam("name", $_REQUEST['name']);
             $stmt->bindParam("description", $_REQUEST['description']);
@@ -59,9 +60,9 @@ class phpList_RESTAPI_Lists{
             $stmt->execute();
             $id = $db->lastInsertId();
             $db = null;
-            phpList_RESTAPI_Lists::listGet( $id );
+            Lists::listGet( $id );
         } catch(PDOException $e) {
-            phpList_RESTAPI_Response::outputError($e);
+            Response::outputError($e);
         }
         die(0);
     }
@@ -85,7 +86,7 @@ class phpList_RESTAPI_Lists{
         $sql = "UPDATE " . $GLOBALS['table_prefix'] . "list SET name=:name, description=:description, listorder=:listorder, prefix=:prefix, rssfeed=:rssfeed, active=:active WHERE id=:id;";
 
         try {
-            $db = phpList_RESTAPI_PDO::getConnection();
+            $db = PDO::getConnection();
             $stmt = $db->prepare($sql);
             $stmt->bindParam("id", $_REQUEST['id']);
             $stmt->bindParam("name", $_REQUEST['name'] );
@@ -96,9 +97,9 @@ class phpList_RESTAPI_Lists{
             $stmt->bindParam("active", $_REQUEST['active'] );
             $stmt->execute();
             $db = null;
-            phpList_RESTAPI_Lists::listGet( $_REQUEST['id'] );
+            Lists::listGet( $_REQUEST['id'] );
         } catch(PDOException $e) {
-            phpList_RESTAPI_Response::outputError($e);
+            Response::outputError($e);
         }
         die(0);
     }
@@ -115,14 +116,14 @@ class phpList_RESTAPI_Lists{
 
         $sql = "DELETE FROM " . $GLOBALS['table_prefix'] . "list WHERE id=:id;";
         try {
-            $db = phpList_RESTAPI_PDO::getConnection();
+            $db = PDO::getConnection();
             $stmt = $db->prepare($sql);
             $stmt->bindParam("id", $_REQUEST['id']);
             $stmt->execute();
             $db = null;
-            phpList_RESTAPI_Response::outputDeleted( 'List', $_REQUEST['id'] );
+            Response::outputDeleted( 'List', $_REQUEST['id'] );
         } catch(PDOException $e) {
-            phpList_RESTAPI_Response::outputError($e);
+            Response::outputError($e);
         }
         die(0);
     }
@@ -136,18 +137,18 @@ class phpList_RESTAPI_Lists{
      * </p>
      */
     static function listsUser( $user_id=0 ) {
-        $response = new phpList_RESTAPI_Response();
+        $response = new Response();
         if ( $user_id==0 ) $user_id = $_REQUEST['user_id'];
         $sql = "SELECT * FROM " . $GLOBALS['table_prefix'] . "list WHERE id IN (SELECT listid FROM " . $GLOBALS['table_prefix'] . "listuser WHERE userid=" . $user_id . ") ORDER BY listorder;";
         try {
-            $db = phpList_RESTAPI_PDO::getConnection();
+            $db = PDO::getConnection();
             $stmt = $db->query($sql);
             $result = $stmt->fetchAll(PDO::FETCH_OBJ);
             $db = null;
             $response->setData('Lists', $result);
             $response->output();
         } catch(PDOException $e) {
-            phpList_RESTAPI_Response::outputError($e);
+            Response::outputError($e);
         }
         die(0);
     }
@@ -167,15 +168,15 @@ class phpList_RESTAPI_Lists{
         if ( $user_id==0 ) $user_id = $_REQUEST['user_id'];
         $sql = "INSERT INTO " . $GLOBALS['table_prefix'] . "listuser (userid, listid, entered) VALUES (:user_id, :list_id, now());";
         try {
-            $db = phpList_RESTAPI_PDO::getConnection();
+            $db = PDO::getConnection();
             $stmt = $db->prepare($sql);
             $stmt->bindParam("user_id", $user_id );
             $stmt->bindParam("list_id", $list_id );
             $stmt->execute();
             $db = null;
-            phpList_RESTAPI_Lists::listsUser( $user_id );
+            Lists::listsUser( $user_id );
         } catch(PDOException $e) {
-            phpList_RESTAPI_Response::outputError($e);
+            Response::outputError($e);
         }
         die(0);
     }
@@ -194,15 +195,15 @@ class phpList_RESTAPI_Lists{
         if ( $user_id==0 ) $user_id = $_REQUEST['user_id'];
         $sql = "DELETE FROM " . $GLOBALS['table_prefix'] . "listuser WHERE listid=:list_id AND userid=:user_id;";
         try {
-            $db = phpList_RESTAPI_PDO::getConnection();
+            $db = PDO::getConnection();
             $stmt = $db->prepare($sql);
             $stmt->bindParam("user_id", $user_id );
             $stmt->bindParam("list_id", $list_id );
             $stmt->execute();
             $db = null;
-            phpList_RESTAPI_Response::outputMessage( 'User ' . $user_id . ' is unassigned from list ' . $list_id );
+            Response::outputMessage( 'User ' . $user_id . ' is unassigned from list ' . $list_id );
         } catch(PDOException $e) {
-            phpList_RESTAPI_Response::outputError($e);
+            Response::outputError($e);
         }
         die(0);
     }
@@ -221,15 +222,15 @@ class phpList_RESTAPI_Lists{
         if ( $message_id==0 ) $message_id = $_REQUEST['message_id'];
         $sql = "INSERT INTO " . $GLOBALS['table_prefix'] . "listmessage (messageid, listid, entered) VALUES (:message_id, :list_id, now());";
         try {
-            $db = phpList_RESTAPI_PDO::getConnection();
+            $db = PDO::getConnection();
             $stmt = $db->prepare($sql);
             $stmt->bindParam("message_id", $message_id );
             $stmt->bindParam("list_id", $list_id );
             $stmt->execute();
             $db = null;
-            phpList_RESTAPI_Lists::listGet( $list_id );
+            Lists::listGet( $list_id );
         } catch(PDOException $e) {
-            phpList_RESTAPI_Response::outputError($e);
+            Response::outputError($e);
         }
         die(0);
     }
@@ -249,22 +250,18 @@ class phpList_RESTAPI_Lists{
         if ( $message_id==0 ) $message_id = $_REQUEST['message_id'];
         $sql = "DELETE FROM " . $GLOBALS['table_prefix'] . "listmessage WHERE listid=:list_id AND messageid=:message_id;";
         try {
-            $db = phpList_RESTAPI_PDO::getConnection();
+            $db = PDO::getConnection();
             $stmt = $db->prepare($sql);
             $stmt->bindParam("message_id", $message_id );
             $stmt->bindParam("list_id", $list_id );
             $stmt->execute();
             $db = null;
-            phpList_RESTAPI_Response::outputMessage( 'Message ' . $message_id . ' is unassigned from list ' . $list_id );
+            Response::outputMessage( 'Message ' . $message_id . ' is unassigned from list ' . $list_id );
         } catch(PDOException $e) {
-            phpList_RESTAPI_Response::outputError($e);
+            Response::outputError($e);
         }
         die(0);
     }
 
 
 }
-
-
-
-?>

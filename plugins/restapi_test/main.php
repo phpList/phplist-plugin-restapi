@@ -5,20 +5,11 @@
  * Creating list, user, message
  * And cleaning up after
  */
+namespace phpListRestapi;
 
 include 'phplist_restapi_helper.php';
 
 $plugin = $GLOBALS["plugins"][$_GET["pi"]];
-
-if ( isset( $_POST['restapi_test_login'] ) ){
-	$login = $_POST['restapi_test_login'];
-	$password = $_POST['restapi_test_password'];
-	if ( !empty($login) && !empty($password) ){
-		Sql_Query( sprintf( "UPDATE %s SET value='%s' WHERE item='restapi_test_login'", $tables["config"], $login ) );
-		Sql_Query( sprintf( "UPDATE %s SET value='%s' WHERE item='restapi_test_password'", $tables["config"], $password ) );
-	}
-}
-
 $url = apiUrl( $website );
 
 $login = getConfig('restapi_test_login');
@@ -37,7 +28,7 @@ if (empty($login)) {
   return;
 }
 
-$admin = new stdClass();
+$admin = new \stdClass();
 $admin->email =  getConfig('admin_address');
 
 $step = 1;
@@ -54,7 +45,7 @@ $step = 1;
     //Get the loginname and password!
     $id = $_SESSION["logindetails"]["id"];
 
-    $api = new phpList_RESTAPI_Helper( $url );
+    $api = new Helper( $url );
     $result = $api->login( $login, $password );
     if ($result->status != 'success'){
         echo $result->data->message;

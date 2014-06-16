@@ -1,18 +1,20 @@
 <?php
 
+namespace phpListRestapi;
+
 /**
- * Class phpList_RESTAPI_Messages
+ * Class Messages
  * Manage phplist Messages
  */
-class phpList_RESTAPI_Messages{
+class Messages{
 
     static function messageGet( $id=0 ) {
         if ( $id==0 ) $id = $_REQUEST['id'];
-        phpList_RESTAPI_Common::select( 'Message', "SELECT * FROM " . $GLOBALS['table_prefix'] . "message WHERE id=" . $id . ";", true );
+        Common::select( 'Message', "SELECT * FROM " . $GLOBALS['table_prefix'] . "message WHERE id=" . $id . ";", true );
     }
 
     static function messagesGet() {
-        phpList_RESTAPI_Common::select( 'Messages', "SELECT * FROM " . $GLOBALS['table_prefix'] . "message ORDER BY Modified DESC;" );
+        Common::select( 'Messages', "SELECT * FROM " . $GLOBALS['table_prefix'] . "message ORDER BY Modified DESC;" );
     }
 
     /**
@@ -39,7 +41,7 @@ class phpList_RESTAPI_Messages{
 
         $sql = "INSERT INTO " . $GLOBALS['table_prefix'] . "message (subject, fromfield, replyto, message, textmessage, footer, entered, status, sendformat, template, embargo, rsstemplate, owner, htmlformatted ) VALUES ( :subject, :fromfield, :replyto, :message, :textmessage, :footer, now(), :status, :sendformat, :template, :embargo, :rsstemplate, :owner, :htmlformatted );";
         try {
-            $db = phpList_RESTAPI_PDO::getConnection();
+            $db = PDO::getConnection();
             $stmt = $db->prepare($sql);
             $stmt->bindParam("subject", $_REQUEST['subject'] );
             $stmt->bindParam("fromfield", $_REQUEST['fromfield'] );
@@ -57,9 +59,9 @@ class phpList_RESTAPI_Messages{
             $stmt->execute();
             $id = $db->lastInsertId();
             $db = null;
-            phpList_RESTAPI_Messages::messageGet( $id );
+            Messages::messageGet( $id );
         } catch(PDOException $e) {
-            phpList_RESTAPI_Response::outputError($e);
+            Response::outputError($e);
         }
 
     }
@@ -90,7 +92,7 @@ class phpList_RESTAPI_Messages{
         if ( $id == 0 ) $id = $_REQUEST['id'];
         $sql = "UPDATE " . $GLOBALS['table_prefix'] . "message SET subject=:subject, fromfield=:fromfield, replyto=:replyto, message=:message, textmessage=:textmessage, footer=:footer, status=:status, sendformat=:sendformat, template=:template, sendstart=:sendstart, rsstemplate=:rsstemplate, owner=:owner, htmlformatted=:htmlformatted WHERE id=:id;";
         try {
-            $db = phpList_RESTAPI_PDO::getConnection();
+            $db = PDO::getConnection();
             $stmt = $db->prepare($sql);
             $stmt->bindParam("id", $id );
             $stmt->bindParam("subject", $_REQUEST['subject'] );
@@ -108,9 +110,9 @@ class phpList_RESTAPI_Messages{
             $stmt->bindParam("htmlformatted", $_REQUEST['htmlformatted'] );
             $stmt->execute();
             $db = null;
-            phpList_RESTAPI_Messages::messageGet( $id );
+            Messages::messageGet( $id );
         } catch(PDOException $e) {
-            phpList_RESTAPI_Response::outputError($e);
+            Response::outputError($e);
         }
 
     }
@@ -122,7 +124,7 @@ class phpList_RESTAPI_Messages{
 			$pi = pathinfo($_POST['name']);
 			$dest.= '.'.$pi['extension'];
 			file_put_contents($dest,base64_decode($_POST['image']));
-			$response = new phpList_RESTAPI_Response();
+			$response = new Response();
 			$response->setData('Filename', basename($dest));
 			$response->output();
 		}
@@ -132,12 +134,8 @@ class phpList_RESTAPI_Messages{
 		$key = md5(time().mt_rand(0,10000));
 		Sql_Query(sprintf('insert into %s (adminid,value,entered,expires) values(%d,"%s",%d,date_add(now(),interval 1 hour))',
 		$GLOBALS['tables']['admintoken'],$_SESSION['logindetails']['id'],$key,time()),1);
-		$response = new phpList_RESTAPI_Response();
+		$response = new Response();
 		$response->setData('formtoken', $key);
 		$response->output();
 	}
 }
-
-
-
-?>

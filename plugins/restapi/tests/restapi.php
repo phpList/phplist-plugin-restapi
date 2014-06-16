@@ -241,5 +241,3 @@ class TestRestapi extends \PHPUnit_Framework_TestCase
         $this->assertEquals( 'success', $result->status );
     }
 }
-
-?>
