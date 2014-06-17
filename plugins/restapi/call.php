@@ -17,7 +17,7 @@ include 'includes/common.php';
 
 include 'includes/actions.php';
 include 'includes/lists.php';
-include 'includes/users.php';
+include 'includes/subscribers.php';
 include 'includes/templates.php';
 include 'includes/messages.php';
 
