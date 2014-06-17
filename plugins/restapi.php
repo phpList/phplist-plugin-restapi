@@ -13,6 +13,8 @@
  * v 1 * Andreas Ek, 2012-12-26
  * https://github.com/EkAndreas/phplistapi
  */
+defined('PHPLISTINIT') || die;
+
 class restapi extends phplistPlugin {
 
     public $name = "RESTAPI";

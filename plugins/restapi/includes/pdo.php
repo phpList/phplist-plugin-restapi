@@ -2,6 +2,8 @@
 
 namespace phpListRestapi;
 
+defined('PHPLISTINIT') || die;
+
 /**
  * Class PDO
  */

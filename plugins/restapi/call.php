@@ -2,6 +2,8 @@
 
 namespace phpListRestapi;
 
+defined('PHPLISTINIT') || die;
+
 //No HTML-output, please!
 ob_end_clean();
 

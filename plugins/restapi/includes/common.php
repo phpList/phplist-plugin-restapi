@@ -2,6 +2,8 @@
 
 namespace phpListRestapi;
 
+defined('PHPLISTINIT') || die;
+
 class Common {
 
     static function select( $type, $sql, $single=false ){

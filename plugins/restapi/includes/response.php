@@ -2,6 +2,8 @@
 
 namespace phpListRestapi;
 
+defined('PHPLISTINIT') || die;
+
 /**
  * Common response as success and error
  * Andreas Ek, 2012-12-26

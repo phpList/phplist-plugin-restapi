@@ -1,6 +1,8 @@
 <?php
 namespace phpListRestapi;
 
+defined('PHPLISTINIT') || die;
+
 /**
  * Class phpList_RESTAPI_Lists
  * Getting lists, adding and removing its users and messages

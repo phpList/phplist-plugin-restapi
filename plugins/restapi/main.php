@@ -2,6 +2,8 @@
 
 namespace phpListRestapi;
 
+defined('PHPLISTINIT') || die;
+
 include 'includes/common.php';
 
 $plugin = $GLOBALS["plugins"][$_GET["pi"]];
