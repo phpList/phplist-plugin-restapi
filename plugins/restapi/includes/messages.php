@@ -119,6 +119,7 @@ class Messages{
 
     }
 
+  /** unfinished - https://github.com/phpList/phplist-plugin-restapi/issues/3
 	static function imageAdd(){
 		if($_POST['image'] and $_POST['name']){
 			$imageDirectory = "/var/www/phplist/content/c/";
@@ -131,6 +132,7 @@ class Messages{
 			$response->output();
 		}
 	}
+  * */
 	
 	static function formtokenGet(){
 		$key = md5(time().mt_rand(0,10000));
