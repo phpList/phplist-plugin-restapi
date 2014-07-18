@@ -37,7 +37,7 @@ if ( strcmp( $_SERVER['REQUEST_METHOD'], "POST")  ) {
     $doc = new \phpListRestapiDoc();
     $doc->addClass( 'Actions' );
     $doc->addClass( 'Lists' );
-    $doc->addClass( 'Users' );
+    $doc->addClass( 'Subscribers' );
     $doc->addClass( 'Templates' );
     $doc->addClass( 'Messages' );
     $doc->output();
