@@ -63,7 +63,7 @@ class Lists {
             $id = $db->lastInsertId();
             $db = null;
             Lists::listGet( $id );
-        } catch(PDOException $e) {
+        } catch(\PDOException $e) {
             Response::outputError($e);
         }
         die(0);
@@ -100,7 +100,7 @@ class Lists {
             $stmt->execute();
             $db = null;
             Lists::listGet( $_REQUEST['id'] );
-        } catch(PDOException $e) {
+        } catch(\PDOException $e) {
             Response::outputError($e);
         }
         die(0);
@@ -124,7 +124,7 @@ class Lists {
             $stmt->execute();
             $db = null;
             Response::outputDeleted( 'List', $_REQUEST['id'] );
-        } catch(PDOException $e) {
+        } catch(\PDOException $e) {
             Response::outputError($e);
         }
         die(0);
@@ -149,7 +149,7 @@ class Lists {
             $db = null;
             $response->setData('Lists', $result);
             $response->output();
-        } catch(PDOException $e) {
+        } catch(\PDOException $e) {
             Response::outputError($e);
         }
         die(0);
@@ -177,7 +177,7 @@ class Lists {
             $stmt->execute();
             $db = null;
             Lists::listsSubscriber( $subscriber_id );
-        } catch(PDOException $e) {
+        } catch(\PDOException $e) {
             Response::outputError($e);
         }
         die(0);
@@ -204,7 +204,7 @@ class Lists {
             $stmt->execute();
             $db = null;
             Response::outputMessage( 'Subscriber ' . $subscriber_id . ' is unassigned from list ' . $list_id );
-        } catch(PDOException $e) {
+        } catch(\PDOException $e) {
             Response::outputError($e);
         }
         die(0);
@@ -231,7 +231,7 @@ class Lists {
             $stmt->execute();
             $db = null;
             Lists::listGet( $list_id );
-        } catch(PDOException $e) {
+        } catch(\PDOException $e) {
             Response::outputError($e);
         }
         die(0);
@@ -259,7 +259,7 @@ class Lists {
             $stmt->execute();
             $db = null;
             Response::outputMessage( 'Message ' . $message_id . ' is unassigned from list ' . $list_id );
-        } catch(PDOException $e) {
+        } catch(\PDOException $e) {
             Response::outputError($e);
         }
         die(0);
