@@ -91,7 +91,7 @@ class Subscribers {
             $id = $db->lastInsertId();
             $db = null;
             Subscribers::SubscriberGet( $id );
-        } catch(PDOException $e) {
+        } catch(\PDOException $e) {
             Response::outputError($e);
         }
 
@@ -129,7 +129,7 @@ class Subscribers {
             $stmt->execute();
             $db = null;
             Subscribers::SubscriberGet( $_REQUEST['id'] );
-        } catch(PDOException $e) {
+        } catch(\PDOException $e) {
             Response::outputError($e);
         }
 
@@ -154,7 +154,7 @@ class Subscribers {
             $stmt->execute();
             $db = null;
             Response::outputDeleted( 'Subscriber', $_REQUEST['id'] );
-        } catch(PDOException $e) {
+        } catch(\PDOException $e) {
             Response::outputError($e);
         }
 

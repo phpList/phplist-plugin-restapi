@@ -15,7 +15,7 @@ class Common {
             $db = null;
             if ($single && is_array($result) && isset($result[0])) $result = $result[0];
             $response->setData($type, $result);
-        } catch( PDOException $e ) {
+        } catch( \PDOException $e ) {
             $response->setError( $e->getCode(), $e->getMessage() );
         }
         $response->output();
