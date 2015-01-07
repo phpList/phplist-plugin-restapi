@@ -1,8 +1,13 @@
 <phpunit bootstrap="bootstrap.php">
+    <testsuites>
+        <testsuite name="money">
+            <directory>./</directory>
+        </testsuite>
+    </testsuites>
     <php>
-        <const name="API_URL_BASE_PATH" value="http://phplist-dev.local/lists/admin/?page=call&amp;pi=restapi"/>
+        <const name="API_URL_BASE_PATH" value="http://local.pl/lists/admin/?page=call&amp;pi=restapi"/>
         <const name="API_LOGIN_USERNAME" value="admin"/>
-        <const name="API_LOGIN_PASSWORD" value="phplist1"/>
+        <const name="API_LOGIN_PASSWORD" value="phplist"/>
         <const name="TMP_PATH" value="/tmp"/>
     </php>
 </phpunit>
