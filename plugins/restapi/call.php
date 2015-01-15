@@ -21,6 +21,8 @@ include 'includes/subscribers.php';
 include 'includes/templates.php';
 include 'includes/messages.php';
 
+include 'includes/userattributes.php';
+
 include 'doc/doc.php';
 
 if (function_exists('api_request_log')) {
@@ -40,6 +42,7 @@ if ( strcmp( $_SERVER['REQUEST_METHOD'], "POST")  ) {
     $doc->addClass( 'Subscribers' );
     $doc->addClass( 'Templates' );
     $doc->addClass( 'Messages' );
+    $doc->addClass( 'UserAttributes' );
     $doc->output();
 }
 
@@ -57,5 +60,9 @@ if ( is_callable( array( 'phpListRestapi\Subscribers', $cmd ) ) ) Subscribers::$
 if ( is_callable( array( 'phpListRestapi\Templates',   $cmd ) ) ) Templates::$cmd();
 if ( is_callable( array( 'phpListRestapi\Messages',    $cmd ) ) ) Messages::$cmd();
 
+if ( is_callable( array( 'phpListRestapi\UserAttributes',    $cmd ) ) ) UserAttributes::$cmd();
+
+
 //If no command found, return error message!
 Response::outputErrorMessage( 'No function for provided [cmd] found!' );
+
