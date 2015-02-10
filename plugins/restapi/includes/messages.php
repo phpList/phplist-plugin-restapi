@@ -106,7 +106,7 @@ class Messages{
             $stmt->bindParam("status", $_REQUEST['status'] );
             $stmt->bindParam("sendformat", $_REQUEST['sendformat'] );
             $stmt->bindParam("template", $_REQUEST['template'] );
-            $stmt->bindParam("sendstart", $_REQUEST['sendstart'] );
+            $stmt->bindParam("embargo", $_REQUEST['embargo'] );
             $stmt->bindParam("rsstemplate", $_REQUEST['rsstemplate'] );
             $stmt->bindParam("owner", $_REQUEST['owner'] );
             $stmt->bindParam("htmlformatted", $_REQUEST['htmlformatted'] );
