@@ -222,7 +222,7 @@ class Lists {
     static function listMessageAdd( $list_id=0, $message_id=0 ){
         if ( $list_id==0 ) $list_id = $_REQUEST['list_id'];
         if ( $message_id==0 ) $message_id = $_REQUEST['message_id'];
-        $sql = "INSERT INTO " . $GLOBALS['table_prefix'] . "listmessage (messageid, listid, entered) VALUES (:message_id, :list_id, now()) ON DUPLICATE KEY UPDATE list_id=:list_id;";
+        $sql = "INSERT INTO " . $GLOBALS['table_prefix'] . "listmessage (messageid, listid, entered) VALUES (:message_id, :list_id, now()) ON DUPLICATE KEY UPDATE listid=:list_id;";
         try {
             $db = PDO::getConnection();
             $stmt = $db->prepare($sql);
