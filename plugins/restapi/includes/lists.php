@@ -154,6 +154,31 @@ class Lists {
         }
         die(0);
     }
+    
+    /**
+     * <p>Get all ID of the subscribers in a list.</p>
+     * <p><strong>Parameters:</strong><br/>
+     * [*list_id] {integer} the List-ID.
+     * <p><strong>Returns:</strong><br/>
+     * Array of all subscriber ID in a specific list.
+     * </p>
+     */
+    static function listAllSubscriber ( $id=0 ) {
+        $response = new Response();
+        if ( $id==0 ) $id = $_REQUEST['id'];
+        $sql = "SELECT * FROM " . $GLOBALS['table_prefix'] . "listuser ORDER BY userid ASC;";
+        try {
+            $db = PDO::getConnection();
+            $stmt = $db->query($sql);
+            $result = $stmt->fetchAll(PDO::FETCH_OBJ);
+            $db = null;
+            $response->setData('Lists', $result);
+            $response->output();
+        } catch(\PDOException $e) {
+            Response::outputError($e);
+        }
+        die(0);
+    }
 
     /**
      * <p>Adds a subscriber to a list.</p>
