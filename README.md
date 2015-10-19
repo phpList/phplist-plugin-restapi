@@ -7,7 +7,7 @@ Two plugins inside this repo: "restapi" and "restapi-test"
 
 Original development by Flowcom AB, Andreas Ek ([@EkAndreas](https://twitter.com/ekandreas))
 
-License: GPLv2
+License: GPLv3 or later
 
 ##History
 ```
