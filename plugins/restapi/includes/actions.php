@@ -4,17 +4,18 @@ namespace phpListRestapi;
 
 defined('PHPLISTINIT') || die;
 
-class Actions {
-
+class Actions
+{
     /**
      * <p>Function to call for login.<p>
      * <p><strong>Parameters:</strong><br/>
      * [*login] {string} loginname as an admin to phpList<br/>
      * [*password] {string} the password
-     * </p>
+     * </p>.
      */
-    static function login() {
-        Response::outputMessage( 'Welcome!' );
+    public static function login()
+    {
+        Response::outputMessage('Welcome!');
     }
 
     /**
@@ -22,11 +23,10 @@ class Actions {
      * Perhaps this is done via CRON or manually through the admin interface?</p>
      * <p><strong>Parameters:</strong><br/>
      * [*login] {string} loginname as an admin to phpList<br/>
-     * [*password] {string} the password
-     *
+     * [*password] {string} the password.
      */
-    static function processQueue() {
-        Response::outputMessage( 'Not implemented' );
+    public static function processQueue()
+    {
+        Response::outputMessage('Not implemented');
     }
-
 }

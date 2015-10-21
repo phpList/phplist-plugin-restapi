@@ -1,6 +1,7 @@
 <?php
+
 /**
- * Plugin that implements a REST API
+ * Plugin that implements a REST API.
  * 
  * Documentation: http://resources.phplist.com/plugin/restapi
  * 
@@ -15,23 +16,24 @@
  */
 defined('PHPLISTINIT') || die;
 
-class restapi extends phplistPlugin {
-
-    public $name = "RESTAPI";
+class restapi extends phplistPlugin
+{
+    public $name = 'RESTAPI';
     public $description = 'Implements a REST API interface to phpList';
     public $topMenuLinks = array(
       'main' => array('category' => 'system'),
-    ); 
+    );
 
-    function restapi() {
-      parent::phplistplugin();
-      $this->coderoot = dirname(__FILE__) . '/restapi/';
+    public function restapi()
+    {
+        parent::phplistplugin();
+        $this->coderoot = dirname(__FILE__).'/restapi/';
     }
 
-    function adminmenu() {
+    public function adminmenu()
+    {
         return array(
-            "main" => "RESTAPI"
+            'main' => 'RESTAPI',
         );
     }
-
 }

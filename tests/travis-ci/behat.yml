@@ -1,0 +1,9 @@
+default:
+  paths:
+    features: tests/features
+  extensions:
+    Behat\MinkExtension\Extension:
+      goutte:    ~
+      selenium2: ~
+      # Change to you custom url
+      base_url: http://phplist.dev/

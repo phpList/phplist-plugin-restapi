@@ -12,6 +12,7 @@ License: GPLv3 or later
 ##History
 ```
 v.      Date        Description
+        2015-10-21  Added Travis integration
 0.3     2014-05-31  Moved to phpList organisation and renamed phplist-plugin-restapi
 0.2.7   2013-03-13  Added order and limit to listsGet
 0.2.6   2013-03-13  Test script fixed with login and password.

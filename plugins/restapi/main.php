@@ -6,9 +6,9 @@ defined('PHPLISTINIT') || die;
 
 include 'includes/common.php';
 
-$plugin = $GLOBALS["plugins"][$_GET["pi"]];
+$plugin = $GLOBALS['plugins'][$_GET['pi']];
 
-$url = Common::apiUrl( $website );
+$url = Common::apiUrl($website);
 
 ?>
 
@@ -44,7 +44,7 @@ $url = Common::apiUrl( $website );
     <p>
         <h2>More information</h2>
         Please read more at Github!
-        <a href="https://github.com/EkAndreas/phplistapi">https://github.com/EkAndreas/phplistapi</a>
+        <a href="https://github.com/phpList/phplist-plugin-restapi">https://github.com/phpList/phplist-plugin-restapi</a>
     </p>
 
     <p>
