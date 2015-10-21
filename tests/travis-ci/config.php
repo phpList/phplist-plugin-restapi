@@ -110,5 +110,5 @@ $bounce_unsubscribe_threshold = 5;
 # in most cases, it is fine to leave this as it is
 define('ENCRYPTION_ALGO', 'sha256');
 
-define('PLUGIN_ROOTDIR', '/home/travis/build/michield/phplist-plugin-restapi/plugins/');
+define('PLUGIN_ROOTDIR', '/home/travis/build/phpList/phplist-plugin-restapi/plugins/');
 $GLOBALS['plugins_autoenable'] = array('restapi');
