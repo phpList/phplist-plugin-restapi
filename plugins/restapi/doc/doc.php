@@ -1,46 +1,43 @@
 <?php
 
-class phpListRestapiDoc {
-
+class phpListRestapiDoc
+{
     private $classes;
 
-    function __construct()
+    public function __construct()
     {
     }
 
-    function addClass( $classname ){
-
+    public function addClass($classname)
+    {
         $this->classes[] = "phpListRestapi\\$classname";
-
     }
 
-    function output(){
-
+    public function output()
+    {
         $this->header();
 
-        foreach( $this->classes as $class ){
-
-            $reflect = new \ReflectionClass( $class );
+        foreach ($this->classes as $class) {
+            $reflect = new \ReflectionClass($class);
             $methods = $reflect->getMethods();
-            foreach( $methods as $method ){
-
+            foreach ($methods as $method) {
                 echo '<section>';
                 echo '<div class="page-header">';
-                echo '<h2>' . $method->name . '</h2>';
+                echo '<h2>'.$method->name.'</h2>';
                 echo '</div>';
                 echo '<div class="row">';
                 echo '<div class="span12">';
 
                 $comment = $method->getDocComment();
 
-                $comment = str_replace( '/**', '', $comment );
-                $comment = str_replace( '*/', '', $comment );
-                $comment = str_replace( '[*', '<span class="label label-warning">', $comment );
-                $comment = str_replace( '[', '<span class="label label-success">', $comment );
-                $comment = str_replace( ']', '</span>', $comment );
-                $comment = str_replace( '{', '<span class="badge">', $comment );
-                $comment = str_replace( '}', '</span>', $comment );
-                $comment = str_replace( '*', '', $comment );
+                $comment = str_replace('/**', '', $comment);
+                $comment = str_replace('*/', '', $comment);
+                $comment = str_replace('[*', '<span class="label label-warning">', $comment);
+                $comment = str_replace('[', '<span class="label label-success">', $comment);
+                $comment = str_replace(']', '</span>', $comment);
+                $comment = str_replace('{', '<span class="badge">', $comment);
+                $comment = str_replace('}', '</span>', $comment);
+                $comment = str_replace('*', '', $comment);
                 //$comment = str_replace( '<br><br>', '', $comment );
 
                 echo trim($comment);
@@ -50,18 +47,15 @@ class phpListRestapiDoc {
                 echo '<br/>';
                 echo '<section>';
             }
-
         }
 
         $this->footer();
 
         exit;
-
     }
 
-
-    function header(){
-
+    public function header()
+    {
         ?>
 
         <!DOCTYPE html>
@@ -80,7 +74,8 @@ class phpListRestapiDoc {
                         <div class="row">
                             <div class="span6">
                                 <h1>API Plugin to phpList</h1>
-                                <p class="lead">Documentation generated <?php echo date('Y-m-d H:i:s'); ?></p>
+                                <p class="lead">Documentation generated <?php echo date('Y-m-d H:i:s');
+        ?></p>
                             </div>
                         </div>
                     </header>
@@ -100,8 +95,8 @@ class phpListRestapiDoc {
 
     }
 
-    function footer(){
-
+    public function footer()
+    {
         ?>
                   <footer id="footer">
                       <p class="pull-right"><a href="#">Back to top</a></p>
@@ -113,6 +108,4 @@ class phpListRestapiDoc {
         <?php
 
     }
-
-
 }

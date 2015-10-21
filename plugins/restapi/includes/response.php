@@ -6,43 +6,43 @@ defined('PHPLISTINIT') || die;
 
 /**
  * Common response as success and error
- * Andreas Ek, 2012-12-26
+ * Andreas Ek, 2012-12-26.
  */
-
-class Response{
-
+class Response
+{
     private $result;
 
-    function __construct(){
+    public function __construct()
+    {
         $this->result = array();
     }
 
-    function setError( $code, $message ){
+    public function setError($code, $message)
+    {
         $this->result['status'] = 'error';
         $this->result['type'] = 'Error';
-        $this->result['data'] = array (
-            'code' => $code,
-            'message' => $message
+        $this->result['data'] = array(
+            'code'    => $code,
+            'message' => $message,
         );
     }
 
-    function setData( $type, $data ){
-
+    public function setData($type, $data)
+    {
         $this->result['status'] = 'success';
         $this->result['type'] = $type;
         $this->result['data'] = $data;
-
     }
 
-    function output(){
+    public function output()
+    {
         header('Content-Type: application/json');
-        echo $this->json_encode2( $this->result );
+        echo $this->json_encode2($this->result);
         die(0);
-
     }
 
     /**
-     * Convert an object into an associative array
+     * Convert an object into an associative array.
      *
      * This function converts an object into an associative array by iterating
      * over its public properties. Because this function uses the foreach
@@ -50,7 +50,8 @@ class Response{
      *
      * @return array
      */
-    function object_to_array($var) {
+    public function object_to_array($var)
+    {
         $result = array();
         $references = array();
 
@@ -68,11 +69,12 @@ class Response{
                 $result[$key] = utf8_encode($value);
             }
         }
+
         return $result;
     }
 
     /**
-     * Convert a value to JSON
+     * Convert a value to JSON.
      *
      * This function returns a JSON representation of $param. It uses json_encode
      * to accomplish this, but converts objects and arrays containing objects to
@@ -80,35 +82,40 @@ class Response{
      * properties directly but only through an Iterator interface are also encoded
      * correctly.
      */
-    function json_encode2($param) {
+    public function json_encode2($param)
+    {
         if (is_object($param) || is_array($param)) {
             $param = $this->object_to_array($param);
         }
+
         return json_encode($param);
     }
 
-    static function outputError($e){
-        $response = new Response();
-        $response->setError( $e->getCode(), $e->getMessage() );
+    public static function outputError($e)
+    {
+        $response = new self();
+        $response->setError($e->getCode(), $e->getMessage());
         $response->output();
     }
 
-    static function outputErrorMessage( $message ){
-        $response = new Response();
-        $response->setError( 0, $message );
+    public static function outputErrorMessage($message)
+    {
+        $response = new self();
+        $response->setError(0, $message);
         $response->output();
     }
 
-    static function outputDeleted( $type, $id ){
-        $response = new Response();
-        $response->setData( $type, 'Item with ' . $id . ' is successfully deleted!' );
+    public static function outputDeleted($type, $id)
+    {
+        $response = new self();
+        $response->setData($type, 'Item with '.$id.' is successfully deleted!');
         $response->output();
     }
 
-    static function outputMessage( $message ){
-        $response = new Response();
-        $response->setData( 'SystemMessage', $message );
+    public static function outputMessage($message)
+    {
+        $response = new self();
+        $response->setData('SystemMessage', $message);
         $response->output();
     }
-
 }

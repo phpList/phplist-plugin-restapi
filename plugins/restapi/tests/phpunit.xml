@@ -1,8 +1,0 @@
-<phpunit bootstrap="bootstrap.php">
-    <php>
-        <const name="API_URL_BASE_PATH" value="http://phplist-dev.local/lists/admin/?page=call&amp;pi=restapi"/>
-        <const name="API_LOGIN_USERNAME" value="admin"/>
-        <const name="API_LOGIN_PASSWORD" value="phplist1"/>
-        <const name="TMP_PATH" value="/tmp"/>
-    </php>
-</phpunit>

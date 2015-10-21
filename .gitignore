@@ -1,0 +1,4 @@
+/vendor/
+plugins/restapi/output/
+/composer.lock
+/.php_cs.cache
