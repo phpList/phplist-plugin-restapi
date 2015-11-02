@@ -13,6 +13,9 @@ class TestRestapi extends \PHPUnit_Framework_TestCase
     public $testListName;
     public $testListRename;
     private $debug = 0;
+    private $testEmailAddress = '';
+    private $testTemplateTitle = '';
+    private $testTemplateRenamedTitle = '';
 
     public function setUp()
     {
@@ -23,6 +26,9 @@ class TestRestapi extends \PHPUnit_Framework_TestCase
         $this->tmpPath = TMP_PATH;
         $this->testListName = 'API Test Testlist '.time();
         $this->testListRename = 'API Test Testlist'.date('Y-m-d H:i:s');
+        $this->testEmailAddress = 'test-'.time().rand(100, 999).'@phplist.com';
+        $this->testTemplateTitle = 'API Test Template '.date('Y-m-d H:i:s');
+        $this->testTemplateRenamedTitle = 'API Test Template Renamed '.date('Y-m-d H:i:s');
     }
 
     public function tearDown()
@@ -73,7 +79,7 @@ class TestRestapi extends \PHPUnit_Framework_TestCase
     {
         // Set the username and pwd to login with
         $post_params = array(
-            'login'    => $this->loginName,
+            'login' => $this->loginName,
             'password' => $this->password,
         );
 
@@ -115,12 +121,12 @@ class TestRestapi extends \PHPUnit_Framework_TestCase
     {
         // Create minimal params for api call
         $post_params = array(
-            'name'        => $this->testListName,
+            'name' => $this->testListName,
             'description' => 'List created with API phpUnit test',
-            'listorder'   => '0',
-            'prefix'      => '',
-            'rssfeed'     => '',
-            'active'      => '1',
+            'listorder' => '0',
+            'prefix' => '',
+            'rssfeed' => '',
+            'active' => '1',
         );
 
         // Execute the api call
@@ -157,15 +163,14 @@ class TestRestapi extends \PHPUnit_Framework_TestCase
      */
     public function testListUpdate($listId)
     {
-        // Create minimal params for api call
         $post_params = array(
-            'id'          => $listId,
-            'name'        => $this->testListRename,
+            'id' => $listId,
+            'name' => $this->testListRename,
             'description' => 'List modified with API phpUnit test',
-            'listorder'   => '1',
-            'prefix'      => '_',
-            'rssfeed'     => '',
-            'active'      => '1',
+            'listorder' => '1',
+            'prefix' => '_',
+            'rssfeed' => '',
+            'active' => '1',
         );
         if ($this->debug) {
             print "Updating $listId".PHP_EOL;
@@ -189,21 +194,57 @@ class TestRestapi extends \PHPUnit_Framework_TestCase
         $this->assertEquals('1', $result->data->active);
     }
 
+     /**
+      * Test counting the total number of subscribers.
+      */
+     public function testSubscriberCount()
+     {
+         $post_params = array(
+        );
+        // Execute the api call
+        $result = $this->callAPI('subscribersCount', $post_params);
+         $this->assertEquals('success', $result->status);
+         $this->assertTrue(is_numeric($result->data->total));
+
+         if ($this->debug) {
+             print 'There are '.$result->data->total.' subscribers'.PHP_EOL;
+         }
+         $subscriberCount = $result->data->total;
+
+         return $subscriberCount;
+     }
+
+    /** 
+     * Test that a subscriber exists.
+     */
+    public function testSubscriberExist()
+    {
+        $params = array(
+            'email' => $this->testEmailAddress,
+        );
+        $result = $this->callAPI('subscriberGetByEmail', $params);
+        $this->assertEquals('success', $result->status);
+        $this->assertEmpty($result->data); // it should not exist yet
+        $testEmailAddress = $this->testEmailAddress;
+
+        return $testEmailAddress;
+    }
+
     /**
      * Test adding a new subscriber.
      *
      * @todo add another test to delete the user later on
-     * @depends testListAdd
+     * @depends testSubscriberExist
      */
-    public function testSubscriberAdd($listId)
+    public function testSubscriberAdd($testEmailAddress)
     {
         // Set the user details as parameters
         $post_params = array(
-            'email'     => 'test_'.rand(100, 999).'@phplist.com', // rand() works around 'email' being a primary key and therefore unique
+            'email' => $testEmailAddress,
             'confirmed' => 1,
             'htmlemail' => 1,
-            'password'  => 'password',
-            'disabled'  => 0,
+            'password' => 'password',
+            'disabled' => 0,
         );
 
         // Execute the api call
@@ -218,10 +259,52 @@ class TestRestapi extends \PHPUnit_Framework_TestCase
         return $subscriberId;
     }
 
+    /** 
+     * Test that a subscriber exists again.
+     *
+     * @depends testSubscriberExist
+     */
+    public function testSubscriberExist2($testEmailAddress)
+    {
+        $params = array(
+            'email' => $testEmailAddress,
+        );
+        $result = $this->callAPI('subscriberGetByEmail', $params);
+        $this->assertEquals('success', $result->status);
+        $this->assertTrue(is_numeric($result->data->id)); // now it does
+        $subscriberId = $result->data->id;
+
+        // Pass on the newly created userid to other tests
+        return $subscriberId;
+    }
+
+     /**
+      * Test counting the total number of subscribers.
+      * We should now have one more than before.
+      *
+      * @depends testSubscriberCount
+      */
+     public function testSubscriberCount2($subscriberCount)
+     {
+         $post_params = array(
+        );
+        // Execute the api call
+        $result = $this->callAPI('subscribersCount', $post_params);
+         $this->assertEquals('success', $result->status);
+         $this->assertTrue(is_numeric($result->data->total));
+         $this->assertEquals($subscriberCount + 1, $result->data->total);
+
+         if ($this->debug) {
+             print 'There are now '.$result->data->total.' subscribers'.PHP_EOL;
+         }
+         $subscriberCount2 = $result->data->total;
+
+         return $subscriberCount2;
+     }
+
     /**
      * Test adding a subscriber to an existing list.
      *
-     * @todo check subscriber is actually added, don't trust return status
      * @depends testListAdd
      * @depends testSubscriberAdd
      */
@@ -229,7 +312,7 @@ class TestRestapi extends \PHPUnit_Framework_TestCase
     {
         // Set list and subscriber vars
         $post_params = array(
-            'list_id'       => $listId,
+            'list_id' => $listId,
             'subscriber_id' => $subscriberId,
         );
 
@@ -240,6 +323,304 @@ class TestRestapi extends \PHPUnit_Framework_TestCase
         $this->assertEquals('success', $result->status);
     }
 
+    /**
+     * Verify the lists a subscriber is member of.
+     * The subscriber should be on the list.
+     *
+     * @depends testListAdd
+     * @depends testSubscriberAdd
+     */
+     
+    public function testListsSubscriber($listId, $subscriberId)
+    {
+        $post_params = array(
+            'list_id' => $listId,
+            'subscriber_id' => $subscriberId,
+        );
+
+        // Execute the api call
+        $result = $this->callAPI('listsSubscriber', $post_params);
+        $this->assertEquals('success', $result->status);
+        $this->assertTrue(is_array($result->data));
+        $listIds = array();
+        foreach ($result->data as $resultItem) {
+            $listIds[] = $resultItem->id;
+        }
+        $this->assertContains($listId, $listIds);
+    }
+
+     /** 
+      * list all templates.
+      */
+     public function testListTemplates()
+     {
+         $post_params = array(
+        );
+
+         $result = $this->callAPI('templatesGet', $post_params);
+         $this->assertEquals('success', $result->status);
+         $templateCount = count($result->data);
+
+         return $templateCount;
+     }
+    /** 
+     * Test template existence and creation.
+     */
+    public function testTemplateGetByTitle()
+    {
+        $post_params = array(
+            'title' => $this->testTemplateTitle,
+        );
+
+        // Execute the api call
+        $result = $this->callAPI('templateGetByTitle', $post_params);
+        $this->assertEquals('success', $result->status);
+        $this->assertTrue(is_array($result->data));
+
+        if (empty($result->data->id)) {
+            $template_content = file_get_contents(__DIR__.'/test-template1.html');
+            $post_params = array(
+                'title' => $this->testTemplateTitle,
+                'template' => $template_content,
+            );
+            $result = $this->callAPI('templateAdd', $post_params);
+            $this->assertEquals('success', $result->status);
+            $this->assertEquals($this->testTemplateTitle, $result->data->title);
+            $this->assertTrue(is_numeric($result->data->id));
+            if ($this->debug) {
+                echo 'New template created for test.'.PHP_EOL;
+            }
+            $templateId = $result->data->id;
+        } else {
+            $templateId = $result->data->id;
+        }
+
+        return $templateId;
+    }
+
+    /** 
+     * Test template existence and creation.
+     *
+     * @depends testTemplateGetByTitle
+     */
+    public function testTemplateUpdate($templateId)
+    {
+        $post_params = array(
+            'id' => $templateId,
+            'title' => $this->testTemplateRenamedTitle,
+            'template' => file_get_contents(__DIR__.'/test-template2.html'),
+        );
+
+        // Execute the api call
+        $result = $this->callAPI('templateUpdate', $post_params);
+        $this->assertEquals('success', $result->status);
+        $this->assertTrue(is_numeric($result->data->id));
+        $this->assertEquals($result->data->id, $templateId);
+        $this->assertEquals($this->testTemplateRenamedTitle, $result->data->title);
+        $templateId = $result->data->id;
+
+        return $templateId;
+    }
+
+     /** 
+      * list all templates again, we should have one more now.
+      *
+      * @depends testListTemplates
+      */
+     public function testListTemplatesAgain($templateCount)
+     {
+         $post_params = array(
+        );
+
+         $result = $this->callAPI('templatesGet', $post_params);
+         $this->assertEquals('success', $result->status);
+         $newTemplateCount = count($result->data);
+         $this->assertEquals($templateCount + 1, count($result->data));
+
+         return $newTemplateCount;
+     }
+
+     /**
+      * test counting the number of campaigns.
+      */
+     public function testCountCampaigns()
+     {
+         $post_params = array(
+        );
+
+         $result = $this->callAPI('messagesCount', $post_params);
+         $this->assertEquals('success', $result->status);
+         $campaignCount = $result->data->total;
+
+         return $campaignCount;
+     }
+     
+     /**
+      * 
+      * test creating a campaign
+      * @depends testTemplateGetByTitle
+      */
+           
+     function testCreateCampaign($templateId) {
+        $post_params = array(
+            'subject' => 'Test Campaign created by API '.time(),
+            'fromfield' => 'From Name apitest@phplist.com',
+            'replyto' => '',
+            'message' => 'Test Message',
+            'textmessage' => 'Text',
+            'footer' => 'Footer',
+            'status' => 'submitted',
+            'sendformat' => 'both',
+            'template' => $templateId,
+            'embargo' => date('Y-m-d'),
+            'rsstemplate' => '',
+            'owner' => 0,
+            'htmlformatted' => 1,
+        );
+        
+        $result = $this->callAPI('messageAdd', $post_params);
+        $this->assertEquals('success', $result->status);
+        $campaignID = $result->data->id;
+        return $campaignID;
+    }
+    
+    /**
+     * update a campaign
+     * @depends testCreateCampaign
+     */
+         
+    function testUpdateCampaign($campaignID) {
+        
+        $post_params = array(
+            'id' => $campaignID,
+        );
+        
+        $result = $this->callAPI('messageGet', $post_params,true);
+        $this->assertEquals('success', $result->status);
+        
+        $current = $result->data;
+        $post_params = array(
+            'id' => $campaignID,
+            'subject' => 'Test Campaign updated by API '.time(),
+            'fromfield' => $current->fromfield,
+            'replyto' => $current->replyto,
+            'message' => $current->message,
+            'textmessage' => $current->textmessage,
+            'footer' => $current->footer,
+            'status' => 'submitted',
+            'sendformat' => $current->sendformat,
+            'template' => $current->template,
+            'embargo' => $current->embargo,
+            'rsstemplate' => $current->rsstemplate,
+            'owner' => $current->owner,
+            'htmlformatted' => $current->htmlformatted,
+        );
+        
+        $result = $this->callAPI('messageUpdate', $post_params);
+        $this->assertEquals('success', $result->status);
+        $campaignID = $result->data->id;
+        return $campaignID;
+    }
+
+     /**
+      * test counting the number of campaigns again, should be one more
+      * @depends testCountCampaigns
+      */
+     public function testCountCampaignsAgain($campaignCount)
+     {
+         $post_params = array(
+        );
+
+         $result = $this->callAPI('messagesCount', $post_params);
+         $this->assertEquals('success', $result->status);
+         $this->assertEquals($campaignCount+1, $result->data->total);
+         $campaignCount = $result->data->total;
+
+         return $campaignCount;
+     }
+     
+     /**
+      * test adding a campaign to a list
+      * 
+      * @depends testUpdateCampaign
+      * @depends testListAdd
+      */
+    public function testAddCampaignToList($campaignID,$listId) {
+        $post_params = array(
+            'list_id' => $listId,
+            'message_id' => $campaignID,
+        );
+        $result = $this->callAPI('listMessageAdd', $post_params);
+        $this->assertEquals('success', $result->status);
+    }
+    
+ 
+    /**
+     * test removing Subscriber from list
+     *
+     * @depends testListAdd
+     * @depends testSubscriberAdd
+     */
+    public function testListSubscriberDelete($listId, $subscriberId)
+    {
+        // Set list and subscriber vars
+        $post_params = array(
+            'list_id' => $listId,
+            'subscriber_id' => $subscriberId,
+        );
+
+        // Execute the api call
+        $result = $this->callAPI('listSubscriberDelete', $post_params);
+
+        $this->assertEquals('success', $result->status);
+    }
+
+    /**
+     * Verify the lists a subscriber is member of.
+     * Now the subscriber should no longer be on the list.
+     *
+     * @depends testListAdd
+     * @depends testSubscriberAdd
+     */
+     
+    public function testListsSubscriberAgain($listId, $subscriberId)
+    {
+        $post_params = array(
+            'list_id' => $listId,
+            'subscriber_id' => $subscriberId,
+        );
+
+        // Execute the api call
+        $result = $this->callAPI('listsSubscriber', $post_params);
+        $this->assertEquals('success', $result->status);
+        $this->assertTrue(is_array($result->data));
+        $listIds = array();
+        foreach ($result->data as $resultItem) {
+            $listIds[] = $resultItem->id;
+        }
+        $this->assertNotContains($listId, $listIds);
+    }
+    
+    /**
+     * Test deleting the template
+     * @depends testTemplateUpdate
+     */
+     
+     public function testTemplateDelete($templateId) 
+     {
+        $post_params = array(
+            'id' => $templateId,
+        );
+        if ($this->debug) {
+            print 'Deleting template '.$templateId.PHP_EOL;
+        }
+        // Execute the api call
+        $result = $this->callAPI('templateDelete', $post_params);
+
+        $this->assertEquals('success', $result->status);
+        $this->assertEquals('Item with '.$templateId.' is successfully deleted!', $result->data);
+    }
+          
     /**
      * Test deleting an existing list.
      *
@@ -262,4 +643,5 @@ class TestRestapi extends \PHPUnit_Framework_TestCase
         $this->assertEquals('success', $result->status);
         $this->assertEquals('Item with '.$listId.' is successfully deleted!', $result->data);
     }
+    
 }
