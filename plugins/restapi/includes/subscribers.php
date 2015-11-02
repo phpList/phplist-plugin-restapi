@@ -21,10 +21,10 @@ class Subscribers
     public static function subscribersGet($order_by = 'id', $order = 'asc', $limit = 100)
     {
 
-                //getting optional values
-                if (isset($_REQUEST['order_by']) && !empty($_REQUEST['order_by'])) {
-                    $order_by = $_REQUEST['order_by'];
-                }
+        //getting optional values
+        if (isset($_REQUEST['order_by']) && !empty($_REQUEST['order_by'])) {
+            $order_by = $_REQUEST['order_by'];
+        }
         if (isset($_REQUEST['order']) && !empty($_REQUEST['order'])) {
             $order = $_REQUEST['order'];
         }
@@ -33,6 +33,21 @@ class Subscribers
         }
 
         Common::select('Users', 'SELECT * FROM '.$GLOBALS['usertable_prefix']."user ORDER BY $order_by $order LIMIT $limit;");
+    }
+
+    /**
+     * Get the total of Subscribers in the system.
+     * 
+     * <p><strong>Parameters:</strong><br/>
+     * none
+     * </p>
+     * <p><strong>Returns:</strong><br/>
+     * Number of subscribers.
+     * </p>
+     */
+    public static function subscribersCount()
+    {
+        Common::select('Users', 'SELECT count(id) as total FROM '.$GLOBALS['usertable_prefix']."user",true);
     }
 
     /**
