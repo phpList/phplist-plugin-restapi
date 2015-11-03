@@ -7,7 +7,8 @@ defined('PHPLISTINIT') || die;
 class Actions
 {
     /**
-     * <p>Function to call for login.<p>
+     * Function to call for login.
+     * 
      * <p><strong>Parameters:</strong><br/>
      * [*login] {string} loginname as an admin to phpList<br/>
      * [*password] {string} the password
@@ -19,7 +20,8 @@ class Actions
     }
 
     /**
-     * <p>Processes the Message Queue in phpList.<br/>
+     * Processes the Message Queue in phpList.
+     * 
      * Perhaps this is done via CRON or manually through the admin interface?</p>
      * <p><strong>Parameters:</strong><br/>
      * [*login] {string} loginname as an admin to phpList<br/>

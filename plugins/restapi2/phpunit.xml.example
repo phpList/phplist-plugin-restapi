@@ -1,0 +1,28 @@
+<phpunit colors='true' bootstrap='./tests/phpunit-bootstrap.php'>
+    <testsuites>
+        <testsuite name='Primary'>
+            <directory>./tests</directory>
+        </testsuite>
+    </testsuites>
+    <php>
+        <!-- Constants -->
+        <const name='API_URL_BASE_PATH' value=''/>
+        <const name='API_LOGIN_USERNAME' value='admin'/>
+        <const name='API_LOGIN_PASSWORD' value='phplist'/>
+        <!-- Absolute path to system's temporary directory -->
+        <const name='TMP_PATH' value='/tmp'/>
+        <!-- Name of the folder housing phpList -->
+        <const name='PAGE_ROOT' value='/lists'/>
+        <!-- Name of the admin directory -->
+        <const name='ADMIN_PATH' value='/admin'/>
+
+        <!-- Variables -->
+        <var name="database_host" value="localhost" />
+        <var name="DB_PORT" value='3306' />
+        // !! Change these vars to fit your local config !!
+        <var name="database_name" value='' />
+        <var name="database_user" value='' />
+        <var name="database_password" value='' />
+        <var name="phplist3-config-file-path" value='' />
+    </php>
+</phpunit>

@@ -1,0 +1,26 @@
+dl {
+    border: 3px double #ccc;
+    border-radius: 0.4em;
+    padding: 0.5em;
+}
+dt {
+    float: left;
+    clear: left;
+    width: 100px;
+    text-align: right;
+    font-weight: bold;
+}
+dt:after {
+    content: ":";
+}
+dd {
+    margin: 0 0 0 110px;
+    padding: 0 0 0.5em 0;
+}
+code
+, pre {
+    border-radius: 0.4em;
+    background-color: #ECECEC;
+    padding: 0.2em 0.4em;
+    font-family: Consolas, Monaco, Lucida Console, monospace;
+}

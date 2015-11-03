@@ -1,0 +1,117 @@
+services:
+# Classes without dependencies
+  Response:
+    class:     Rapi\Response
+  Campaigns:
+    class:     Rapi\Campiagns
+
+# Classes with dependencies
+  Admin:
+    class:     Rapi\Admin
+    arguments: [@Response]
+  Common:
+    class:     Rapi\Common
+    arguments: [@PdoEx, @Response]
+  Lists:
+    class:     Rapi\Lists
+    arguments: [@Common, @PdoEx, @Response]
+  PdoEx:
+    class:     Rapi\PdoEx
+    arguments: [%pdoEx.hostname%, %pdoEx.username%, %pdoEx.pass%, %pdoEx.dbname%]
+  Subscribers:
+    class:     Rapi\Subscribers
+  Templates:
+    class:     Rapi\Templates
+    arguments: [@Common]
+
+# Handler classes
+  SubscriberHandler:
+    class:     Rapi\Handler\SubscriberHandler
+    arguments: [@SubscriberEntity, @SubscriberManager]
+  ListHandler:
+    class:     Rapi\Handler\ListHandler
+    arguments: [@ListEntity, @ListManager, @SubscriberEntity]
+
+# It seems order matters; hence Call{} definition goes last, not alphabetically
+  Call:
+    class:     Rapi\Call
+    arguments: [@ListHandler, @SubscriberHandler]
+
+# phpList 4 services
+  Logger:
+    class: phpList\helper\Logger
+  Util:
+    class: phpList\helper\Util
+    arguments: [@Config, @Logger]
+  EmailUtil:
+    class:  phpList\EmailUtil
+    arguments: [@Config, %emailaddress.address%]
+  Pass:
+    class:  phpList\Pass
+    arguments: [@Config, %password.password%]
+  Config:
+    class: phpList\Config
+    arguments: [%config.configfile%]
+  Database:
+    class:  phpList\helper\Database
+    arguments: [@Config]
+  Language:
+    class: phpList\helper\Language
+    arguments: [@Database, @Config]
+  phpList:
+    class: phpList\phpList
+    arguments: [@Config, @Database, @Language, @Util]
+  Campaign:
+    class: phpList\Campaign
+    arguments: [@Config, @Database, @MailingList, @Template]
+  Template:
+    class: phpList\Template
+    arguments: [@Config, @Database, @TemplateImage]
+  TemplateImage:
+    class: phpList\TemplateImage
+    arguments: [@Config, @Database]
+
+# Entities
+  CampaignEntity:
+    class: phpList\Entity\CampaignEntity
+  ListEntity:
+    class: phpList\Entity\ListEntity
+  SubscriberEntity:
+    class: phpList\Entity\SubscriberEntity
+    arguments: [%subscriberentity.emailaddress%, %subscriberentity.plainpass%]
+  TemplateEntity:
+    class: phpList\Entity\TemplateEntity
+  TemplateImageEntity:
+    class: phpList\Entity\TemplateImageEntity
+
+# Managers
+  ListManager:
+    class: phpList\ListManager
+    arguments: [@Config, @Database, @ListModel]
+  SubscriberManager:
+    class: phpList\SubscriberManager
+    arguments: [@Config, @EmailUtil, @Pass, @SubscriberModel]
+
+# Models
+  ListModel:
+    class: phpList\Model\ListModel
+    arguments: [@Config, @Database]
+  SubscriberModel:
+    class: phpList\Model\SubscriberModel
+    arguments: [@Config, @Database]
+
+# Define parameters, to be set in app logic
+# NOTE: the classname.parameter syntax is just a Symfony convention; parameter
+# names are handles as single simple strings
+parameters:
+  pdoEx.hostname: hostname
+  pdoEx.username: username
+  pdoEx.pass: pass
+  pdoEx.dbname: dbname
+
+# phpList 4 parameters
+  config.configfile: config_file
+  emailaddress.address: email_address
+  password.password: password
+  subscriberentity.emailaddress: placeholder
+  subscriberentity.plainpass: placeholder
