@@ -17,6 +17,12 @@ class Messages
         }
         Common::select('Message', 'SELECT * FROM '.$GLOBALS['table_prefix'].'message WHERE id='.$id.';', true);
     }
+    
+    public static function messagesCount()
+    {
+        Common::select('Messages', 'SELECT count(id) as total FROM '.$GLOBALS['table_prefix'].'message',true);
+    }
+
 
     public static function messagesGet()
     {
@@ -113,7 +119,7 @@ class Messages
             $stmt->bindParam('status', $_REQUEST['status']);
             $stmt->bindParam('sendformat', $_REQUEST['sendformat']);
             $stmt->bindParam('template', $_REQUEST['template']);
-            $stmt->bindParam('sendstart', $_REQUEST['sendstart']);
+            $stmt->bindParam('embargo', $_REQUEST['embargo']);
             $stmt->bindParam('rsstemplate', $_REQUEST['rsstemplate']);
             $stmt->bindParam('owner', $_REQUEST['owner']);
             $stmt->bindParam('htmlformatted', $_REQUEST['htmlformatted']);

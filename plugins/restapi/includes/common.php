@@ -47,4 +47,15 @@ class Common
 
         return $url;
     }
+    
+    public static function parms($string,$data) {
+        $indexed=$data==array_values($data);
+        foreach($data as $k=>$v) {
+            if(is_string($v)) $v="'$v'";
+            if($indexed) $string=preg_replace('/\?/',$v,$string,1);
+            else $string=str_replace(":$k",$v,$string);
+        }
+        return $string;
+    }
+
 }

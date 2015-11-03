@@ -19,7 +19,7 @@ before_script:
   - sudo cat /etc/apache2/sites-available/default
   - sudo /etc/init.d/apache2 restart
   - composer self-update
-  - composer install --dev --prefer-dist
+  - composer install --prefer-dist
   - sudo cp -f tests/travis-ci/behat.yml behat.yml
 
   # Set MySQL configuration and create the database.
