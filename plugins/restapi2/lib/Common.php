@@ -31,7 +31,7 @@ class Common {
         }
 
         // Generate the path plus get vars
-        $path = $pageRoot . $adminDir . '?page=call&pi=restapi';
+        $path = $pageRoot . $adminDir . '?page=call&pi=restapi2';
 
         $url = $protocol . $website . $path;
         $trimmedUrl = rtrim( $url, '/' );
