@@ -15,17 +15,17 @@
  */
 defined( 'PHPLISTINIT' ) || die;
 
-class restapi extends phplistPlugin {
+class restapi2 extends phplistPlugin {
 
     // Set plugin name presented in admin pages
     public $name = 'RESTAPI';
     // Description of the app as displayed in admin pages
     public $description = 'Implements a REST API interface to phpList';
 
-    function restapi() {
+    function restapi2() {
       parent::phplistplugin();
       // Set path to plugin folder
-      $this->coderoot = dirname( __FILE__ ) . '/restapi/';
+      $this->coderoot = dirname( __FILE__ ) . '/restapi2/';
     }
 
     // Set header nav link label, url, and category

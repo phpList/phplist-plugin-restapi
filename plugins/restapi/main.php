@@ -36,7 +36,7 @@ $url = Common::apiUrl($website);
     </p>
     <p>
         <h2>Client</h2>
-        To try the RESTAPI, please use a client like CocaRestClient or eqvivalent!<br/>
+        To try the RESTAPI, please use a client like CocaRestClient or equivalent!<br/>
         There is an example class in restapi-test/phplist_restapi_helper.php if you like to try it in PHP.<br/>
         For examples check commands in restapi-test/main.php
     </p>
@@ -50,6 +50,6 @@ $url = Common::apiUrl($website);
     <p>
         <h2>Issues</h2>
         All issues regarding the RESTAPI is handled at Github!
-        <a href="https://github.com/EkAndreas/phplistapi">https://github.com/EkAndreas/phplistapi</a>
+        <a href="https://github.com/phpList/phplist-plugin-restapi/issues">https://github.com/phpList/phplist-plugin-restapi/issues</a>
     </p>
 
