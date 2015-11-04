@@ -545,7 +545,7 @@ class TestRestapi extends \PHPUnit_Framework_TestCase
      /**
       * test adding a campaign to a list
       * 
-      * @depends testUpdateCampaign
+      * @depends testCreateCampaign
       * @depends testListAdd
       */
     public function testAddCampaignToList($campaignID,$listId) {
