@@ -12,7 +12,7 @@ class TestRestapi extends \PHPUnit_Framework_TestCase
     public $tmpPath;
     public $testListName;
     public $testListRename;
-    private $debug = 1;
+    private $debug = 0;
     private $testEmailAddress = '';
     private $testTemplateTitle = '';
     private $testTemplateRenamedTitle = '';
