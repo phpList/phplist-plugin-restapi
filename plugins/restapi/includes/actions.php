@@ -19,16 +19,4 @@ class Actions
         Response::outputMessage('Welcome!');
     }
 
-    /**
-     * Processes the Message Queue in phpList.
-     * 
-     * Perhaps this is done via CRON or manually through the admin interface?</p>
-     * <p><strong>Parameters:</strong><br/>
-     * [*login] {string} loginname as an admin to phpList<br/>
-     * [*password] {string} the password.
-     */
-    public static function processQueue()
-    {
-        Response::outputMessage('Not implemented');
-    }
 }

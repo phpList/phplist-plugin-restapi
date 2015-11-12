@@ -21,7 +21,7 @@ class Lists
      */
     public static function listsGet()
     {
-        Common::select('Lists', 'SELECT * FROM '.$GLOBALS['table_prefix'].'list ORDER BY listorder;');
+        Common::select('Lists', 'SELECT * FROM '.$GLOBALS['table_prefix'].'list ORDER BY listorder;',array());
     }
 
     /**
@@ -38,7 +38,13 @@ class Lists
         if ($id == 0) {
             $id = $_REQUEST['id'];
         }
-        Common::select('List', 'SELECT * FROM '.$GLOBALS['table_prefix']."list WHERE id = $id;", true);
+        
+        $params = array(
+            'id'=> array($id,PDO::PARAM_INT),
+            );
+        
+        
+        Common::select('List', 'SELECT * FROM '.$GLOBALS['table_prefix']."list WHERE id = :id;",$params,true);
     }
 
     /**
@@ -48,8 +54,6 @@ class Lists
      * [*name] {string} the name of the list.<br/>
      * [description] {string} adds a description to the list.<br/>
      * [listorder] {integer} an expression to sortorder, eg 100.<br/>
-     * [prefix] {string} adds a prefix to the list (?).<br/>
-     * [rssfeed] {string} the url to the feed for this list (?).<br/>
      * [active] {integer} if list should be active set this one to 1, otherwise it will be disabled.<br/>
      * <p><strong>Returns:</strong><br/>
      * The list added.
@@ -57,7 +61,7 @@ class Lists
      */
     public static function listAdd()
     {
-        $sql = 'INSERT INTO '.$GLOBALS['table_prefix'].'list (name, description, listorder, prefix, rssfeed, category, active) VALUES (:name, :description, :listorder, :prefix, :rssfeed, :category, :active);';
+        $sql = 'INSERT INTO '.$GLOBALS['table_prefix'].'list (name, description, listorder, category, active) VALUES (:name, :description, :listorder, :category, :active);';
         // allow for an empty category, which didn't exist before
         if (!isset($_REQUEST['category'])) {
             $_REQUEST['category'] = '';
@@ -65,13 +69,11 @@ class Lists
         try {
             $db = PDO::getConnection();
             $stmt = $db->prepare($sql);
-            $stmt->bindParam('name', $_REQUEST['name']);
-            $stmt->bindParam('description', $_REQUEST['description']);
-            $stmt->bindParam('listorder', $_REQUEST['listorder']);
-            $stmt->bindParam('prefix', $_REQUEST['prefix']);
-            $stmt->bindParam('rssfeed', $_REQUEST['rssfeed']);
-            $stmt->bindParam('category', $_REQUEST['category']);
-            $stmt->bindParam('active', $_REQUEST['active']);
+            $stmt->bindParam('name', $_REQUEST['name'],PDO::PARAM_STR);
+            $stmt->bindParam('description', $_REQUEST['description'],PDO::PARAM_STR);
+            $stmt->bindParam('listorder', $_REQUEST['listorder'],PDO::PARAM_INT);
+            $stmt->bindParam('category', $_REQUEST['category'],PDO::PARAM_STR);
+            $stmt->bindParam('active', $_REQUEST['active'],PDO::PARAM_BOOL);
             $stmt->execute();
             $id = $db->lastInsertId();
             $db = null;
@@ -90,8 +92,6 @@ class Lists
      * [*name] {string} the name of the list.<br/>
      * [description] {string} adds a description to the list.<br/>
      * [listorder] {integer} an expression to sortorder, eg 100.<br/>
-     * [prefix] {string} adds a prefix to the list (?).<br/>
-     * [rssfeed] {string} the url to the feed for this list (?).<br/>
      * [active] {integer} if list should be active set this one to 1, otherwise it will be disabled.<br/>
      * <p><strong>Returns:</strong><br/>
      * The list updated.
@@ -99,7 +99,7 @@ class Lists
      */
     public static function listUpdate()
     {
-        $sql = 'UPDATE '.$GLOBALS['table_prefix'].'list SET name=:name, description=:description, listorder=:listorder, prefix=:prefix, rssfeed=:rssfeed, category=:category, active=:active WHERE id=:id;';
+        $sql = 'UPDATE '.$GLOBALS['table_prefix'].'list SET name=:name, description=:description, listorder=:listorder, category=:category, active=:active WHERE id=:id;';
 
         // allow for an empty category, which didn't exist before
         if (!isset($_REQUEST['category'])) {
@@ -109,14 +109,12 @@ class Lists
         try {
             $db = PDO::getConnection();
             $stmt = $db->prepare($sql);
-            $stmt->bindParam('id', $_REQUEST['id']);
-            $stmt->bindParam('name', $_REQUEST['name']);
-            $stmt->bindParam('description', $_REQUEST['description']);
-            $stmt->bindParam('listorder', $_REQUEST['listorder']);
-            $stmt->bindParam('prefix', $_REQUEST['prefix']);
-            $stmt->bindParam('rssfeed', $_REQUEST['rssfeed']);
-            $stmt->bindParam('category', $_REQUEST['category']);
-            $stmt->bindParam('active', $_REQUEST['active']);
+            $stmt->bindParam('id', $_REQUEST['id'],PDO::PARAM_INT);
+            $stmt->bindParam('name', $_REQUEST['name'],PDO::PARAM_STR);
+            $stmt->bindParam('description', $_REQUEST['description'],PDO::PARAM_STR);
+            $stmt->bindParam('listorder', $_REQUEST['listorder'],PDO::PARAM_INT);
+            $stmt->bindParam('category', $_REQUEST['category'],PDO::PARAM_STR);
+            $stmt->bindParam('active', $_REQUEST['active'],PDO::PARAM_BOOL);
             $stmt->execute();
             $db = null;
             self::listGet($_REQUEST['id']);
@@ -139,12 +137,15 @@ class Lists
     {
         $sql = 'DELETE FROM '.$GLOBALS['table_prefix'].'list WHERE id=:id;';
         try {
+            if (!is_numeric($_REQUEST['id']) || empty($_REQUEST['id'])) {
+                Response::outputErrorMessage('invalid call');
+            }
             $db = PDO::getConnection();
             $stmt = $db->prepare($sql);
-            $stmt->bindParam('id', $_REQUEST['id']);
+            $stmt->bindParam('id', $_REQUEST['id'],PDO::PARAM_INT);
             $stmt->execute();
             $db = null;
-            Response::outputDeleted('List', $_REQUEST['id']);
+            Response::outputDeleted('List', sprintf('%d',$_REQUEST['id']));
         } catch (PDOException $e) {
             Response::outputError($e);
         }
@@ -164,12 +165,17 @@ class Lists
     {
         $response = new Response();
         if ($subscriber_id == 0) {
-            $subscriber_id = $_REQUEST['subscriber_id'];
+            $subscriber_id = sprintf('%d',$_REQUEST['subscriber_id']);
         }
-        $sql = 'SELECT * FROM '.$GLOBALS['table_prefix'].'list WHERE id IN (SELECT listid FROM '.$GLOBALS['table_prefix'].'listuser WHERE userid='.$subscriber_id.') ORDER BY listorder;';
+        $sql = 'SELECT * FROM '.$GLOBALS['table_prefix'].'list WHERE id IN (SELECT listid FROM '.$GLOBALS['table_prefix'].'listuser WHERE userid=:subscriber_id) ORDER BY listorder;';
+        if (!is_numeric($subscriber_id) || empty($subscriber_id)) {
+            Response::outputErrorMessage('invalid call');
+        }
         try {
             $db = PDO::getConnection();
-            $stmt = $db->query($sql);
+            $stmt = $db->prepare($sql);
+            $stmt->bindParam('subscriber_id', $subscriber_id, PDO::PARAM_INT);
+            $stmt->execute();
             $result = $stmt->fetchAll(PDO::FETCH_OBJ);
             $db = null;
             $response->setData('Lists', $result);
@@ -194,17 +200,20 @@ class Lists
     public static function listSubscriberAdd($list_id = 0, $subscriber_id = 0)
     {
         if ($list_id == 0) {
-            $list_id = $_REQUEST['list_id'];
+            $list_id = sprintf('%d',$_REQUEST['list_id']);
         }
         if ($subscriber_id == 0) {
-            $subscriber_id = $_REQUEST['subscriber_id'];
+            $subscriber_id = sprintf('%d',$_REQUEST['subscriber_id']);
+        }
+         if (empty($subscriber_id) || empty($list_id)) {
+            Response::outputErrorMessage('invalid call');
         }
         $sql = 'INSERT INTO '.$GLOBALS['table_prefix'].'listuser (userid, listid, entered) VALUES (:subscriber_id, :list_id, now());';
         try {
             $db = PDO::getConnection();
             $stmt = $db->prepare($sql);
-            $stmt->bindParam('subscriber_id', $subscriber_id);
-            $stmt->bindParam('list_id', $list_id);
+            $stmt->bindParam('subscriber_id', $subscriber_id,PDO::PARAM_INT);
+            $stmt->bindParam('list_id', $list_id,PDO::PARAM_INT);
             $stmt->execute();
             $db = null;
             self::listsSubscriber($subscriber_id);
@@ -236,8 +245,8 @@ class Lists
         try {
             $db = PDO::getConnection();
             $stmt = $db->prepare($sql);
-            $stmt->bindParam('subscriber_id', $subscriber_id);
-            $stmt->bindParam('list_id', $list_id);
+            $stmt->bindParam('subscriber_id', $subscriber_id,PDO::PARAM_INT);
+            $stmt->bindParam('list_id', $list_id,PDO::PARAM_INT);
             $stmt->execute();
             $db = null;
             Response::outputMessage('Subscriber '.$subscriber_id.' is unassigned from list '.$list_id);
@@ -269,8 +278,8 @@ class Lists
         try {
             $db = PDO::getConnection();
             $stmt = $db->prepare($sql);
-            $stmt->bindParam('message_id', $message_id);
-            $stmt->bindParam('list_id', $list_id);
+            $stmt->bindParam('message_id', $message_id,PDO::PARAM_INT);
+            $stmt->bindParam('list_id', $list_id,PDO::PARAM_INT);
             $stmt->execute();
             $db = null;
             self::listGet($list_id);
@@ -303,8 +312,8 @@ class Lists
         try {
             $db = PDO::getConnection();
             $stmt = $db->prepare($sql);
-            $stmt->bindParam('message_id', $message_id);
-            $stmt->bindParam('list_id', $list_id);
+            $stmt->bindParam('message_id', $message_id,PDO::PARAM_INT);
+            $stmt->bindParam('list_id', $list_id,PDO::PARAM_INT);
             $stmt->execute();
             $db = null;
             Response::outputMessage('Message '.$message_id.' is unassigned from list '.$list_id);

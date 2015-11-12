@@ -12,16 +12,16 @@ class Subscribers
      * <p><strong>Parameters:</strong><br/>
      * [order_by] {string} name of column to sort, default "id".<br/>
      * [order] {string} sort order asc or desc, default: asc.<br/>
-     * [limit] {integer} limit the result, default 100.<br/>
+     * [limit] {integer} limit the result, default 100 (max 100)<br/>
+     * [offset] {integer} offset of the result, default 0.<br/>
      * </p>
      * <p><strong>Returns:</strong><br/>
      * List of Subscribers.
      * </p>
      */
-    public static function subscribersGet($order_by = 'id', $order = 'asc', $limit = 100)
+    public static function subscribersGet($order_by = 'id', $order = 'asc', $limit = 100, $offset = 0)
     {
 
-        //getting optional values
         if (isset($_REQUEST['order_by']) && !empty($_REQUEST['order_by'])) {
             $order_by = $_REQUEST['order_by'];
         }
@@ -31,8 +31,22 @@ class Subscribers
         if (isset($_REQUEST['limit']) && !empty($_REQUEST['limit'])) {
             $limit = $_REQUEST['limit'];
         }
+        if (isset($_REQUEST['offset']) && !empty($_REQUEST['offset'])) {
+            $offset = $_REQUEST['offset'];
+        }
+        if ($limit > 100) {
+            $limit = 100;
+        }
+      #  $limit = 2;
+        
+        $params = array (
+            'order_by' => array($order_by,PDO::PARAM_STR),
+            'order' => array($order,PDO::PARAM_STR),
+            'limit' => array($limit,PDO::PARAM_INT),
+            'offset' => array($offset,PDO::PARAM_INT),
+        );
 
-        Common::select('Users', 'SELECT * FROM '.$GLOBALS['usertable_prefix']."user ORDER BY $order_by $order LIMIT $limit;");
+        Common::select('Users', 'SELECT * FROM '.$GLOBALS['usertable_prefix']."user ORDER BY :order_by :order LIMIT :limit OFFSET :offset;",$params);
     }
 
     /**
@@ -47,7 +61,7 @@ class Subscribers
      */
     public static function subscribersCount()
     {
-        Common::select('Users', 'SELECT count(id) as total FROM '.$GLOBALS['usertable_prefix']."user",true);
+        Common::select('Users', 'SELECT count(id) as total FROM '.$GLOBALS['usertable_prefix']."user",array(),true);
     }
 
     /**
@@ -63,9 +77,16 @@ class Subscribers
     public static function subscriberGet($id = 0)
     {
         if ($id == 0) {
-            $id = $_REQUEST['id'];
+            $id = sprintf('%d',$_REQUEST['id']);
         }
-        Common::select('User', 'SELECT * FROM '.$GLOBALS['usertable_prefix']."user WHERE id = $id;", true);
+        if (!is_numeric($id) || empty($id)) {
+            Response::outputErrorMessage('invalid call');
+        }
+        
+        $params = array(
+            'id' => array($id,PDO::PARAM_INT),
+        );
+        Common::select('User', 'SELECT * FROM '.$GLOBALS['usertable_prefix']."user WHERE id = :id;",$params, true);
     }
 
     /**
@@ -83,7 +104,10 @@ class Subscribers
         if (empty($email)) {
             $email = $_REQUEST['email'];
         }
-        Common::select('User', 'SELECT * FROM '.$GLOBALS['usertable_prefix']."user WHERE email = '$email';", true);
+        $params = array(
+            'email' => array($email,PDO::PARAM_STR)
+        );
+        Common::select('User', 'SELECT * FROM '.$GLOBALS['usertable_prefix']."user WHERE email = :email;",$params, true);
     }
 
     /**
@@ -93,8 +117,7 @@ class Subscribers
      * [*email] {string} the email address of the Subscriber.<br/>
      * [*confirmed] {integer} 1=confirmed, 0=unconfirmed.<br/>
      * [*htmlemail] {integer} 1=html emails, 0=no html emails.<br/>
-     * [*rssfrequency] {integer}<br/>
-     * [*password] {string} The password to this Subscriber.<br/>
+     * [*password] {string} The password for this Subscriber.<br/>
      * [*disabled] {integer} 1=disabled, 0=enabled<br/>
      * </p>
      * <p><strong>Returns:</strong><br/>
@@ -103,22 +126,19 @@ class Subscribers
      */
     public static function subscriberAdd()
     {
-        $sql = 'INSERT INTO '.$GLOBALS['usertable_prefix'].'user (email, confirmed, htmlemail, rssfrequency, password, passwordchanged, disabled, entered, uniqid) VALUES (:email, :confirmed, :htmlemail, :rssfrequency, :password, now(), :disabled, now(), :uniqid);';
+        $sql = 'INSERT INTO '.$GLOBALS['usertable_prefix'].'user (email, confirmed, htmlemail, password, passwordchanged, disabled, entered, uniqid) VALUES (:email, :confirmed, :htmlemail, :password, now(), :disabled, now(), :uniqid);';
+
+        $encPwd = Common::encryptPassword($_REQUEST['password']);
         try {
             $db = PDO::getConnection();
             $stmt = $db->prepare($sql);
-            $stmt->bindParam('email', $_REQUEST['email']);
-            $stmt->bindParam('confirmed', $_REQUEST['confirmed']);
-            $stmt->bindParam('htmlemail', $_REQUEST['htmlemail']);
-            $stmt->bindParam('rssfrequency', $_REQUEST['rssfrequency']);
-            $stmt->bindParam('password', $_REQUEST['password']);
-            $stmt->bindParam('disabled', $_REQUEST['disabled']);
-
-            // fails on strict
-#            $stmt->bindParam("uniqid", md5(uniqid(mt_rand())));
-
+            $stmt->bindParam('email', $_REQUEST['email'], PDO::PARAM_STR);
+            $stmt->bindParam('confirmed', $_REQUEST['confirmed'], PDO::PARAM_BOOL);
+            $stmt->bindParam('htmlemail', $_REQUEST['htmlemail'], PDO::PARAM_BOOL);
+            $stmt->bindParam('password', $encPwd, PDO::PARAM_STR);
+            $stmt->bindParam('disabled', $_REQUEST['disabled'], PDO::PARAM_BOOL);
             $uniq = md5(uniqid(mt_rand()));
-            $stmt->bindParam('uniqid', $uniq);
+            $stmt->bindParam('uniqid', $uniq, PDO::PARAM_STR);
             $stmt->execute();
             $id = $db->lastInsertId();
             $db = null;
@@ -146,18 +166,17 @@ class Subscribers
      */
     public static function subscriberUpdate()
     {
-        $sql = 'UPDATE '.$GLOBALS['usertable_prefix'].'user SET email=:email, confirmed=:confirmed, htmlemail=:htmlemail, rssfrequency=:rssfrequency, password=:password, passwordchanged=now(), disabled=:disabled WHERE id=:id;';
+        $sql = 'UPDATE '.$GLOBALS['usertable_prefix'].'user SET email=:email, confirmed=:confirmed, htmlemail=:htmlemail, password=:password, passwordchanged=now(), disabled=:disabled WHERE id=:id;';
 
         try {
             $db = PDO::getConnection();
             $stmt = $db->prepare($sql);
-            $stmt->bindParam('id', $_REQUEST['id']);
-            $stmt->bindParam('email', $_REQUEST['email']);
-            $stmt->bindParam('confirmed', $_REQUEST['confirmed']);
-            $stmt->bindParam('htmlemail', $_REQUEST['htmlemail']);
-            $stmt->bindParam('rssfrequency', $_REQUEST['rssfrequency']);
-            $stmt->bindParam('password', $_REQUEST['password']);
-            $stmt->bindParam('disabled', $_REQUEST['disabled']);
+            $stmt->bindParam('id', $_REQUEST['id'], PDO::PARAM_INT);
+            $stmt->bindParam('email', $_REQUEST['email'], PDO::PARAM_STR);
+            $stmt->bindParam('confirmed', $_REQUEST['confirmed'], PDO::PARAM_BOOL);
+            $stmt->bindParam('htmlemail', $_REQUEST['htmlemail'], PDO::PARAM_BOOL);
+            $stmt->bindParam('password', $_REQUEST['password'], PDO::PARAM_STR);
+            $stmt->bindParam('disabled', $_REQUEST['disabled'], PDO::PARAM_BOOL);
             $stmt->execute();
             $db = null;
             self::SubscriberGet($_REQUEST['id']);
@@ -180,12 +199,15 @@ class Subscribers
     {
         $sql = 'DELETE FROM '.$GLOBALS['usertable_prefix'].'user WHERE id=:id;';
         try {
+            if (!is_numeric($_REQUEST['id'])) {
+                Response::outputErrorMessage('invalid call');
+            }
             $db = PDO::getConnection();
             $stmt = $db->prepare($sql);
-            $stmt->bindParam('id', $_REQUEST['id']);
+            $stmt->bindParam('id', $_REQUEST['id'], PDO::PARAM_INT);
             $stmt->execute();
             $db = null;
-            Response::outputDeleted('Subscriber', $_REQUEST['id']);
+            Response::outputDeleted('Subscriber', sprintf('%d',$_REQUEST['id']));
         } catch (PDOException $e) {
             Response::outputError($e);
         }

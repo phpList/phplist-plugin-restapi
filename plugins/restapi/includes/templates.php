@@ -12,7 +12,7 @@ class Templates
 {
     public static function templatesGet()
     {
-        Common::select('Templates', 'SELECT * FROM '.$GLOBALS['table_prefix'].'template ORDER BY listorder;');
+        Common::select('Templates', 'SELECT * FROM '.$GLOBALS['table_prefix'].'template ORDER BY listorder;',array());
     }
 
     public static function templateGet($id = 0)
@@ -20,7 +20,10 @@ class Templates
         if ($id == 0) {
             $id = $_REQUEST['id'];
         }
-        Common::select('Template', 'SELECT * FROM '.$GLOBALS['table_prefix'].'template WHERE id='.$id.';', true);
+        $params = array(
+            'id' => array($id,PDO::PARAM_INT),
+        );
+        Common::select('Template', 'SELECT * FROM '.$GLOBALS['table_prefix'].'template WHERE id=:id;',$params, true);
     }
 
     public static function templateGetByTitle($title = '')
@@ -28,7 +31,10 @@ class Templates
         if (empty($title)) {
             $title = $_REQUEST['title'];
         }
-        Common::select('Template', 'SELECT * FROM '.$GLOBALS['table_prefix']."template WHERE title='".$title."';", true);
+        $params = array(
+            'title' => array($title,PDO::PARAM_STR),
+        );
+        Common::select('Template', 'SELECT * FROM '.$GLOBALS['table_prefix']."template WHERE title=:title;",$params, true);
     }
 
     /**
@@ -64,7 +70,7 @@ class Templates
         try {
             $db = PDO::getConnection();
             $stmt = $db->prepare($sql);
-            $stmt->bindParam('id', $_REQUEST['id']);
+            $stmt->bindParam('id', $_REQUEST['id'],PDO::PARAM_INT);
             $stmt->bindParam('title', $_REQUEST['title']);
             $stmt->bindParam('template', $_REQUEST['template']);
             $stmt->execute();
@@ -77,11 +83,14 @@ class Templates
 
     public static function templateDelete()
     {
-        $sql = 'DELETE FROM '.$GLOBALS['table_prefix'].'template WHERE id=:id;';
+        $sql = 'DELETE FROM '.$GLOBALS['table_prefix'].'template WHERE id=:id';
         try {
+            if (!is_numeric($_REQUEST['id'])) {
+                Response::outputErrorMessage('invalid call');
+            }
             $db = PDO::getConnection();
             $stmt = $db->prepare($sql);
-            $stmt->bindParam('id', $_REQUEST['id']);
+            $stmt->bindParam('id', $_REQUEST['id'],PDO::PARAM_STR);
             $stmt->execute();
             $db = null;
             Response::outputDeleted('Template', $_REQUEST['id']);

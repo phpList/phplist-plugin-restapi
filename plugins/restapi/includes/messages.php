@@ -15,18 +15,58 @@ class Messages
         if ($id == 0) {
             $id = $_REQUEST['id'];
         }
-        Common::select('Message', 'SELECT * FROM '.$GLOBALS['table_prefix'].'message WHERE id='.$id.';', true);
+        
+        $params = array(
+            'id' => array($id,PDO::PARAM_INT),
+            );
+        
+        Common::select('Message', 'SELECT * FROM '.$GLOBALS['table_prefix'].'message WHERE id=:id;',$params, true);
     }
     
     public static function messagesCount()
     {
-        Common::select('Messages', 'SELECT count(id) as total FROM '.$GLOBALS['table_prefix'].'message',true);
+        Common::select('Messages', 'SELECT count(id) as total FROM '.$GLOBALS['table_prefix'].'message',array(),true);
     }
 
 
-    public static function messagesGet()
+    /**
+     * Get all the Campaigns in the system.
+     * 
+     * <p><strong>Parameters:</strong><br/>
+     * [order_by] {string} name of column to sort, default "id".<br/>
+     * [order] {string} sort order asc or desc, default: asc.<br/>
+     * [limit] {integer} limit the result, default 10 (max 10)<br/>
+     * [offset] {integer} offset of the result, default 0.<br/>
+     * </p>
+     * <p><strong>Returns:</strong><br/>
+     * List of Campaigns.
+     * </p>
+     */
+    public static function messagesGet($order_by = 'modified', $order = 'desc', $limit = 10, $offset = 0)
     {
-        Common::select('Messages', 'SELECT * FROM '.$GLOBALS['table_prefix'].'message ORDER BY Modified DESC;');
+        if (isset($_REQUEST['order_by']) && !empty($_REQUEST['order_by'])) {
+            $order_by = $_REQUEST['order_by'];
+        }
+        if (isset($_REQUEST['order']) && !empty($_REQUEST['order'])) {
+            $order = $_REQUEST['order'];
+        }
+        if (isset($_REQUEST['limit']) && !empty($_REQUEST['limit'])) {
+            $limit = sprintf('%d',$_REQUEST['limit']);
+        }
+        if (isset($_REQUEST['offset']) && !empty($_REQUEST['offset'])) {
+            $offset = sprintf('%d',$_REQUEST['offset']);
+        }
+        if ($limit > 10) {
+            $limit = 10;
+        }
+        
+        $params = array (
+            'order_by' => array($order_by,PDO::PARAM_STR),
+            'order' => array($order,PDO::PARAM_STR),
+            'limit' => array($limit,PDO::PARAM_INT),
+            'offset' => array($offset,PDO::PARAM_INT),
+        );
+        Common::select('Messages', 'SELECT * FROM '.$GLOBALS['table_prefix'].'message ORDER BY :order_by :order LIMIT :limit OFFSET :offset;',$params);
     }
 
     /**
@@ -56,19 +96,19 @@ class Messages
         try {
             $db = PDO::getConnection();
             $stmt = $db->prepare($sql);
-            $stmt->bindParam('subject', $_REQUEST['subject']);
-            $stmt->bindParam('fromfield', $_REQUEST['fromfield']);
-            $stmt->bindParam('replyto', $_REQUEST['replyto']);
-            $stmt->bindParam('message', $_REQUEST['message']);
-            $stmt->bindParam('textmessage', $_REQUEST['textmessage']);
-            $stmt->bindParam('footer', $_REQUEST['footer']);
-            $stmt->bindParam('status', $_REQUEST['status']);
-            $stmt->bindParam('sendformat', $_REQUEST['sendformat']);
-            $stmt->bindParam('template', $_REQUEST['template']);
-            $stmt->bindParam('embargo', $_REQUEST['embargo']);
-            $stmt->bindParam('rsstemplate', $_REQUEST['rsstemplate']);
-            $stmt->bindParam('owner', $_REQUEST['owner']);
-            $stmt->bindParam('htmlformatted', $_REQUEST['htmlformatted']);
+            $stmt->bindParam('subject', $_REQUEST['subject'], PDO::PARAM_STR);
+            $stmt->bindParam('fromfield', $_REQUEST['fromfield'], PDO::PARAM_STR);
+            $stmt->bindParam('replyto', $_REQUEST['replyto'], PDO::PARAM_STR);
+            $stmt->bindParam('message', $_REQUEST['message'], PDO::PARAM_STR);
+            $stmt->bindParam('textmessage', $_REQUEST['textmessage'], PDO::PARAM_STR);
+            $stmt->bindParam('footer', $_REQUEST['footer'], PDO::PARAM_STR);
+            $stmt->bindParam('status', $_REQUEST['status'], PDO::PARAM_STR);
+            $stmt->bindParam('sendformat', $_REQUEST['sendformat'], PDO::PARAM_STR);
+            $stmt->bindParam('template', $_REQUEST['template'], PDO::PARAM_INT);
+            $stmt->bindParam('embargo', $_REQUEST['embargo'], PDO::PARAM_STR);
+            $stmt->bindParam('rsstemplate', $_REQUEST['rsstemplate'], PDO::PARAM_STR);
+            $stmt->bindParam('owner', $_REQUEST['owner'], PDO::PARAM_INT);
+            $stmt->bindParam('htmlformatted', $_REQUEST['htmlformatted'], PDO::PARAM_STR);
             $stmt->execute();
             $id = $db->lastInsertId();
             $db = null;
@@ -109,20 +149,20 @@ class Messages
         try {
             $db = PDO::getConnection();
             $stmt = $db->prepare($sql);
-            $stmt->bindParam('id', $id);
-            $stmt->bindParam('subject', $_REQUEST['subject']);
-            $stmt->bindParam('fromfield', $_REQUEST['fromfield']);
-            $stmt->bindParam('replyto', $_REQUEST['replyto']);
-            $stmt->bindParam('message', $_REQUEST['message']);
-            $stmt->bindParam('textmessage', $_REQUEST['textmessage']);
-            $stmt->bindParam('footer', $_REQUEST['footer']);
+            $stmt->bindParam('id', $id, PDO::PARAM_INT);
+            $stmt->bindParam('subject', $_REQUEST['subject'], PDO::PARAM_STR);
+            $stmt->bindParam('fromfield', $_REQUEST['fromfield'], PDO::PARAM_STR);
+            $stmt->bindParam('replyto', $_REQUEST['replyto'], PDO::PARAM_STR);
+            $stmt->bindParam('message', $_REQUEST['message'], PDO::PARAM_STR);
+            $stmt->bindParam('textmessage', $_REQUEST['textmessage'], PDO::PARAM_STR);
+            $stmt->bindParam('footer', $_REQUEST['footer'], PDO::PARAM_STR);
             $stmt->bindParam('status', $_REQUEST['status']);
-            $stmt->bindParam('sendformat', $_REQUEST['sendformat']);
-            $stmt->bindParam('template', $_REQUEST['template']);
-            $stmt->bindParam('embargo', $_REQUEST['embargo']);
-            $stmt->bindParam('rsstemplate', $_REQUEST['rsstemplate']);
-            $stmt->bindParam('owner', $_REQUEST['owner']);
-            $stmt->bindParam('htmlformatted', $_REQUEST['htmlformatted']);
+            $stmt->bindParam('sendformat', $_REQUEST['sendformat'], PDO::PARAM_STR);
+            $stmt->bindParam('template', $_REQUEST['template'], PDO::PARAM_INT);
+            $stmt->bindParam('embargo', $_REQUEST['embargo'], PDO::PARAM_STR);
+            $stmt->bindParam('rsstemplate', $_REQUEST['rsstemplate'], PDO::PARAM_STR);
+            $stmt->bindParam('owner', $_REQUEST['owner'], PDO::PARAM_INT);
+            $stmt->bindParam('htmlformatted', $_REQUEST['htmlformatted'], PDO::PARAM_BOOL);
             $stmt->execute();
             $db = null;
             self::messageGet($id);

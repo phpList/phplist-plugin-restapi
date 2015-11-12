@@ -6,12 +6,16 @@ defined('PHPLISTINIT') || die;
 
 class Common
 {
-    public static function select($type, $sql, $single = false)
+    public static function select($type, $sql, $params = array(), $single = false)
     {
         $response = new Response();
         try {
             $db = PDO::getConnection();
-            $stmt = $db->query($sql);
+            $stmt = $db->prepare($sql);
+            foreach ($params as $param => $paramValue) {
+                $stmt->bindParam($param, $paramValue[0],$paramValue[1]);
+            }
+            $stmt->execute();
             $result = $stmt->fetchAll(PDO::FETCH_OBJ);
             $db = null;
             if ($single && is_array($result) && isset($result[0])) {
@@ -57,5 +61,26 @@ class Common
         }
         return $string;
     }
+    
+    public static function encryptPassword($pass)
+    {
+        if (empty($pass)) {
+            return '';
+        }
+
+        if (function_exists('hash')) {
+            if (!in_array(ENCRYPTION_ALGO, hash_algos(), true)) {
+                ## fallback, not that secure, but better than none at all
+                $algo = 'md5';
+            } else {
+                $algo = ENCRYPTION_ALGO;
+            }
+
+            return hash($algo, $pass);
+        } else {
+            return md5($pass);
+        }
+    }
+
 
 }
