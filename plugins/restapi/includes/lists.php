@@ -78,7 +78,7 @@ class Lists
             $id = $db->lastInsertId();
             $db = null;
             self::listGet($id);
-        } catch (PDOException $e) {
+        } catch (\Exception $e) {
             Response::outputError($e);
         }
         die(0);
@@ -118,7 +118,7 @@ class Lists
             $stmt->execute();
             $db = null;
             self::listGet($_REQUEST['id']);
-        } catch (PDOException $e) {
+        } catch (\Exception $e) {
             Response::outputError($e);
         }
         die(0);
@@ -146,7 +146,7 @@ class Lists
             $stmt->execute();
             $db = null;
             Response::outputDeleted('List', sprintf('%d',$_REQUEST['id']));
-        } catch (PDOException $e) {
+        } catch (\Exception $e) {
             Response::outputError($e);
         }
         die(0);
@@ -180,7 +180,7 @@ class Lists
             $db = null;
             $response->setData('Lists', $result);
             $response->output();
-        } catch (PDOException $e) {
+        } catch (\Exception $e) {
             Response::outputError($e);
         }
         die(0);
@@ -217,7 +217,7 @@ class Lists
             $stmt->execute();
             $db = null;
             self::listsSubscriber($subscriber_id);
-        } catch (PDOException $e) {
+        } catch (\Exception $e) {
             Response::outputError($e);
         }
         die(0);
@@ -250,7 +250,7 @@ class Lists
             $stmt->execute();
             $db = null;
             Response::outputMessage('Subscriber '.$subscriber_id.' is unassigned from list '.$list_id);
-        } catch (PDOException $e) {
+        } catch (\Exception $e) {
             Response::outputError($e);
         }
         die(0);
@@ -283,7 +283,7 @@ class Lists
             $stmt->execute();
             $db = null;
             self::listGet($list_id);
-        } catch (PDOException $e) {
+        } catch (\Exception $e) {
             Response::outputError($e);
         }
         die(0);
@@ -317,7 +317,7 @@ class Lists
             $stmt->execute();
             $db = null;
             Response::outputMessage('Message '.$message_id.' is unassigned from list '.$list_id);
-        } catch (PDOException $e) {
+        } catch (\Exception $e) {
             Response::outputError($e);
         }
         die(0);

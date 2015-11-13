@@ -113,7 +113,7 @@ class Messages
             $id = $db->lastInsertId();
             $db = null;
             self::messageGet($id);
-        } catch (PDOException $e) {
+        } catch (\Exception $e) {
             Response::outputError($e);
         }
     }
@@ -166,7 +166,7 @@ class Messages
             $stmt->execute();
             $db = null;
             self::messageGet($id);
-        } catch (PDOException $e) {
+        } catch (\Exception $e) {
             Response::outputError($e);
         }
     }

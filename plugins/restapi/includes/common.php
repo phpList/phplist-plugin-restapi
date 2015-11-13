@@ -8,8 +8,8 @@ class Common
 {
     public static function select($type, $sql, $params = array(), $single = false)
     {
-        $response = new Response();
-        try {
+       $response = new Response();
+       try {
             $db = PDO::getConnection();
             $stmt = $db->prepare($sql);
             foreach ($params as $param => $paramValue) {
@@ -22,7 +22,7 @@ class Common
                 $result = $result[0];
             }
             $response->setData($type, $result);
-        } catch (PDOException $e) {
+        } catch (\Exception $e) {
             $response->setError($e->getCode(), $e->getMessage());
         }
         $response->output();

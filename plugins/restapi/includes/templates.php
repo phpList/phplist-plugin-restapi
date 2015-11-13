@@ -59,7 +59,7 @@ class Templates
             $id = $db->lastInsertId();
             $db = null;
             self::templateGet($id);
-        } catch (PDOException $e) {
+        } catch (\Exception $e) {
             Response::outputError($e);
         }
     }
@@ -76,7 +76,7 @@ class Templates
             $stmt->execute();
             $db = null;
             self::templateGet($_REQUEST['id']);
-        } catch (PDOException $e) {
+        } catch (\Exception $e) {
             Response::outputError($e);
         }
     }
@@ -94,7 +94,7 @@ class Templates
             $stmt->execute();
             $db = null;
             Response::outputDeleted('Template', $_REQUEST['id']);
-        } catch (PDOException $e) {
+        } catch (\Exception $e) {
             Response::outputError($e);
         }
     }

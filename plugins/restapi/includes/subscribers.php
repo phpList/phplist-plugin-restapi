@@ -143,7 +143,7 @@ class Subscribers
             $id = $db->lastInsertId();
             $db = null;
             self::SubscriberGet($id);
-        } catch (PDOException $e) {
+        } catch (\Exception $e) {
             Response::outputError($e);
         }
     }
@@ -180,7 +180,7 @@ class Subscribers
             $stmt->execute();
             $db = null;
             self::SubscriberGet($_REQUEST['id']);
-        } catch (PDOException $e) {
+        } catch (\Exception $e) {
             Response::outputError($e);
         }
     }
@@ -208,7 +208,7 @@ class Subscribers
             $stmt->execute();
             $db = null;
             Response::outputDeleted('Subscriber', sprintf('%d',$_REQUEST['id']));
-        } catch (PDOException $e) {
+        } catch (\Exception $e) {
             Response::outputError($e);
         }
     }
