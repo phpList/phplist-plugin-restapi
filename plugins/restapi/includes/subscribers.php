@@ -86,7 +86,7 @@ class Subscribers
         $params = array(
             'id' => array($id,PDO::PARAM_INT),
         );
-        Common::select('User', 'SELECT * FROM '.$GLOBALS['usertable_prefix']."user WHERE id = :id;",$params, true);
+        Common::select('Subscriber', 'SELECT * FROM '.$GLOBALS['usertable_prefix']."user WHERE id = :id;",$params, true);
     }
 
     /**
@@ -107,7 +107,7 @@ class Subscribers
         $params = array(
             'email' => array($email,PDO::PARAM_STR)
         );
-        Common::select('User', 'SELECT * FROM '.$GLOBALS['usertable_prefix']."user WHERE email = :email;",$params, true);
+        Common::select('Subscriber', 'SELECT * FROM '.$GLOBALS['usertable_prefix']."user WHERE email = :email;",$params, true);
     }
 
     /**
@@ -166,20 +166,22 @@ class Subscribers
      */
     public static function subscriberUpdate()
     {
-        $sql = 'UPDATE '.$GLOBALS['usertable_prefix'].'user SET email=:email, confirmed=:confirmed, htmlemail=:htmlemail, password=:password, passwordchanged=now(), disabled=:disabled WHERE id=:id;';
-
+        $sql = 'UPDATE '.$GLOBALS['usertable_prefix'].'user SET email=:email, confirmed=:confirmed, htmlemail=:htmlemail WHERE id=:id;';
+        
+        $id = sprintf('%d',$_REQUEST['id']);
+        if (empty($id)) {
+            Response::outputErrorMessage('invalid call');
+        }
         try {
             $db = PDO::getConnection();
             $stmt = $db->prepare($sql);
-            $stmt->bindParam('id', $_REQUEST['id'], PDO::PARAM_INT);
+            $stmt->bindParam('id', $id, PDO::PARAM_INT);
             $stmt->bindParam('email', $_REQUEST['email'], PDO::PARAM_STR);
             $stmt->bindParam('confirmed', $_REQUEST['confirmed'], PDO::PARAM_BOOL);
             $stmt->bindParam('htmlemail', $_REQUEST['htmlemail'], PDO::PARAM_BOOL);
-            $stmt->bindParam('password', $_REQUEST['password'], PDO::PARAM_STR);
-            $stmt->bindParam('disabled', $_REQUEST['disabled'], PDO::PARAM_BOOL);
             $stmt->execute();
             $db = null;
-            self::SubscriberGet($_REQUEST['id']);
+            self::SubscriberGet($id);
         } catch (\Exception $e) {
             Response::outputError($e);
         }

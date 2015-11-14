@@ -287,10 +287,55 @@ class TestRestapi extends \PHPUnit_Framework_TestCase
         return $subscriberId;
     }
     
+    /**
+     * Test adding a the subscriber again
+     *
+     * this should fail on being duplicate
+     * @depends testSubscriberExist
+     */
+    public function testSubscriberAddAgain($testEmailAddress)
+    {
+        $post_params = array(
+            'email' => $testEmailAddress,
+            'confirmed' => 1,
+            'htmlemail' => 1,
+            'password' => 'password',
+            'disabled' => 0,
+        );
+
+        $result = $this->callAPI('subscriberAdd', $post_params);
+        $this->assertEquals('error', $result->status);
+    }
+
+    /**
+     * Test updating the subscriber
+     *
+     * this should fail on being duplicate
+     * @depends testSubscriberAdd
+     */
+    public function testSubscriberUpdate($subscriberId)
+    {
+        $changedEmail = 'updatetest-'.time().rand(100, 999).'@phplist.com';
+        $post_params = array(
+            'id' => $subscriberId,
+            'email' => $changedEmail,
+            'confirmed' => 1,
+            'htmlemail' => 0,
+        );
+
+        $result = $this->callAPI('subscriberUpdate', $post_params);
+        $this->assertEquals('success', $result->status);
+        $this->assertEquals(1, $result->data->confirmed);
+        $this->assertEquals($changedEmail,$result->data->email);
+        $this->assertEquals(0, $result->data->htmlemail);
+        $testEmailAddress = $changedEmail;
+        return $testEmailAddress;
+    }
+    
     /** 
      * test getting subscriber by ID
      * @depends testSubscriberAdd
-     * @depends testSubscriberExist
+     * @depends testSubscriberUpdate
      * 
      */
     public function testSubscriberGet($subscriberId,$testEmailAddress) {
@@ -300,7 +345,6 @@ class TestRestapi extends \PHPUnit_Framework_TestCase
 
         // Execute the api call
         $result = $this->callAPI('subscriberGet', $post_params);
-
         $this->assertEquals('success', $result->status);
         $fetchedSubscriberId = $result->data->id;
         $this->assertEquals($fetchedSubscriberId, $subscriberId);
@@ -330,7 +374,7 @@ class TestRestapi extends \PHPUnit_Framework_TestCase
     /** 
      * Test that a subscriber exists again.
      *
-     * @depends testSubscriberExist
+     * @depends testSubscriberUpdate
      */
     public function testSubscriberExist2($testEmailAddress)
     {
@@ -341,8 +385,6 @@ class TestRestapi extends \PHPUnit_Framework_TestCase
         $this->assertEquals('success', $result->status);
         $this->assertTrue(is_numeric($result->data->id)); // now it does
         $subscriberId = $result->data->id;
-
-        // Pass on the newly created userid to other tests
         return $subscriberId;
     }
 
