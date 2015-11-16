@@ -42,8 +42,6 @@ if (function_exists('api_request_log')) {
     api_request_log();
 }
 
-
-//Check if this is called outside phpList auth, this should never occur!
 if (empty($plugin->coderoot)) {
     Response::outputErrorMessage('Not authorized! Please login with [login] and [password] as admin first!');
 }
@@ -51,6 +49,24 @@ if (empty($plugin->coderoot)) {
 if ($cmd != 'login') {
   Common::LogRequest($cmd);
   Common::enforceRequestLimit(getConfig('restapi_limit'));
+}
+$ipAddress = getConfig('restapi_ipaddress');
+if (!empty($ipAddress) && ($GLOBALS['remoteAddr'] != $ipAddress)) {
+    $response->outputErrorMessage('Incorrect ip address for request. Check your settings.');
+    die(0);
+} 
+$requireSecret = getConfig('restapi_usesecret');
+if ($requireSecret) {
+  $secret = getConfig('remote_processing_secret');
+  if (empty($_REQUEST['secret']) || $_REQUEST['secret'] != $secret) {
+    $response->outputErrorMessage('Incorrect processing secret. Check your settings.');
+    die(0);
+  }
+} 
+$enforceSSL = getConfig('restapi_enforcessl');
+if ($enforceSSL && empty($_SERVER['HTTPS'])) {
+    $response->outputErrorMessage('Invalid API request. Request is not using SSL, which is enforced by the plugin settings.');
+    die(0);
 }
 
 //Now bind the commands with static functions

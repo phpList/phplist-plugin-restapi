@@ -22,6 +22,7 @@ class TestRestapi extends \PHPUnit_Framework_TestCase
         // Set values from constants stored in phpunit.xml
         $this->loginName = API_LOGIN_USERNAME;
         $this->password = API_LOGIN_PASSWORD;
+        $this->processingSecret = API_REMOTE_PROCESSING_SECRET;
         $this->url = API_URL_BASE_PATH;
         $this->tmpPath = TMP_PATH;
         $this->testListName = 'API Test Testlist '.time();
@@ -43,6 +44,7 @@ class TestRestapi extends \PHPUnit_Framework_TestCase
     private function callApi($command, $post_params, $decode = true)
     {
         $post_params['cmd'] = $command;
+        $post_params['secret'] = $this->processingSecret;
         if ($this->debug) {
             print  "Calling $command".PHP_EOL;
         }
@@ -85,7 +87,6 @@ class TestRestapi extends \PHPUnit_Framework_TestCase
 
         // Execute the login with the credentials as params
         $result = $this->callApi('login', $post_params);
-
         // Check if the login was successful
         $this->assertEquals('success', $result->status);
     }
@@ -102,7 +103,6 @@ class TestRestapi extends \PHPUnit_Framework_TestCase
 
         // Execute the api call
         $result = $this->callApi('listsGet', $post_params);
-
         // Check if the lists were fetched successfully
         $this->assertEquals('success', $result->status);
         $this->assertTrue(is_numeric(count($result->data)));
