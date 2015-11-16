@@ -28,7 +28,7 @@ before_script:
 
 script:
   - vendor/bin/behat
-  - phpunit -c tests/phpunit/phpunit.xml tests/phpunit/restapi.php
+  - phpunit -c tests/travis-ci/phpunit.xml tests/phpunit/restapi.php
 after_failure:
   - echo "Failures detected. Outputing additional logs:"
   - sudo cat /var/log/apache2/error.log
