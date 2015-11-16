@@ -27,6 +27,37 @@ class Common
         }
         $response->output();
     }
+    
+    public static function logRequest($cmd) 
+    {
+       try {
+            $db = PDO::getConnection();
+            $stmt = $db->prepare('insert into '.$GLOBALS['table_prefix'].'restapi_request_log (url,cmd,ip,request,date) values(:url,:cmd,:ip,:request,now())');
+            $stmt->bindParam('url', $_SERVER['REQUEST_URI'],PDO::PARAM_STR);
+            $stmt->bindParam('cmd', $cmd,PDO::PARAM_STR);
+            $stmt->bindParam('ip', $GLOBALS['remoteAddr'],PDO::PARAM_STR);
+            $stmt->bindParam('request', serialize($_REQUEST),PDO::PARAM_STR);
+            $stmt->execute();
+        } catch (\Exception $e) {
+            $response->setError($e->getCode(), $e->getMessage());
+        }
+    }
+
+    public static function enforceRequestLimit($limit) 
+    {
+       try {
+            $db = PDO::getConnection();
+            $stmt = $db->prepare('select count(cmd) as num from '.$GLOBALS['table_prefix'].'restapi_request_log where date > date_sub(now(),interval 1 minute)');
+            $stmt->execute();
+            $result = $stmt->fetch(PDO::FETCH_ASSOC);
+            if ($result['num'] > $limit) {
+              $response->outputErrorMessage('Too many requests. Requests are limited to '.$limit.' per minute');
+              die(0);
+            }
+        } catch (\Exception $e) {
+            $response->setError($e->getCode(), $e->getMessage());
+        }
+    }
 
     public static function apiUrl($website)
     {

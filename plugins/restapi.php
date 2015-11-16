@@ -33,16 +33,47 @@ class restapi extends phplistPlugin
       'main' => array('category' => 'system'),
     );
 
-    public function restapi()
+    public $DBstruct = array(
+        'request_log' => array(
+            'id' => array('integer not null primary key auto_increment', 'ID'),
+            'url' => array('text not null', ''),
+            'cmd' => array('varchar(150) not null',''),
+            'ip' => array('varchar(15) not null',''),
+            'request' => array('text not null', ''),
+            'date' => array('timestamp not null', ''),
+        ),
+    );
+
+    public $settings = array(
+        'restapi_limit' => array(
+            'description' => 'Maximum number of RESTAPI requests per minute',
+            'type' => 'integer',
+            'value' => 60,
+            'allowempty' => 0,
+            'min' => 1,
+            'max' => 1200,
+            'category'=> 'Security',
+        ),
+    );
+    public function __construct()
     {
-        parent::phplistplugin();
-        $this->coderoot = dirname(__FILE__).'/restapi/';
+        $this->coderoot = dirname(__FILE__) . '/' . __CLASS__ . '/';
+        parent::__construct();
+        if (!Sql_Table_exists($GLOBALS['table_prefix'].'restapi_request_log')) {
+            saveConfig(md5('plugin-restapi-initialised'), false, 0);
+            $this->initialise();
+        }
     }
 
     public function adminmenu()
     {
         return array(
-            'main' => 'RESTAPI',
+            'main' => 'RESTAPI Main',
         );
+    }
+    
+    public function logRequest($cmd) {
+      file_put_contents('/tmp/debug.log',sprintf('insert into %s (url,cmd,ip,request,date) values("%s","%s","%s","%s",now())',
+        $GLOBALS['table_prefix'].'restapi_request_log',sql_escape($_SERVER['REQUEST_URI']),$GLOBALS['remoteAddr'],$cmd,sql_escape(serialize($_REQUEST))).PHP_EOL,FILE_APPEND);
     }
 }

@@ -192,9 +192,9 @@ class TestRestapi extends \PHPUnit_Framework_TestCase
      public function testSubscriberCount()
      {
          $post_params = array(
-        );
-        // Execute the api call
-        $result = $this->callAPI('subscribersCount', $post_params);
+         );
+         // Execute the api call
+         $result = $this->callAPI('subscribersCount', $post_params);
          $this->assertEquals('success', $result->status);
          $this->assertTrue(is_numeric($result->data->total));
 
