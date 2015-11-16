@@ -48,8 +48,10 @@ if (empty($plugin->coderoot)) {
     Response::outputErrorMessage('Not authorized! Please login with [login] and [password] as admin first!');
 }
 
-Common::LogRequest($cmd);
-Common::enforceRequestLimit(getConfig('restapi_limit'));
+if ($cmd != 'login') {
+  Common::LogRequest($cmd);
+  Common::enforceRequestLimit(getConfig('restapi_limit'));
+}
 
 //Now bind the commands with static functions
 if (is_callable(array('phpListRestapi\Lists',       $cmd))) {
