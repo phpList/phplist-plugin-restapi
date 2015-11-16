@@ -270,6 +270,7 @@ class TestRestapi extends \PHPUnit_Framework_TestCase
         // Set the user details as parameters
         $post_params = array(
             'email' => $testEmailAddress,
+            'foreignkey' => 'testForeignKey',
             'confirmed' => 1,
             'htmlemail' => 1,
             'password' => 'password',
@@ -353,6 +354,27 @@ class TestRestapi extends \PHPUnit_Framework_TestCase
         return $subscriberId;
     }
     
+    /** 
+     * test getting subscriber by Foreign Key
+     * @depends testSubscriberAdd
+     * @depends testSubscriberUpdate
+     * 
+     */
+    public function testSubscriberGetByFK($subscriberId,$testEmailAddress) {
+        $post_params = array(
+            'foreignkey' => 'testForeignKey',
+        );
+
+        // Execute the api call
+        $result = $this->callAPI('subscriberGetByForeignkey', $post_params);
+        $this->assertEquals('success', $result->status);
+        $this->assertTrue(is_numeric($result->data->id));
+        $fetchedSubscriberId = $result->data->id;
+        $this->assertEquals($fetchedSubscriberId, $subscriberId);
+        $this->assertEquals($testEmailAddress,  $result->data->email);
+
+        return $subscriberId;
+    }
     /** 
      * test getting subscriber by ID
      * @depends testSubscriberAdd

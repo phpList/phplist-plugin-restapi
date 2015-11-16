@@ -37,8 +37,7 @@ class Subscribers
         if ($limit > 100) {
             $limit = 100;
         }
-      #  $limit = 2;
-        
+       
         $params = array (
             'order_by' => array($order_by,PDO::PARAM_STR),
             'order' => array($order,PDO::PARAM_STR),
@@ -111,6 +110,26 @@ class Subscribers
     }
 
     /**
+     * Get one Subscriber by foreign key.
+     * 
+     * <p><strong>Parameters:</strong><br/>
+     * [*foreignkey] {string} the foreign key of the Subscriber.<br/>
+     * </p>
+     * <p><strong>Returns:</strong><br/>
+     * One Subscriber only.
+     * </p>
+     */
+    public static function subscriberGetByForeignkey($foreignkey = '')
+    {
+        if (empty($foreignkey)) {
+            $foreignkey = $_REQUEST['foreignkey'];
+        }
+        $params = array(
+            'foreignkey' => array($foreignkey,PDO::PARAM_STR)
+        );
+        Common::select('Subscriber', 'SELECT * FROM '.$GLOBALS['usertable_prefix']."user WHERE foreignkey = :foreignkey;",$params, true);
+    }
+    /**
      * Add one Subscriber.
      * 
      * <p><strong>Parameters:</strong><br/>
@@ -126,7 +145,7 @@ class Subscribers
      */
     public static function subscriberAdd()
     {
-        $sql = 'INSERT INTO '.$GLOBALS['usertable_prefix'].'user (email, confirmed, htmlemail, password, passwordchanged, disabled, entered, uniqid) VALUES (:email, :confirmed, :htmlemail, :password, now(), :disabled, now(), :uniqid);';
+        $sql = 'INSERT INTO '.$GLOBALS['usertable_prefix'].'user (email, confirmed, foreignkey, htmlemail, password, passwordchanged, disabled, entered, uniqid) VALUES (:email, :confirmed, :foreignkey, :htmlemail, :password, now(), :disabled, now(), :uniqid);';
 
         $encPwd = Common::encryptPassword($_REQUEST['password']);
         try {
@@ -135,6 +154,7 @@ class Subscribers
             $stmt->bindParam('email', $_REQUEST['email'], PDO::PARAM_STR);
             $stmt->bindParam('confirmed', $_REQUEST['confirmed'], PDO::PARAM_BOOL);
             $stmt->bindParam('htmlemail', $_REQUEST['htmlemail'], PDO::PARAM_BOOL);
+            $stmt->bindParam('foreignkey', $_REQUEST['foreignkey'], PDO::PARAM_STR);
             $stmt->bindParam('password', $encPwd, PDO::PARAM_STR);
             $stmt->bindParam('disabled', $_REQUEST['disabled'], PDO::PARAM_BOOL);
             $uniq = md5(uniqid(mt_rand()));
