@@ -21,6 +21,7 @@ before_script:
   - composer self-update
   - composer install --prefer-dist
   - sudo cp -f tests/travis-ci/behat.yml behat.yml
+  - sudo cp -f tests/travis-ci/phpunit.xml tests/phpunit/
 
   # Set MySQL configuration and create the database.
   - mysql -e 'SET GLOBAL wait_timeout = 5400;'
@@ -28,7 +29,7 @@ before_script:
 
 script:
   - vendor/bin/behat
-  - phpunit -c tests/travis-ci/phpunit.xml tests/phpunit/restapi.php
+  - phpunit -c tests/phpunit/phpunit.xml tests/phpunit/restapi.php
 after_failure:
   - echo "Failures detected. Outputing additional logs:"
   - sudo cat /var/log/apache2/error.log
