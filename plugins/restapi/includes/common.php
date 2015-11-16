@@ -49,8 +49,8 @@ class Common
             $db = PDO::getConnection();
             $stmt = $db->prepare('select count(cmd) as num from '.$GLOBALS['table_prefix'].'restapi_request_log where date > date_sub(now(),interval 1 minute)');
             $stmt->execute();
-            $result = $stmt->fetch(PDO::FETCH_ASSOC);
-            if ($result['num'] > $limit) {
+            $result = $stmt->fetch(PDO::FETCH_OBJ);
+            if ($result->num > $limit) {
               $response->outputErrorMessage('Too many requests. Requests are limited to '.$limit.' per minute');
               die(0);
             }
