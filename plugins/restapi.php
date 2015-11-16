@@ -58,7 +58,7 @@ class restapi extends phplistPlugin
             'description' => 'Require SSL on Rest API calls',
             'type' => 'boolean',
             'allowempty' => true,
-            'value' => true,
+            'value' => false,
             'category'=> 'Security',
         ),
         'restapi_ipaddress' => array(
@@ -72,7 +72,7 @@ class restapi extends phplistPlugin
             'description' => 'Require the secret code for Rest API calls',
             'type' => 'boolean',
             'allowempty' => true,
-            'value' => true,
+            'value' => false,
             'category'=> 'Security',
         ),
     );
