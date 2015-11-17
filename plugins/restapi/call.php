@@ -36,8 +36,6 @@ if (empty($cmd)) {
     Response::outputMessage('OK! For action, please provide Post Param Key [cmd] !');
 }
 
-$plugin->logRequest($cmd);
-
 if (function_exists('api_request_log')) {
     api_request_log();
 }
@@ -47,7 +45,7 @@ if (empty($plugin->coderoot)) {
 }
 
 if ($cmd != 'login') {
-  Common::LogRequest($cmd);
+  Common::logRequest($cmd);
   Common::enforceRequestLimit(getConfig('restapi_limit'));
 }
 $ipAddress = getConfig('restapi_ipaddress');

@@ -41,6 +41,9 @@ class restapi extends phplistPlugin
             'ip' => array('varchar(15) not null',''),
             'request' => array('text not null', ''),
             'date' => array('timestamp not null', ''),
+            'index_1' => array('dateidx (date)',''),
+            'index_2' => array('cmdidx (cmd)',''),
+            'index_3' => array('ipidx (ip)',''),
         ),
     );
 
@@ -93,8 +96,5 @@ class restapi extends phplistPlugin
         );
     }
     
-    public function logRequest($cmd) {
-      file_put_contents('/tmp/debug.log',sprintf('insert into %s (url,cmd,ip,request,date) values("%s","%s","%s","%s",now())',
-        $GLOBALS['table_prefix'].'restapi_request_log',sql_escape($_SERVER['REQUEST_URI']),$GLOBALS['remoteAddr'],$cmd,sql_escape(serialize($_REQUEST))).PHP_EOL,FILE_APPEND);
-    }
+
 }
