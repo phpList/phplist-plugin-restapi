@@ -115,6 +115,11 @@ class Common
             return md5($pass);
         }
     }
+    
+    public static function createUniqId() {
+       return md5(uniqid(mt_rand()));
+    }
+
 
 
 }

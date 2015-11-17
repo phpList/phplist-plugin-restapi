@@ -129,6 +129,7 @@ class Subscribers
         );
         Common::select('Subscriber', 'SELECT * FROM '.$GLOBALS['usertable_prefix']."user WHERE foreignkey = :foreignkey;",$params, true);
     }
+
     /**
      * Add one Subscriber.
      * 
@@ -136,6 +137,8 @@ class Subscribers
      * [*email] {string} the email address of the Subscriber.<br/>
      * [*confirmed] {integer} 1=confirmed, 0=unconfirmed.<br/>
      * [*htmlemail] {integer} 1=html emails, 0=no html emails.<br/>
+     * [*foreignkey] {string} Foreign key.<br/>
+     * [*subscribepage] {integer} subscribe page to sign up to.<br/>
      * [*password] {string} The password for this Subscriber.<br/>
      * [*disabled] {integer} 1=disabled, 0=enabled<br/>
      * </p>
@@ -150,6 +153,7 @@ class Subscribers
           VALUES (:email, :confirmed, :foreignkey, :htmlemail, :password, now(), :subscribepage, :disabled, now(), :uniqid);';
 
         $encPwd = Common::encryptPassword($_REQUEST['password']);
+        $uniqueID = Common::createUniqId();
         if (!validateEmail($_REQUEST['email'])) {
             Response::outputErrorMessage('invalid email address');
         }
@@ -160,12 +164,12 @@ class Subscribers
             $stmt->bindParam('email', $_REQUEST['email'], PDO::PARAM_STR);
             $stmt->bindParam('confirmed', $_REQUEST['confirmed'], PDO::PARAM_BOOL);
             $stmt->bindParam('htmlemail', $_REQUEST['htmlemail'], PDO::PARAM_BOOL);
+            /* @@todo ensure uniqueness of FK */
             $stmt->bindParam('foreignkey', $_REQUEST['foreignkey'], PDO::PARAM_STR);
             $stmt->bindParam('password', $encPwd, PDO::PARAM_STR);
             $stmt->bindParam('subscribepage', $_REQUEST['subscribepage'], PDO::PARAM_INT);
             $stmt->bindParam('disabled', $_REQUEST['disabled'], PDO::PARAM_BOOL);
-            $uniq = md5(uniqid(mt_rand()));
-            $stmt->bindParam('uniqid', $uniq, PDO::PARAM_STR);
+            $stmt->bindParam('uniqid', $uniqueID, PDO::PARAM_STR);
             $stmt->execute();
             $id = $db->lastInsertId();
             $db = null;
@@ -174,7 +178,66 @@ class Subscribers
             Response::outputError($e);
         }
     }
+    
+    /**
+     * Add a Subscriber with lists.
+     * 
+     * <p><strong>Parameters:</strong><br/>
+     * [*email] {string} the email address of the Subscriber.<br/>
+     * [*foreignkey] {string} Foreign key.<br/>
+     * [*htmlemail] {integer} 1=html emails, 0=no html emails.<br/>
+     * [*subscribepage] {integer} subscribepage to sign up to.<br/>
+     * [*lists] {string} comma-separated list IDs.<br/>
+     * </p>
+     * <p><strong>Returns:</strong><br/>
+     * The added Subscriber.
+     * </p>
+     */
+    public static function subscribe()
+    {
+        $sql = 'INSERT INTO '.$GLOBALS['tables']['user'].' 
+          (email, htmlemail, foreignkey, subscribepage, entered, uniqid) 
+          VALUES (:email, :htmlemail, :foreignkey, :subscribepage, now(), :uniqid);';
 
+        $uniqueID = Common::createUniqId();
+        $subscribePage = sprintf('%d',$_REQUEST['subscribepage']);
+        if (!validateEmail($_REQUEST['email'])) {
+            Response::outputErrorMessage('invalid email address');
+        }
+        
+        $listNames = '';
+        $lists = explode(',',$_REQUEST['lists']);
+        
+        try {
+            $db = PDO::getConnection();
+            $stmt = $db->prepare($sql);
+            $stmt->bindParam('email', $_REQUEST['email'], PDO::PARAM_STR);
+            $stmt->bindParam('htmlemail', $_REQUEST['htmlemail'], PDO::PARAM_BOOL);
+            /* @@todo ensure uniqueness of FK */
+            $stmt->bindParam('foreignkey', $_REQUEST['foreignkey'], PDO::PARAM_STR);
+            $stmt->bindParam('subscribepage', $subscribePage, PDO::PARAM_INT);
+            $stmt->bindParam('uniqid', $uniqueID, PDO::PARAM_STR);
+            $stmt->execute();
+            $subscriberId = $db->lastInsertId();
+            foreach ($lists as $listId) {
+                $stmt = $db->prepare('replace into '.$GLOBALS['tables']['listuser'].' (userid,listid,entered) values(:userid,:listid,now())');
+                $stmt->bindParam('userid', $subscriberId, PDO::PARAM_INT);
+                $stmt->bindParam('listid', $listId, PDO::PARAM_INT);
+                $stmt->execute();
+                $listNames .= "\n  * ".listname($listId);
+            }
+            $subscribeMessage = getUserConfig("subscribemessage:$subscribePage", $subscriberId);
+            $subscribeMessage = str_replace('[LISTS]',$listNames,$subscribeMessage);
+            
+            $subscribePage = sprintf('%d',$_REQUEST['subscribepage']);
+            sendMail($_REQUEST['email'], getConfig("subscribesubject:$subscribePage"), $subscribeMessage );
+            addUserHistory($_REQUEST['email'], 'Subscription', 'Subscription via the Rest-API plugin');
+            $db = null;
+            self::SubscriberGet($subscriberId);
+        } catch (\Exception $e) {
+            Response::outputError($e);
+        }
+    } 
     /**
      * Update one Subscriber.
      * 
