@@ -145,9 +145,15 @@ class Subscribers
      */
     public static function subscriberAdd()
     {
-        $sql = 'INSERT INTO '.$GLOBALS['usertable_prefix'].'user (email, confirmed, foreignkey, htmlemail, password, passwordchanged, disabled, entered, uniqid) VALUES (:email, :confirmed, :foreignkey, :htmlemail, :password, now(), :disabled, now(), :uniqid);';
+        $sql = 'INSERT INTO '.$GLOBALS['usertable_prefix'].'user 
+          (email, confirmed, foreignkey, htmlemail, password, passwordchanged, subscribepage, disabled, entered, uniqid) 
+          VALUES (:email, :confirmed, :foreignkey, :htmlemail, :password, now(), :subscribepage, :disabled, now(), :uniqid);';
 
         $encPwd = Common::encryptPassword($_REQUEST['password']);
+        if (!validateEmail($_REQUEST['email'])) {
+            Response::outputErrorMessage('invalid email address');
+        }
+        
         try {
             $db = PDO::getConnection();
             $stmt = $db->prepare($sql);
@@ -156,6 +162,7 @@ class Subscribers
             $stmt->bindParam('htmlemail', $_REQUEST['htmlemail'], PDO::PARAM_BOOL);
             $stmt->bindParam('foreignkey', $_REQUEST['foreignkey'], PDO::PARAM_STR);
             $stmt->bindParam('password', $encPwd, PDO::PARAM_STR);
+            $stmt->bindParam('subscribepage', $_REQUEST['subscribepage'], PDO::PARAM_INT);
             $stmt->bindParam('disabled', $_REQUEST['disabled'], PDO::PARAM_BOOL);
             $uniq = md5(uniqid(mt_rand()));
             $stmt->bindParam('uniqid', $uniq, PDO::PARAM_STR);
