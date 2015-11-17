@@ -119,6 +119,12 @@ class Common
     public static function createUniqId() {
        return md5(uniqid(mt_rand()));
     }
+    
+    public static function method_allowed($class,$method) {
+        if (empty($GLOBALS['restapi_whitelist'])) return true;
+        if (in_array(strtolower($method),$GLOBALS['restapi_whitelist'][strtolower($class)])) return true;
+        return false;
+    }
 
 
 

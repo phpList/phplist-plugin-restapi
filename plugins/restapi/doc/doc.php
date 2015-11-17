@@ -1,4 +1,5 @@
 <?php
+namespace phpListRestapi;
 
 class phpListRestapiDoc
 {
@@ -21,31 +22,34 @@ class phpListRestapiDoc
             $reflect = new \ReflectionClass($class);
             $methods = $reflect->getMethods();
             foreach ($methods as $method) {
-                echo '<section>';
-                echo '<div class="page-header">';
-                echo '<h2>'.$method->name.'</h2>';
-                echo '</div>';
-                echo '<div class="row">';
-                echo '<div class="span12">';
+                if (Common::method_allowed($reflect->getShortName(),$method->name)) {
+                  echo '<section>';
+                  echo '<div class="page-header">';
+             #     echo '<h2>'.$reflect->getShortName().'</h2>';
+                  echo '<h2>'.$method->name.'</h2>';
+                  echo '</div>';
+                  echo '<div class="row">';
+                  echo '<div class="span12">';
 
-                $comment = $method->getDocComment();
+                  $comment = $method->getDocComment();
 
-                $comment = str_replace('/**', '', $comment);
-                $comment = str_replace('*/', '', $comment);
-                $comment = str_replace('[*', '<span class="label label-warning">', $comment);
-                $comment = str_replace('[', '<span class="label label-success">', $comment);
-                $comment = str_replace(']', '</span>', $comment);
-                $comment = str_replace('{', '<span class="badge">', $comment);
-                $comment = str_replace('}', '</span>', $comment);
-                $comment = str_replace('*', '', $comment);
-                //$comment = str_replace( '<br><br>', '', $comment );
+                  $comment = str_replace('/**', '', $comment);
+                  $comment = str_replace('*/', '', $comment);
+                  $comment = str_replace('[*', '<span class="label label-warning">', $comment);
+                  $comment = str_replace('[', '<span class="label label-success">', $comment);
+                  $comment = str_replace(']', '</span>', $comment);
+                  $comment = str_replace('{', '<span class="badge">', $comment);
+                  $comment = str_replace('}', '</span>', $comment);
+                  $comment = str_replace('*', '', $comment);
+                  //$comment = str_replace( '<br><br>', '', $comment );
 
-                echo trim($comment);
+                  echo trim($comment);
 
-                echo '</div>';
-                echo '</div>';
-                echo '<br/>';
-                echo '<section>';
+                  echo '</div>';
+                  echo '</div>';
+                  echo '<br/>';
+                  echo '<section>';
+               }
             }
         }
 

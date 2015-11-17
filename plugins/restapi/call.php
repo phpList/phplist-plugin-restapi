@@ -21,7 +21,7 @@ include_once 'includes/messages.php';
 //If other than POST then assume documentation report
 if (strcmp($_SERVER['REQUEST_METHOD'], 'POST')) {
     include_once 'doc/doc.php';
-    $doc = new \phpListRestapiDoc();
+    $doc = new phpListRestapiDoc();
     $doc->addClass('Actions');
     $doc->addClass('Lists');
     $doc->addClass('Subscribers');
