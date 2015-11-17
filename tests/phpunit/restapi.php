@@ -354,6 +354,33 @@ class TestRestapi extends \PHPUnit_Framework_TestCase
         return $subscriberId;
     }
     
+    /**
+     * Test add subscriber and subscribing to a list in one call
+     *
+     * @depends testListAdd
+     */
+    public function testSubscribe($listId)
+    {
+        // Set the user details as parameters
+        $post_params = array(
+            'email' => $this->testEmailAddress,
+            'htmlemail' => 1,
+            'foreignkey' => '',
+            'subscribepage' => 0,
+            'lists' => $listId,
+        );
+
+        // Execute the api call
+        $result = $this->callAPI('subscribe', $post_params);
+        // Test if the user was created successfully
+        $this->assertEquals('success', $result->status);
+
+        $subscriberId = $result->data->id;
+
+        // Pass on the newly created userid to other tests
+        return $subscriberId;
+    } 
+    
     /** 
      * test getting subscriber by Foreign Key
      * @depends testSubscriberAdd
@@ -424,7 +451,7 @@ class TestRestapi extends \PHPUnit_Framework_TestCase
         $result = $this->callAPI('subscribersCount', $post_params);
          $this->assertEquals('success', $result->status);
          $this->assertTrue(is_numeric($result->data->total));
-         $this->assertEquals($subscriberCount + 1, $result->data->total);
+         $this->assertEquals($subscriberCount + 2, $result->data->total);
 
          if ($this->debug) {
              print 'There are now '.$result->data->total.' subscribers'.PHP_EOL;
@@ -459,6 +486,32 @@ class TestRestapi extends \PHPUnit_Framework_TestCase
      * The subscriber should be on the list.
      *
      * @depends testListAdd
+     * @depends testSubscribe
+     */
+     
+    public function testListsSubscriberSubscribe($listId, $subscriberId)
+    {
+        $post_params = array(
+            'list_id' => $listId,
+            'subscriber_id' => $subscriberId,
+        );
+
+        // Execute the api call
+        $result = $this->callAPI('listsSubscriber', $post_params);
+        $this->assertEquals('success', $result->status);
+        $this->assertTrue(is_array($result->data));
+        $listIds = array();
+        foreach ($result->data as $resultItem) {
+            $listIds[] = $resultItem->id;
+        }
+        $this->assertContains($listId, $listIds);
+    }
+
+     /**
+     * Verify the lists a subscriber is member of.
+     * The subscriber should be on the list.
+     *
+     * @depends testListAdd
      * @depends testSubscriberAdd
      */
      
@@ -479,8 +532,7 @@ class TestRestapi extends \PHPUnit_Framework_TestCase
         }
         $this->assertContains($listId, $listIds);
     }
-
-     /** 
+    /** 
       * list all templates.
       */
      public function testListTemplates()
@@ -715,7 +767,7 @@ class TestRestapi extends \PHPUnit_Framework_TestCase
     public function testAddCampaignToList($campaignID,$listId) {
         $post_params = array(
             'list_id' => $listId,
-            'message_id' => $campaignID,
+            'campaign_id' => $campaignID,
         );
         $result = $this->callAPI('listMessageAdd', $post_params);
         $this->assertEquals('success', $result->status);
@@ -786,7 +838,7 @@ class TestRestapi extends \PHPUnit_Framework_TestCase
     }
     
     /**
-     * delete the subscriber
+     * fail deleting the subscriber
      *
      * @depends testSubscriberAdd
      */
@@ -802,6 +854,23 @@ class TestRestapi extends \PHPUnit_Framework_TestCase
         $this->assertEquals('error', $result->status);
     }
     
+    /**
+     * delete the 2nd subscriber
+     *
+     * @depends testSubscribe
+     */
+     
+    public function testSubscriber2Delete($subscriberId)
+    {
+        $post_params = array(
+            'id' => $subscriberId,
+        );
+
+        // Execute the api call
+        $result = $this->callAPI('subscriberDelete', $post_params);
+        $this->assertEquals('success', $result->status);
+    }
+
     /**
      * Test deleting the template with incorrect data
      */
