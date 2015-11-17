@@ -30,13 +30,15 @@ class Common
     
     public static function logRequest($cmd) 
     {
+       $response = new Response();
+       $requestData = serialize($_REQUEST);
        try {
             $db = PDO::getConnection();
-            $stmt = $db->prepare('insert into '.$GLOBALS['table_prefix'].'restapi_request_log (url,cmd,ip,request,date) values(:url,:cmd,:ip,:request,now())');
-            $stmt->bindParam('url', $_SERVER['REQUEST_URI'],PDO::PARAM_STR);
-            $stmt->bindParam('cmd', $cmd,PDO::PARAM_STR);
+            $stmt = $db->prepare('insert into '.$GLOBALS['table_prefix'].'restapi_request_log (url, cmd, ip, request, date) values(:url, :cmd, :ip, :request, now())');
+            $stmt->bindParam('url', $_SERVER['REQUEST_URI'],PDO::PARAM_STR); 
+            $stmt->bindParam('cmd', $cmd, PDO::PARAM_STR);
             $stmt->bindParam('ip', $GLOBALS['remoteAddr'],PDO::PARAM_STR);
-            $stmt->bindParam('request', serialize($_REQUEST),PDO::PARAM_STR);
+            $stmt->bindParam('request', $requestData, PDO::PARAM_STR);
             $stmt->execute();
         } catch (\Exception $e) {
             $response->setError($e->getCode(), $e->getMessage());
@@ -45,6 +47,7 @@ class Common
 
     public static function enforceRequestLimit($limit) 
     {
+       $response = new Response();
        try {
             $db = PDO::getConnection();
             $stmt = $db->prepare('select count(cmd) as num from '.$GLOBALS['table_prefix'].'restapi_request_log where date > date_sub(now(),interval 1 minute)');
