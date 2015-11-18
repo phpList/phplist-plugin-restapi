@@ -255,7 +255,7 @@ class Lists
             $stmt->bindParam('list_id', $list_id,PDO::PARAM_INT);
             $stmt->execute();
             $db = null;
-            Response::outputMessage('Subscriber '.$subscriber_id.' is unassigned from list '.$list_id);
+            self::listsSubscriber($subscriber_id);
         } catch (\Exception $e) {
             Response::outputError($e);
         }
