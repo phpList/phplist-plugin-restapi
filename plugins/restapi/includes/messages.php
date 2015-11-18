@@ -171,13 +171,4 @@ class Messages
         }
     }
 
-    public static function formtokenGet()
-    {
-        $key = md5(time().mt_rand(0, 10000));
-        Sql_Query(sprintf('insert into %s (adminid,value,entered,expires) values(%d,"%s",%d,date_add(now(),interval 1 hour))',
-        $GLOBALS['tables']['admintoken'], $_SESSION['logindetails']['id'], $key, time()), 1);
-        $response = new Response();
-        $response->setData('formtoken', $key);
-        $response->output();
-    }
 }

@@ -28,7 +28,6 @@ if (strcmp($_SERVER['REQUEST_METHOD'], 'POST')) {
     $doc->output();
     return;
 }
-//No HTML-output, please!
 ob_end_clean();
 
 $cmd = $_REQUEST['cmd'];
