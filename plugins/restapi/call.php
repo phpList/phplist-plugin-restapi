@@ -4,8 +4,6 @@ namespace phpListRestapi;
 
 defined('PHPLISTINIT') || die;
 
-//No HTML-output, please!
-ob_end_clean();
 
 //Getting phpList globals for this plugin
 $plugin = $GLOBALS['plugins'][$_GET['pi']];
@@ -28,7 +26,10 @@ if (strcmp($_SERVER['REQUEST_METHOD'], 'POST')) {
     $doc->addClass('Templates');
     $doc->addClass('Messages');
     $doc->output();
+    return;
 }
+//No HTML-output, please!
+ob_end_clean();
 
 $cmd = $_REQUEST['cmd'];
 $cmd = preg_replace('/\W/', '', $cmd);
