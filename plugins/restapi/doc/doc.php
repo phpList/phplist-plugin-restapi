@@ -48,7 +48,7 @@ class phpListRestapiDoc
                   echo '</div>';
                   echo '</div>';
                   echo '<br/>';
-                  echo '<section>';
+                  echo '</section>';
                }
             }
         }
