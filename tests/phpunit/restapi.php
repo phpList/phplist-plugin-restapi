@@ -60,7 +60,8 @@ class TestRestapi extends \PHPUnit_Framework_TestCase
         curl_setopt($c, CURLOPT_COOKIEFILE,     $this->tmpPath.'/phpList_RESTAPI_cookiejar.txt');
         curl_setopt($c, CURLOPT_COOKIEJAR,      $this->tmpPath.'/phpList_RESTAPI_cookiejar.txt');
         curl_setopt($c, CURLOPT_HTTPHEADER,     array('Connection: Keep-Alive', 'Keep-Alive: 60'));
-
+        curl_setopt($c, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($c, CURLOPT_SSL_VERIFYHOST, false);
         // Execute the call
         $result = curl_exec($c);
 
