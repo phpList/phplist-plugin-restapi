@@ -311,7 +311,6 @@ class TestRestapi extends \PHPUnit_Framework_TestCase
     /**
      * Test updating the subscriber
      *
-     * this should fail on being duplicate
      * @depends testSubscriberAdd
      */
     public function testSubscriberUpdate($subscriberId)
