@@ -517,7 +517,6 @@ class TestRestapi extends \PHPUnit_Framework_TestCase
     public function testListsSubscriber($listId, $subscriberId)
     {
         $post_params = array(
-            'list_id' => $listId,
             'subscriber_id' => $subscriberId,
         );
 
