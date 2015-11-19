@@ -45,7 +45,7 @@ class Subscribers
             'offset' => array($offset,PDO::PARAM_INT),
         );
 
-        Common::select('Users', 'SELECT * FROM '.$GLOBALS['usertable_prefix']."user ORDER BY :order_by :order LIMIT :limit OFFSET :offset;",$params);
+        Common::select('Subscribers', 'SELECT * FROM '.$GLOBALS['tables']['user']." ORDER BY :order_by :order LIMIT :limit OFFSET :offset;",$params);
     }
 
     /**
@@ -60,7 +60,7 @@ class Subscribers
      */
     public static function subscribersCount()
     {
-        Common::select('Users', 'SELECT count(id) as total FROM '.$GLOBALS['usertable_prefix']."user",array(),true);
+        Common::select('Subscribers', 'SELECT count(id) as total FROM '.$GLOBALS['tables']['user'],array(),true);
     }
 
     /**
@@ -85,7 +85,7 @@ class Subscribers
         $params = array(
             'id' => array($id,PDO::PARAM_INT),
         );
-        Common::select('Subscriber', 'SELECT * FROM '.$GLOBALS['usertable_prefix']."user WHERE id = :id;",$params, true);
+        Common::select('Subscriber', 'SELECT * FROM '.$GLOBALS['tables']['user']." WHERE id = :id;",$params, true);
     }
 
     /**
@@ -106,7 +106,7 @@ class Subscribers
         $params = array(
             'email' => array($email,PDO::PARAM_STR)
         );
-        Common::select('Subscriber', 'SELECT * FROM '.$GLOBALS['usertable_prefix']."user WHERE email = :email;",$params, true);
+        Common::select('Subscriber', 'SELECT * FROM '.$GLOBALS['tables']['user']." WHERE email = :email;",$params, true);
     }
 
     /**
@@ -127,7 +127,7 @@ class Subscribers
         $params = array(
             'foreignkey' => array($foreignkey,PDO::PARAM_STR)
         );
-        Common::select('Subscriber', 'SELECT * FROM '.$GLOBALS['usertable_prefix']."user WHERE foreignkey = :foreignkey;",$params, true);
+        Common::select('Subscriber', 'SELECT * FROM '.$GLOBALS['tables']['user']." WHERE foreignkey = :foreignkey;",$params, true);
     }
 
     /**
@@ -148,7 +148,7 @@ class Subscribers
      */
     public static function subscriberAdd()
     {
-        $sql = 'INSERT INTO '.$GLOBALS['usertable_prefix'].'user 
+        $sql = 'INSERT INTO '.$GLOBALS['tables']['user'].'
           (email, confirmed, foreignkey, htmlemail, password, passwordchanged, subscribepage, disabled, entered, uniqid) 
           VALUES (:email, :confirmed, :foreignkey, :htmlemail, :password, now(), :subscribepage, :disabled, now(), :uniqid);';
 
@@ -256,7 +256,7 @@ class Subscribers
      */
     public static function subscriberUpdate()
     {
-        $sql = 'UPDATE '.$GLOBALS['usertable_prefix'].'user SET email=:email, confirmed=:confirmed, htmlemail=:htmlemail WHERE id=:id;';
+        $sql = 'UPDATE '.$GLOBALS['tables']['user'].' SET email=:email, confirmed=:confirmed, htmlemail=:htmlemail WHERE id=:id;';
         
         $id = sprintf('%d',$_REQUEST['id']);
         if (empty($id)) {
@@ -289,7 +289,7 @@ class Subscribers
      */
     public static function subscriberDelete()
     {
-        $sql = 'DELETE FROM '.$GLOBALS['usertable_prefix'].'user WHERE id=:id;';
+        $sql = 'DELETE FROM '.$GLOBALS['tables']['user'].' WHERE id=:id;';
         try {
             if (!is_numeric($_REQUEST['id'])) {
                 Response::outputErrorMessage('invalid call');
