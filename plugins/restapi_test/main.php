@@ -289,65 +289,56 @@ $step = 1;
 
     ?>
 
-    <h2>Step <?php echo $step++; ?> - Create a message</h2>
+    <h2>Step <?php echo $step++; ?> - Create a campaign</h2>
     <?php
 
-    $result = $api->messageAdd('Test API from plugin', $admin_address, $admin_address, 'TEST API', 'TEST API', $template_id, date('Y-m-d H:i:s'));
+    $result = $api->campaignAdd('Test API from plugin', $admin_address, $admin_address, 'TEST API', 'TEST API', $template_id, date('Y-m-d H:i:s'));
     if ($result->status != 'success') {
         echo $result->data->message;
 
         return;
     }
     $message_id = $result->data->id;
-    echo 'Message created (ID='.$message_id.').';
+    echo 'campaign created (ID='.$message_id.').';
 
     ?>
 
-    <h2>Step <?php echo $step++; ?> - Update message</h2>
+    <h2>Step <?php echo $step++; ?> - Update campaign</h2>
     <?php
 
-    $result = $api->messageUpdate($message_id, 'Test API from plugin updated '.date('Y-m-d H:i:s'), $admin_address, $admin_address, 'TEST API', 'TEST API', $template_id, date('Y-m-d H:i:s'), 'submitted', $subscriber_id);
+    //$result = $api->campaignUpdate($message_id, 'Test API from plugin updated '.date('Y-m-d H:i:s'), $admin_address, $admin_address, 'TEST API', 'TEST API', $template_id, date('Y-m-d H:i:s'), 'submitted', $subscriber_id);
+    //if ($result->status != 'success') {
+        //echo $result->data->message;
+
+        //return;
+    //}
+    //echo 'Campaign updated and submitted (ID='.$result->data->id.').';
+
+    ?>
+
+    <h2>Step <?php echo $step++; ?> - Campaigns count</h2>
+    <?php
+
+    $result = $api->campaignsGet();
     if ($result->status != 'success') {
         echo $result->data->message;
 
         return;
     }
-    echo 'Message updated and submitted (ID='.$result->data->id.').';
+    echo 'Campaigns in phpList: '.count($result->data).'.';
 
     ?>
 
-    <h2>Step <?php echo $step++; ?> - Messages count</h2>
+    <h2>Step <?php echo $step++; ?> - Assign campaign to list</h2>
     <?php
 
-    $result = $api->messagesGet();
-    if ($result->status != 'success') {
-        echo $result->data->message;
-
-        return;
-    }
-    echo 'Messages in phpList: '.count($result->data).'.';
-
-    ?>
-
-    <h2>Step <?php echo $step++; ?> - Assign message to list</h2>
-    <?php
-
-    $result = $api->listMessageAdd($list_id, $message_id);
+    $result = $api->listCampaignAdd($list_id, $message_id);
     if ($result->status != 'success') {
         echo $result->data->message;
 
         return;
     }
     echo 'Message assigned to the created list.';
-    ?>
-
-    <h2>Step <?php echo $step++; ?> - Process Queue</h2>
-    <?php
-
-    $result = $api->processQueue($login, $password, true);
-
-    sleep(5);
-
     ?>
 
     <h2>Step <?php echo $step++; ?> - Unassign subscriber from list</h2>

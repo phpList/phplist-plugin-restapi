@@ -22,6 +22,7 @@ class TestRestapi extends \PHPUnit_Framework_TestCase
         // Set values from constants stored in phpunit.xml
         $this->loginName = API_LOGIN_USERNAME;
         $this->password = API_LOGIN_PASSWORD;
+        $this->processingSecret = API_REMOTE_PROCESSING_SECRET;
         $this->url = API_URL_BASE_PATH;
         $this->tmpPath = TMP_PATH;
         $this->testListName = 'API Test Testlist '.time();
@@ -43,6 +44,7 @@ class TestRestapi extends \PHPUnit_Framework_TestCase
     private function callApi($command, $post_params, $decode = true)
     {
         $post_params['cmd'] = $command;
+        $post_params['secret'] = $this->processingSecret;
         if ($this->debug) {
             print  "Calling $command".PHP_EOL;
         }
@@ -55,12 +57,17 @@ class TestRestapi extends \PHPUnit_Framework_TestCase
         curl_setopt($c, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($c, CURLOPT_POST,           1);
         curl_setopt($c, CURLOPT_POSTFIELDS,     $post_params);
-        curl_setopt($c, CURLOPT_COOKIEFILE,     $this->tmpPath.'/phpList_RESTAPI_Helper_cookiejar.txt');
-        curl_setopt($c, CURLOPT_COOKIEJAR,      $this->tmpPath.'/phpList_RESTAPI_Helper_cookiejar.txt');
+        curl_setopt($c, CURLOPT_COOKIEFILE,     $this->tmpPath.'/phpList_RESTAPI_cookiejar.txt');
+        curl_setopt($c, CURLOPT_COOKIEJAR,      $this->tmpPath.'/phpList_RESTAPI_cookiejar.txt');
         curl_setopt($c, CURLOPT_HTTPHEADER,     array('Connection: Keep-Alive', 'Keep-Alive: 60'));
-
+        curl_setopt($c, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($c, CURLOPT_SSL_VERIFYHOST, false);
         // Execute the call
         $result = curl_exec($c);
+        
+        if (curl_errno($c)) {
+            print "Error: ".curl_error($c).PHP_EOL;
+        }
 
         // Check if decoding of result is required
         if ($decode === true) {
@@ -85,7 +92,6 @@ class TestRestapi extends \PHPUnit_Framework_TestCase
 
         // Execute the login with the credentials as params
         $result = $this->callApi('login', $post_params);
-
         // Check if the login was successful
         $this->assertEquals('success', $result->status);
     }
@@ -102,7 +108,6 @@ class TestRestapi extends \PHPUnit_Framework_TestCase
 
         // Execute the api call
         $result = $this->callApi('listsGet', $post_params);
-
         // Check if the lists were fetched successfully
         $this->assertEquals('success', $result->status);
         $this->assertTrue(is_numeric(count($result->data)));
@@ -124,8 +129,6 @@ class TestRestapi extends \PHPUnit_Framework_TestCase
             'name' => $this->testListName,
             'description' => 'List created with API phpUnit test',
             'listorder' => '0',
-            'prefix' => '',
-            'rssfeed' => '',
             'active' => '1',
         );
 
@@ -142,8 +145,6 @@ class TestRestapi extends \PHPUnit_Framework_TestCase
         $this->assertEquals($this->testListName, $result->data->name);
         $this->assertEquals('List created with API phpUnit test', $result->data->description);
         $this->assertEquals('0', $result->data->listorder);
-        $this->assertEquals('', $result->data->prefix);
-        $this->assertEquals('', $result->data->rssfeed);
         #$this->assertEquals( '2014-06-15 15:27:22', $result->data->modified );
         $this->assertEquals('1', $result->data->active);
 
@@ -168,8 +169,6 @@ class TestRestapi extends \PHPUnit_Framework_TestCase
             'name' => $this->testListRename,
             'description' => 'List modified with API phpUnit test',
             'listorder' => '1',
-            'prefix' => '_',
-            'rssfeed' => '',
             'active' => '1',
         );
         if ($this->debug) {
@@ -188,8 +187,6 @@ class TestRestapi extends \PHPUnit_Framework_TestCase
         $this->assertEquals($this->testListRename, $result->data->name);
         $this->assertEquals('List modified with API phpUnit test', $result->data->description);
         $this->assertEquals('1', $result->data->listorder);
-        $this->assertEquals('_', $result->data->prefix);
-        $this->assertEquals('', $result->data->rssfeed);
         #$this->assertEquals( '2014-06-15 15:27:22', $result->data->modified );
         $this->assertEquals('1', $result->data->active);
     }
@@ -200,9 +197,9 @@ class TestRestapi extends \PHPUnit_Framework_TestCase
      public function testSubscriberCount()
      {
          $post_params = array(
-        );
-        // Execute the api call
-        $result = $this->callAPI('subscribersCount', $post_params);
+         );
+         // Execute the api call
+         $result = $this->callAPI('subscribersCount', $post_params);
          $this->assertEquals('success', $result->status);
          $this->assertTrue(is_numeric($result->data->total));
 
@@ -210,6 +207,43 @@ class TestRestapi extends \PHPUnit_Framework_TestCase
              print 'There are '.$result->data->total.' subscribers'.PHP_EOL;
          }
          $subscriberCount = $result->data->total;
+
+         return $subscriberCount;
+     }
+
+     /**
+      * Test fetching all subscribers.
+      * the API limits to 100, so it should not return more than that
+      * @depends testSubscriberCount
+      * 
+      */
+     public function testSubscribersGet($subscriberCount)
+     {
+         if ($this->debug) {
+             print 'There are '.$subscriberCount.' subscribers'.PHP_EOL;
+         }
+       
+         $post_params = array(
+          'order_by' => '', 
+          'order' => '', 
+          'limit' => 500, 
+          'offset' => 0,
+        );
+        if ($subscriberCount > 100) {
+          $max = 100;
+        } else {
+          $max = $subscriberCount;
+        }
+        // Execute the api call
+         $result = $this->callAPI('subscribersGet', $post_params);
+         $this->assertEquals('success', $result->status);
+         $this->assertTrue(is_array($result->data));
+         $this->assertTrue(count($result->data) <= 100);
+         $this->assertEquals(count($result->data),$max);
+         if ($this->debug) {
+             print 'There are '.count($result->data).' subscribers'.PHP_EOL;
+         }
+         $subscriberCount = count($result->data);
 
          return $subscriberCount;
      }
@@ -241,6 +275,7 @@ class TestRestapi extends \PHPUnit_Framework_TestCase
         // Set the user details as parameters
         $post_params = array(
             'email' => $testEmailAddress,
+            'foreignkey' => 'testForeignKey',
             'confirmed' => 1,
             'htmlemail' => 1,
             'password' => 'password',
@@ -249,7 +284,6 @@ class TestRestapi extends \PHPUnit_Framework_TestCase
 
         // Execute the api call
         $result = $this->callAPI('subscriberAdd', $post_params);
-
         // Test if the user was created successfully
         $this->assertEquals('success', $result->status);
 
@@ -258,11 +292,142 @@ class TestRestapi extends \PHPUnit_Framework_TestCase
         // Pass on the newly created userid to other tests
         return $subscriberId;
     }
+    
+    /**
+     * Test adding a the subscriber again
+     *
+     * this should fail on being duplicate
+     * @depends testSubscriberExist
+     */
+    public function testSubscriberAddAgain($testEmailAddress)
+    {
+        $post_params = array(
+            'email' => $testEmailAddress,
+            'confirmed' => 1,
+            'htmlemail' => 1,
+            'password' => 'password',
+            'disabled' => 0,
+        );
+
+        $result = $this->callAPI('subscriberAdd', $post_params);
+        $this->assertEquals('error', $result->status);
+    }
+
+    /**
+     * Test updating the subscriber
+     *
+     * @depends testSubscriberAdd
+     */
+    public function testSubscriberUpdate($subscriberId)
+    {
+        $changedEmail = 'updatetest-'.time().rand(100, 999).'@phplist.com';
+        $post_params = array(
+            'id' => $subscriberId,
+            'email' => $changedEmail,
+            'confirmed' => 1,
+            'htmlemail' => 0,
+        );
+
+        $result = $this->callAPI('subscriberUpdate', $post_params);
+        $this->assertEquals('success', $result->status);
+        $this->assertEquals(1, $result->data->confirmed);
+        $this->assertEquals($changedEmail,$result->data->email);
+        $this->assertEquals(0, $result->data->htmlemail);
+        $testEmailAddress = $changedEmail;
+        return $testEmailAddress;
+    }
+    
+    /** 
+     * test getting subscriber by ID
+     * @depends testSubscriberAdd
+     * @depends testSubscriberUpdate
+     * 
+     */
+    public function testSubscriberGet($subscriberId,$testEmailAddress) {
+        $post_params = array(
+            'id' => $subscriberId,
+        );
+
+        // Execute the api call
+        $result = $this->callAPI('subscriberGet', $post_params);
+        $this->assertEquals('success', $result->status);
+        $fetchedSubscriberId = $result->data->id;
+        $this->assertEquals($fetchedSubscriberId, $subscriberId);
+        $this->assertEquals($testEmailAddress,  $result->data->email);
+
+        return $subscriberId;
+    }
+    
+    /**
+     * Test add subscriber and subscribing to a list in one call
+     *
+     * @depends testListAdd
+     */
+    public function testSubscribe($listId)
+    {
+        // Set the user details as parameters
+        $post_params = array(
+            'email' => $this->testEmailAddress,
+            'htmlemail' => 1,
+            'foreignkey' => '',
+            'subscribepage' => 0,
+            'lists' => $listId,
+        );
+
+        // Execute the api call
+        $result = $this->callAPI('subscribe', $post_params);
+        // Test if the user was created successfully
+        $this->assertEquals('success', $result->status);
+
+        $subscriberId = $result->data->id;
+
+        // Pass on the newly created userid to other tests
+        return $subscriberId;
+    } 
+    
+    /** 
+     * test getting subscriber by Foreign Key
+     * @depends testSubscriberAdd
+     * @depends testSubscriberUpdate
+     * 
+     */
+    public function testSubscriberGetByFK($subscriberId,$testEmailAddress) {
+        $post_params = array(
+            'foreignkey' => 'testForeignKey',
+        );
+
+        // Execute the api call
+        $result = $this->callAPI('subscriberGetByForeignkey', $post_params);
+        $this->assertEquals('success', $result->status);
+        $this->assertTrue(is_numeric($result->data->id));
+        $fetchedSubscriberId = $result->data->id;
+        $this->assertEquals($fetchedSubscriberId, $subscriberId);
+        $this->assertEquals($testEmailAddress,  $result->data->email);
+
+        return $subscriberId;
+    }
+    /** 
+     * test getting subscriber by ID
+     * @depends testSubscriberAdd
+     * @depends testSubscriberExist
+     * 
+     */
+    public function testSubscriberGetFailed($subscriberId,$testEmailAddress) {
+        $post_params = array(
+            'id' => 'id',
+        );
+
+        // Execute the api call
+        $result = $this->callAPI('subscriberGet', $post_params);
+        $this->assertEquals('error', $result->status);
+
+        return $subscriberId;
+    }
 
     /** 
      * Test that a subscriber exists again.
      *
-     * @depends testSubscriberExist
+     * @depends testSubscriberUpdate
      */
     public function testSubscriberExist2($testEmailAddress)
     {
@@ -273,8 +438,6 @@ class TestRestapi extends \PHPUnit_Framework_TestCase
         $this->assertEquals('success', $result->status);
         $this->assertTrue(is_numeric($result->data->id)); // now it does
         $subscriberId = $result->data->id;
-
-        // Pass on the newly created userid to other tests
         return $subscriberId;
     }
 
@@ -292,7 +455,7 @@ class TestRestapi extends \PHPUnit_Framework_TestCase
         $result = $this->callAPI('subscribersCount', $post_params);
          $this->assertEquals('success', $result->status);
          $this->assertTrue(is_numeric($result->data->total));
-         $this->assertEquals($subscriberCount + 1, $result->data->total);
+         $this->assertEquals($subscriberCount + 2, $result->data->total);
 
          if ($this->debug) {
              print 'There are now '.$result->data->total.' subscribers'.PHP_EOL;
@@ -318,7 +481,6 @@ class TestRestapi extends \PHPUnit_Framework_TestCase
 
         // Execute the api call
         $result = $this->callAPI('listSubscriberAdd', $post_params);
-
         // Test if the user was added to the list successfully
         $this->assertEquals('success', $result->status);
     }
@@ -328,10 +490,10 @@ class TestRestapi extends \PHPUnit_Framework_TestCase
      * The subscriber should be on the list.
      *
      * @depends testListAdd
-     * @depends testSubscriberAdd
+     * @depends testSubscribe
      */
      
-    public function testListsSubscriber($listId, $subscriberId)
+    public function testListsSubscriberSubscribe($listId, $subscriberId)
     {
         $post_params = array(
             'list_id' => $listId,
@@ -349,7 +511,31 @@ class TestRestapi extends \PHPUnit_Framework_TestCase
         $this->assertContains($listId, $listIds);
     }
 
-     /** 
+     /**
+     * Verify the lists a subscriber is member of.
+     * The subscriber should be on the list.
+     *
+     * @depends testListAdd
+     * @depends testSubscriberAdd
+     */
+     
+    public function testListsSubscriber($listId, $subscriberId)
+    {
+        $post_params = array(
+            'subscriber_id' => $subscriberId,
+        );
+
+        // Execute the api call
+        $result = $this->callAPI('listsSubscriber', $post_params);
+        $this->assertEquals('success', $result->status);
+        $this->assertTrue(is_array($result->data));
+        $listIds = array();
+        foreach ($result->data as $resultItem) {
+            $listIds[] = $resultItem->id;
+        }
+        $this->assertContains($listId, $listIds);
+    }
+    /** 
       * list all templates.
       */
      public function testListTemplates()
@@ -448,9 +634,42 @@ class TestRestapi extends \PHPUnit_Framework_TestCase
          $post_params = array(
         );
 
-         $result = $this->callAPI('messagesCount', $post_params);
+         $result = $this->callAPI('campaignsCount', $post_params);
          $this->assertEquals('success', $result->status);
          $campaignCount = $result->data->total;
+
+         return $campaignCount;
+     }
+
+     /**
+      * Test fetching all campaigns.
+      * the API limits to 10, so it should not return more than that
+      * @depends testCountCampaigns
+      * 
+      */
+     public function testCampaignsGet($campaignCount)
+     {       
+         $post_params = array(
+          'order_by' => '', 
+          'order' => '', 
+          'limit' => 500, 
+          'offset' => 0,
+        );
+        if ($campaignCount > 10) {
+          $max = 10;
+        } else {
+          $max = $campaignCount;
+        }
+        // Execute the api call
+         $result = $this->callAPI('campaignsGet', $post_params);
+         $this->assertEquals('success', $result->status);
+         $this->assertTrue(is_array($result->data));
+         $this->assertTrue(count($result->data) <= 10);
+         $this->assertEquals(count($result->data),$max);
+         if ($this->debug) {
+             print 'There are '.count($result->data).' campaigns'.PHP_EOL;
+         }
+         $campaignCount = count($result->data);
 
          return $campaignCount;
      }
@@ -478,7 +697,7 @@ class TestRestapi extends \PHPUnit_Framework_TestCase
             'htmlformatted' => 1,
         );
         
-        $result = $this->callAPI('messageAdd', $post_params);
+        $result = $this->callAPI('campaignAdd', $post_params);
         $this->assertEquals('success', $result->status);
         $campaignID = $result->data->id;
         return $campaignID;
@@ -497,7 +716,7 @@ class TestRestapi extends \PHPUnit_Framework_TestCase
             'id' => $campaignID,
         );
         
-        $result = $this->callAPI('messageGet', $post_params,true);
+        $result = $this->callAPI('campaignGet', $post_params,true);
         $this->assertEquals('success', $result->status);
         
         $current = $result->data;
@@ -518,7 +737,7 @@ class TestRestapi extends \PHPUnit_Framework_TestCase
             'htmlformatted' => $current->htmlformatted,
         );
         
-        $result = $this->callAPI('messageUpdate', $post_params);
+        $result = $this->callAPI('campaignUpdate', $post_params);
         $this->assertEquals('success', $result->status);
         $campaignID = $result->data->id;
         return $campaignID;
@@ -534,7 +753,7 @@ class TestRestapi extends \PHPUnit_Framework_TestCase
          $post_params = array(
         );
 
-         $result = $this->callAPI('messagesCount', $post_params);
+         $result = $this->callAPI('campaignsCount', $post_params);
          $this->assertEquals('success', $result->status);
          $this->assertEquals($campaignCount+1, $result->data->total);
          $campaignCount = $result->data->total;
@@ -545,15 +764,15 @@ class TestRestapi extends \PHPUnit_Framework_TestCase
      /**
       * test adding a campaign to a list
       * 
-      * @depends testUpdateCampaign
+      * @depends testCreateCampaign
       * @depends testListAdd
       */
     public function testAddCampaignToList($campaignID,$listId) {
         $post_params = array(
             'list_id' => $listId,
-            'message_id' => $campaignID,
+            'campaign_id' => $campaignID,
         );
-        $result = $this->callAPI('listMessageAdd', $post_params);
+        $result = $this->callAPI('listCampaignAdd', $post_params);
         $this->assertEquals('success', $result->status);
     }
     
@@ -605,6 +824,75 @@ class TestRestapi extends \PHPUnit_Framework_TestCase
     }
     
     /**
+     * delete the subscriber
+     *
+     * @depends testSubscriberAdd
+     */
+     
+    public function testSubscriberDelete($subscriberId)
+    {
+        $post_params = array(
+            'id' => $subscriberId,
+        );
+
+        // Execute the api call
+        $result = $this->callAPI('subscriberDelete', $post_params);
+        $this->assertEquals('success', $result->status);
+    }
+    
+    /**
+     * fail deleting the subscriber
+     *
+     * @depends testSubscriberAdd
+     */
+     
+    public function testSubscriberDeleteFailed($subscriberId)
+    {
+        $post_params = array(
+            'id' => 'id',
+        );
+
+        // Execute the api call
+        $result = $this->callAPI('subscriberDelete', $post_params);
+        $this->assertEquals('error', $result->status);
+    }
+    
+    /**
+     * delete the 2nd subscriber
+     *
+     * @depends testSubscribe
+     */
+     
+    public function testSubscriber2Delete($subscriberId)
+    {
+        $post_params = array(
+            'id' => $subscriberId,
+        );
+
+        // Execute the api call
+        $result = $this->callAPI('subscriberDelete', $post_params);
+        $this->assertEquals('success', $result->status);
+    }
+
+    /**
+     * Test deleting the template with incorrect data
+     */
+     
+     public function testTemplateDeleteFailure() 
+     {
+        $post_params = array(
+            'id' => 'id; delete from phplist_admin;',
+        );
+        if ($this->debug) {
+            print 'Attempting to delete template with incorrect ID'.PHP_EOL;
+        }
+        // Execute the api call
+        $result = $this->callAPI('templateDelete', $post_params);
+
+        $this->assertEquals('error', $result->status);
+    }
+          
+    /**
      * Test deleting the template
      * @depends testTemplateUpdate
      */
@@ -623,7 +911,7 @@ class TestRestapi extends \PHPUnit_Framework_TestCase
         $this->assertEquals('success', $result->status);
         $this->assertEquals('Item with '.$templateId.' is successfully deleted!', $result->data);
     }
-          
+
     /**
      * Test deleting an existing list.
      *
@@ -647,4 +935,24 @@ class TestRestapi extends \PHPUnit_Framework_TestCase
         $this->assertEquals('Item with '.$listId.' is successfully deleted!', $result->data);
     }
     
-}
+    /**
+     * Test deleting an non-existing list.
+     *
+     */
+    public function testListDeleteFailure()
+    {
+        // Create minimal params for api call
+        $post_params = array(
+            'id' => '> 0; delete from phplist_usermessage;',
+        );
+        if ($this->debug) {
+            print 'Attempt to deleting invalid list '.PHP_EOL;
+        }
+        // Execute the api call
+        $result = $this->callAPI('listDelete', $post_params);
+
+        // Check if the list was deleted successfully
+        $this->assertEquals('error', $result->status);
+        $this->assertNotEquals('Item with is successfully deleted!', $result->data);
+     }
+   }
