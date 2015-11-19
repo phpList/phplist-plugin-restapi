@@ -6,7 +6,7 @@ defined('PHPLISTINIT') || die;
 
 /**
  * Class phpList_RESTAPI_Lists
- * Getting lists, adding and removing its users and messages.
+ * Getting lists, adding and removing its subscribers and messages.
  */
 class Lists
 {
@@ -161,7 +161,7 @@ class Lists
      * Get Lists a Subscriber is Member of.
      * 
      * <p><strong>Parameters:</strong><br/>
-     * [*user_id] {integer} the Subscriber-ID.
+     * [*subscriber_id] {integer} the Subscriber-ID.
      * <p><strong>Returns:</strong><br/>
      * Array of lists where the subscriber is assigned to.
      * </p>
