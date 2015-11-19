@@ -36,4 +36,17 @@ class FeatureContext extends MinkContext
 //        doSomethingWith($argument);
 //    }
 //
+
+    /**
+     * @When /^I recreate the database$/
+     */
+    public function iRecreateTheDatabase()
+    {
+        if (is_file(__DIR__.'/../../recreatedb.sh')) {
+            system(__DIR__.'/../../recreatedb.sh');
+        }
+    }
+
+
+
 }
