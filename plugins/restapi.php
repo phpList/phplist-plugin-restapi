@@ -7,13 +7,15 @@
  * 
  * version history:
  * 
- * v 3 2015-11-12
+ * v 3 2015-11-19
  * - updated some calls
  * - added more security checks
  * - added phpunit tests
  * - removed obsolete fields
  * - added limit to subscriber retrieval
  * - added limit to campaign retrieval
+ * - renamed messages to campaigns
+ * - renamed users to subscribers
  * 
  * v 2 * phpList Api Team https://github.com/orgs/phpList/teams/api
  * - renamed plugin repository to phplist-plugin-restapi
@@ -29,6 +31,7 @@ class restapi extends phplistPlugin
     public $name = 'RESTAPI';
     public $description = 'Implements a REST API interface to phpList';
     public $version = 3;
+    public $documentationUrl = 'https://resources.phplist.com/plugin/restapi';
     public $topMenuLinks = array(
       'main' => array('category' => 'system'),
     );
@@ -55,33 +58,33 @@ class restapi extends phplistPlugin
             'allowempty' => false,
             'min' => 1,
             'max' => 1200,
-            'category'=> 'Security',
+            'category' => 'Security',
         ),
         'restapi_enforcessl' => array(
             'description' => 'Require SSL on Rest API calls',
             'type' => 'boolean',
             'allowempty' => true,
             'value' => false,
-            'category'=> 'Security',
+            'category' => 'Security',
         ),
         'restapi_ipaddress' => array(
             'description' => 'IP Address that is allowed to access the API',
             'type' => 'text',
             'allowempty' => true,
             'value' => '',
-            'category'=> 'Security',
+            'category' => 'Security',
         ),
         'restapi_usesecret' => array(
             'description' => 'Require the secret code for Rest API calls',
             'type' => 'boolean',
             'allowempty' => true,
             'value' => false,
-            'category'=> 'Security',
+            'category' => 'Security',
         ),
     );
     public function __construct()
     {
-        $this->coderoot = dirname(__FILE__) . '/' . __CLASS__ . '/';
+        $this->coderoot = dirname(__FILE__).'/'.__CLASS__.'/';
         parent::__construct();
         if (!Sql_Table_exists($GLOBALS['table_prefix'].'restapi_request_log')) {
             saveConfig(md5('plugin-restapi-initialised'), false, 0);
@@ -95,6 +98,4 @@ class restapi extends phplistPlugin
             'main' => 'RESTAPI Main',
         );
     }
-    
-
 }
