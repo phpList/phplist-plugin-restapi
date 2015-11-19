@@ -634,7 +634,7 @@ class TestRestapi extends \PHPUnit_Framework_TestCase
          $post_params = array(
         );
 
-         $result = $this->callAPI('messagesCount', $post_params);
+         $result = $this->callAPI('campaignsCount', $post_params);
          $this->assertEquals('success', $result->status);
          $campaignCount = $result->data->total;
 
@@ -661,7 +661,7 @@ class TestRestapi extends \PHPUnit_Framework_TestCase
           $max = $campaignCount;
         }
         // Execute the api call
-         $result = $this->callAPI('messagesGet', $post_params);
+         $result = $this->callAPI('campaignsGet', $post_params);
          $this->assertEquals('success', $result->status);
          $this->assertTrue(is_array($result->data));
          $this->assertTrue(count($result->data) <= 10);
@@ -697,7 +697,7 @@ class TestRestapi extends \PHPUnit_Framework_TestCase
             'htmlformatted' => 1,
         );
         
-        $result = $this->callAPI('messageAdd', $post_params);
+        $result = $this->callAPI('campaignAdd', $post_params);
         $this->assertEquals('success', $result->status);
         $campaignID = $result->data->id;
         return $campaignID;
@@ -716,7 +716,7 @@ class TestRestapi extends \PHPUnit_Framework_TestCase
             'id' => $campaignID,
         );
         
-        $result = $this->callAPI('messageGet', $post_params,true);
+        $result = $this->callAPI('campaignGet', $post_params,true);
         $this->assertEquals('success', $result->status);
         
         $current = $result->data;
@@ -737,7 +737,7 @@ class TestRestapi extends \PHPUnit_Framework_TestCase
             'htmlformatted' => $current->htmlformatted,
         );
         
-        $result = $this->callAPI('messageUpdate', $post_params);
+        $result = $this->callAPI('campaignUpdate', $post_params);
         $this->assertEquals('success', $result->status);
         $campaignID = $result->data->id;
         return $campaignID;
@@ -753,7 +753,7 @@ class TestRestapi extends \PHPUnit_Framework_TestCase
          $post_params = array(
         );
 
-         $result = $this->callAPI('messagesCount', $post_params);
+         $result = $this->callAPI('campaignsCount', $post_params);
          $this->assertEquals('success', $result->status);
          $this->assertEquals($campaignCount+1, $result->data->total);
          $campaignCount = $result->data->total;
@@ -772,7 +772,7 @@ class TestRestapi extends \PHPUnit_Framework_TestCase
             'list_id' => $listId,
             'campaign_id' => $campaignID,
         );
-        $result = $this->callAPI('listMessageAdd', $post_params);
+        $result = $this->callAPI('listCampaignAdd', $post_params);
         $this->assertEquals('success', $result->status);
     }
     

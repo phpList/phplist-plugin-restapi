@@ -15,7 +15,7 @@ include_once 'includes/actions.php';
 include_once 'includes/lists.php';
 include_once 'includes/subscribers.php';
 include_once 'includes/templates.php';
-include_once 'includes/messages.php';
+include_once 'includes/campaigns.php';
 //If other than POST then assume documentation report
 if (strcmp($_SERVER['REQUEST_METHOD'], 'POST')) {
     include_once 'doc/doc.php';
@@ -24,7 +24,7 @@ if (strcmp($_SERVER['REQUEST_METHOD'], 'POST')) {
     $doc->addClass('Lists');
     $doc->addClass('Subscribers');
     $doc->addClass('Templates');
-    $doc->addClass('Messages');
+    $doc->addClass('Campaigns');
     print $doc->output();
     return;
 }
@@ -80,8 +80,8 @@ if (is_callable(array('phpListRestapi\Subscribers', $cmd))) {
 if (is_callable(array('phpListRestapi\Templates',   $cmd))) {
     Templates::$cmd();
 }
-if (is_callable(array('phpListRestapi\Messages',    $cmd))) {
-    Messages::$cmd();
+if (is_callable(array('phpListRestapi\Campaigns',    $cmd))) {
+    Campaigns::$cmd();
 }
 
 //If no command found, return error message!

@@ -6,7 +6,7 @@ defined('PHPLISTINIT') || die;
 
 /**
  * Class phpList_RESTAPI_Lists
- * Getting lists, adding and removing its subscribers and messages.
+ * Getting lists, adding and removing its subscribers and campaigns.
  */
 class Lists
 {
@@ -272,7 +272,7 @@ class Lists
      * The list assigned.
      * </p>
      */
-    public static function listMessageAdd($list_id = 0, $campaign_id = 0)
+    public static function listCampaignAdd($list_id = 0, $campaign_id = 0)
     {
         if ($list_id == 0) {
             $list_id = $_REQUEST['list_id'];
@@ -306,7 +306,7 @@ class Lists
      * System message of action.
      * </p>
      */
-    public static function listMessageDelete($list_id = 0, $campaign_id = 0)
+    public static function listCampaignDelete($list_id = 0, $campaign_id = 0)
     {
         if ($list_id == 0) {
             $list_id = $_REQUEST['list_id'];

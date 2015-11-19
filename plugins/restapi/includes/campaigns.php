@@ -5,12 +5,12 @@ namespace phpListRestapi;
 defined('PHPLISTINIT') || die;
 
 /**
- * Class Messages
- * Manage phplist Messages.
+ * Class Campaigns
+ * Manage phplist Campaigns.
  */
-class Messages
+class Campaigns
 {
-    public static function messageGet($id = 0)
+    public static function campaignGet($id = 0)
     {
         if ($id == 0) {
             $id = $_REQUEST['id'];
@@ -20,12 +20,12 @@ class Messages
             'id' => array($id,PDO::PARAM_INT),
             );
         
-        Common::select('Message', 'SELECT * FROM '.$GLOBALS['table_prefix'].'message WHERE id=:id;',$params, true);
+        Common::select('Campaign', 'SELECT * FROM '.$GLOBALS['tables']['message'].' WHERE id=:id;',$params, true);
     }
     
-    public static function messagesCount()
+    public static function campaignsCount()
     {
-        Common::select('Messages', 'SELECT count(id) as total FROM '.$GLOBALS['table_prefix'].'message',array(),true);
+        Common::select('Campaign', 'SELECT count(id) as total FROM '.$GLOBALS['tables']['message'],array(),true);
     }
 
 
@@ -42,7 +42,7 @@ class Messages
      * List of Campaigns.
      * </p>
      */
-    public static function messagesGet($order_by = 'modified', $order = 'desc', $limit = 10, $offset = 0)
+    public static function campaignsGet($order_by = 'modified', $order = 'desc', $limit = 10, $offset = 0)
     {
         if (isset($_REQUEST['order_by']) && !empty($_REQUEST['order_by'])) {
             $order_by = $_REQUEST['order_by'];
@@ -66,7 +66,7 @@ class Messages
             'limit' => array($limit,PDO::PARAM_INT),
             'offset' => array($offset,PDO::PARAM_INT),
         );
-        Common::select('Messages', 'SELECT * FROM '.$GLOBALS['table_prefix'].'message ORDER BY :order_by :order LIMIT :limit OFFSET :offset;',$params);
+        Common::select('Campaigns', 'SELECT * FROM '.$GLOBALS['tables']['message'].' ORDER BY :order_by :order LIMIT :limit OFFSET :offset;',$params);
     }
 
     /**
@@ -90,9 +90,9 @@ class Messages
      * The message added.
      * </p>
      */
-    public static function messageAdd()
+    public static function campaignAdd()
     {
-        $sql = 'INSERT INTO '.$GLOBALS['table_prefix'].'message (subject, fromfield, replyto, message, textmessage, footer, entered, status, sendformat, template, embargo, rsstemplate, owner, htmlformatted ) VALUES ( :subject, :fromfield, :replyto, :message, :textmessage, :footer, now(), :status, :sendformat, :template, :embargo, :rsstemplate, :owner, :htmlformatted );';
+        $sql = 'INSERT INTO '.$GLOBALS['tables']['message'].' (subject, fromfield, replyto, message, textmessage, footer, entered, status, sendformat, template, embargo, rsstemplate, owner, htmlformatted ) VALUES ( :subject, :fromfield, :replyto, :message, :textmessage, :footer, now(), :status, :sendformat, :template, :embargo, :rsstemplate, :owner, :htmlformatted );';
         try {
             $db = PDO::getConnection();
             $stmt = $db->prepare($sql);
@@ -112,14 +112,14 @@ class Messages
             $stmt->execute();
             $id = $db->lastInsertId();
             $db = null;
-            self::messageGet($id);
+            self::campaignGet($id);
         } catch (\Exception $e) {
             Response::outputError($e);
         }
     }
 
     /**
-     * Update existing message/campaign.
+     * Update existing campaign.
      * 
      * <p><strong>Parameters:</strong><br/>
      * [*id] {integer} <br/>
@@ -140,12 +140,12 @@ class Messages
      * The message added.
      * </p>
      */
-    public static function messageUpdate($id = 0)
+    public static function campaignUpdate($id = 0)
     {
         if ($id == 0) {
             $id = $_REQUEST['id'];
         }
-        $sql = 'UPDATE '.$GLOBALS['table_prefix'].'message SET subject=:subject, fromfield=:fromfield, replyto=:replyto, message=:message, textmessage=:textmessage, footer=:footer, status=:status, sendformat=:sendformat, template=:template, sendstart=:sendstart, rsstemplate=:rsstemplate, owner=:owner, htmlformatted=:htmlformatted WHERE id=:id;';
+        $sql = 'UPDATE '.$GLOBALS['tables']['message'].' SET subject=:subject, fromfield=:fromfield, replyto=:replyto, message=:message, textmessage=:textmessage, footer=:footer, status=:status, sendformat=:sendformat, template=:template, sendstart=:sendstart, rsstemplate=:rsstemplate, owner=:owner, htmlformatted=:htmlformatted WHERE id=:id;';
         try {
             $db = PDO::getConnection();
             $stmt = $db->prepare($sql);
@@ -165,7 +165,7 @@ class Messages
             $stmt->bindParam('htmlformatted', $_REQUEST['htmlformatted'], PDO::PARAM_BOOL);
             $stmt->execute();
             $db = null;
-            self::messageGet($id);
+            self::campaignGet($id);
         } catch (\Exception $e) {
             Response::outputError($e);
         }
