@@ -25,7 +25,7 @@ if (strcmp($_SERVER['REQUEST_METHOD'], 'POST')) {
     $doc->addClass('Subscribers');
     $doc->addClass('Templates');
     $doc->addClass('Messages');
-    $doc->output();
+    print $doc->output();
     return;
 }
 ob_end_clean();
