@@ -18,9 +18,9 @@ defined( 'PHPLISTINIT' ) || die;
 class restapi2 extends phplistPlugin {
 
     // Set plugin name presented in admin pages
-    public $name = 'RESTAPI';
+    public $name = 'RESTAPI2';
     // Description of the app as displayed in admin pages
-    public $description = 'Implements a REST API interface to phpList';
+    public $description = 'REST API interface to phpList4, work in progress';
 
     function restapi2() {
       parent::phplistplugin();
