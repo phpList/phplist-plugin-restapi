@@ -195,16 +195,16 @@ class Helper
         return $result;
     }
 
-    public function listMessageAdd($list_id, $message_id)
+    public function listCampaignAdd($list_id, $message_id)
     {
 
         //Post Data
         $post_params = array(
             'list_id'    => $list_id,
-            'message_id' => $message_id,
+            'campaign_id' => $message_id,
         );
 
-        $result = $this->callAPI('listMessageAdd', $post_params);
+        $result = $this->callAPI('listCampaignAdd', $post_params);
 
         return $result;
     }
@@ -215,10 +215,10 @@ class Helper
         //Post Data
         $post_params = array(
             'list_id'    => $list_id,
-            'message_id' => $message_id,
+            'campaign_id' => $message_id,
         );
 
-        $result = $this->callAPI('listMessageDelete', $post_params);
+        $result = $this->callAPI('listCampaignDelete', $post_params);
 
         return $result;
     }
@@ -403,7 +403,7 @@ class Helper
      * Messages
      ************************************************************/
 
-    public function messageGet($id)
+    public function campaignGet($id)
     {
 
         //Post Data
@@ -411,24 +411,24 @@ class Helper
             'id' => $id,
         );
 
-        $result = $this->callAPI('messageGet', $post_params);
+        $result = $this->callAPI('campaignGet', $post_params);
 
         return $result;
     }
 
-    public function messagesGet()
+    public function campaignsGet()
     {
 
         //Post Data
         $post_params = array(
         );
 
-        $result = $this->callAPI('messagesGet', $post_params);
+        $result = $this->callAPI('campaignsGet', $post_params);
 
         return $result;
     }
 
-    public function messageAdd($subject, $fromfield, $replyto, $message, $textmessage, $template, $embargo, $status = 'draft', $owner = 0, $sendformat = 'HTML', $footer = '', $rsstemplate = '')
+    public function campaignAdd($subject, $fromfield, $replyto, $message, $textmessage, $template, $embargo, $status = 'draft', $owner = 0, $sendformat = 'HTML', $footer = '', $rsstemplate = '')
     {
 
         //Post Data
@@ -447,12 +447,12 @@ class Helper
             'owner'       => $owner,
         );
 
-        $result = $this->callAPI('messageAdd', $post_params);
+        $result = $this->callAPI('campaignAdd', $post_params);
 
         return $result;
     }
 
-    public function messageUpdate($id, $subject, $fromfield, $replyto, $message, $textmessage, $template, $embargo, $status = 'draft', $owner = 0, $sendformat = 'HTML', $footer = '', $rsstemplate = '')
+    public function campaignUpdate($id, $subject, $fromfield, $replyto, $message, $textmessage, $template, $embargo, $status = 'draft', $owner = 0, $sendformat = 'HTML', $footer = '', $rsstemplate = '')
     {
 
         //Post Data
@@ -472,7 +472,7 @@ class Helper
             'owner'       => $owner,
         );
 
-        $result = $this->callAPI('messageUpdate', $post_params);
+        $result = $this->callAPI('campaignUpdate', $post_params);
 
         return $result;
     }
