@@ -61,6 +61,32 @@ class phpListRestapiDoc
     public function header()
     {
         return '
+        
+        <style type="text/css">
+.param-required {
+  background-color: #DD5600;
+}
+.param-optional {
+    background-color: #669533;
+}
+.restapi-datatype {
+    background-color: #999;
+}
+
+.restapi-param, .restapi-datatype {
+    border-radius: 3px;
+    display: inline-block;
+    padding: 2px 4px;
+    font-size: 11.844px;
+    font-weight: bold;
+    line-height: 14px;
+    color: #FFF;
+    vertical-align: baseline;
+    white-space: nowrap;
+    text-shadow: 0px -1px 0px rgba(0, 0, 0, 0.25);
+}
+
+        </style>
 
                     <header class="jumbotron subhead" id="overview">
                         <div class="row">

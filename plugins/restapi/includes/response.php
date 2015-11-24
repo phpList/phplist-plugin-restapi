@@ -36,7 +36,7 @@ class Response
 
     public function output()
     {
-        header('Content-Type: application/json');
+        header('Content-Type: application/json; charset=utf-8;');
         echo $this->json_encode2($this->result);
         die(0);
     }
@@ -66,7 +66,7 @@ class Response
                 }
             } else {
                 // simple values are untouched
-                $result[$key] = utf8_encode($value);
+                $result[$key] = $value;
             }
         }
 
