@@ -702,7 +702,37 @@ class TestRestapi extends \PHPUnit_Framework_TestCase
         $campaignID = $result->data->id;
         return $campaignID;
     }
-    
+ 
+      /**
+      * 
+      * test creating a campaign with UTF-8 characters
+      */
+           
+     function testCreateCampaignUTF8() {
+        $post_params = array(
+            'subject' => 'Test Campaign created by API '.time(),
+            'fromfield' => 'From Name apitest@phplist.com',
+            'replyto' => '',
+            'message' => '快速的棕色狐狸跳过懒狗',
+            'textmessage' => '快速的棕色狐狸跳过懒狗',
+            'footer' => 'Footer',
+            'status' => 'submitted',
+            'sendformat' => 'both',
+            'template' => 0,
+            'embargo' => date('Y-m-d'),
+            'rsstemplate' => '',
+            'owner' => 0,
+            'htmlformatted' => 1,
+        );
+        
+        $result = $this->callAPI('campaignAdd', $post_params);
+        $this->assertEquals('success', $result->status);
+        $campaignID = $result->data->id;
+        $this->assertEquals($result->data->message,'快速的棕色狐狸跳过懒狗');
+        return $campaignID;
+    }
+ 
+  
     /**
      * update a campaign
      * @depends testCreateCampaign
@@ -755,7 +785,7 @@ class TestRestapi extends \PHPUnit_Framework_TestCase
 
          $result = $this->callAPI('campaignsCount', $post_params);
          $this->assertEquals('success', $result->status);
-         $this->assertEquals($campaignCount+1, $result->data->total);
+         $this->assertEquals($campaignCount+2, $result->data->total);
          $campaignCount = $result->data->total;
 
          return $campaignCount;
