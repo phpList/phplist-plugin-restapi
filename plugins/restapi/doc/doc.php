@@ -100,7 +100,7 @@ class phpListRestapiDoc
                     <div class="row">
                         <div class="xspan12">
                             <div class="well">
-                                The following methods is called by Body Param [cmd] to the plugin URL via request method POST.
+                                The following methods are called by Body Param [cmd] to the plugin URL via an HTTP POST requestT.
                                 <p>
                                     <span class="restapi-param param-required">Required body parameter</span><br/>
                                     <span class="restapi-param param-optional">Optional body parameter</span><br/>
