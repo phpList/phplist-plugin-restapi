@@ -67,8 +67,6 @@ print_r($result);
         $method = 'getSubscriber';
 
         $result = $this->callApi( $className, $method, $params );
-
-        var_dump($result);
     }
 
     // /**
