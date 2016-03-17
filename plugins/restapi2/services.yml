@@ -110,7 +110,7 @@ parameters:
   pdoEx.dbname: dbname
 
 # phpList 4 parameters
-  config.configfile: config_file
+  config.configfile: null
   emailaddress.address: email_address
   password.password: password
   subscriberentity.emailaddress: placeholder
