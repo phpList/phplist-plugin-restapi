@@ -6,8 +6,8 @@ use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 
-// Load phplist3 config
-require_once( $GLOBALS['phplist3-config-file-path'] );
+// Load phplist4 config
+$iniConfigArray = parse_ini_file( $GLOBALS['phplist4-ini-config-file-path'] );
 
 // Include Symfony autoloader
 require_once( 'vendor/autoload.php' );
@@ -27,7 +27,7 @@ $loader = new YamlFileLoader( $container, new FileLocator(__DIR__) );
 // Load the service config file, which is in YAML format
 $loader->load( '../services.yml' );
 // Set necessary config class parameter
-$container->setParameter( 'config.configfile', $GLOBALS['phplist4-config-file-path'] );
+$container->setParameter( 'config.configfile', $GLOBALS['phplist4-ini-config-file-path'] );
 // These service parameters will be used as constructor arguments for pdoEx{}
 $container->setParameter( 'pdoEx.hostname', $GLOBALS['database_host'] );
 $container->setParameter( 'pdoEx.username', $GLOBALS['database_user'] );
