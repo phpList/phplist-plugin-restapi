@@ -38,28 +38,28 @@ class Pl4Test extends \PHPUnit_Framework_TestCase
         $this->subscriberManager = $this->container->get( 'SubscriberManager' );
     }
 
-    /**
-    * @note This belongs in a test class for SubscriberEntity, not here
-    */
-    public function testAdd()
-    {
-        // Add new subscriber properties to the entity
-        $scrEntity = new SubscriberEntity;
-        $scrEntity->emailAddress = $this->emailAddress;
-        $scrEntity->plainPass = $this->plainPass;
-
-        // Copy the email address to test it later
-        $emailCopy = $this->emailAddress;
-        // Save the subscriber
-        $newSubscriberId = $this->subscriberManager->add( $scrEntity );
-
-        // Test that an ID was returned
-        $this->assertNotEmpty( $newSubscriberId );
-        $this->assertTrue( is_numeric( $newSubscriberId ) );
-
-        // Pass on to the next test
-        return array( 'id' => $newSubscriberId, 'email' => $emailCopy, 'encPass' => $scrEntity->encPass );
-    }
+    // /**
+    // * @note This belongs in a test class for SubscriberEntity, not here
+    // */
+    // public function testAdd()
+    // {
+    //     // Add new subscriber properties to the entity
+    //     $scrEntity = new SubscriberEntity;
+    //     $scrEntity->emailAddress = $this->emailAddress;
+    //     $scrEntity->plainPass = $this->plainPass;
+    //
+    //     // Copy the email address to test it later
+    //     $emailCopy = $this->emailAddress;
+    //     // Save the subscriber
+    //     $newSubscriberId = $this->subscriberManager->add( $scrEntity );
+    //
+    //     // Test that an ID was returned
+    //     $this->assertNotEmpty( $newSubscriberId );
+    //     $this->assertTrue( is_numeric( $newSubscriberId ) );
+    //
+    //     // Pass on to the next test
+    //     return array( 'id' => $newSubscriberId, 'email' => $emailCopy, 'encPass' => $scrEntity->encPass );
+    // }
 
     /**
     * @depends testAdd
