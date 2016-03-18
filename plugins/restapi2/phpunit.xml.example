@@ -23,6 +23,8 @@
         <var name="database_name" value='' />
         <var name="database_user" value='' />
         <var name="database_password" value='' />
+        <var name="table_prefix" value='phplist_' />
+        <var name="usertable_prefix" value='phplist_user_' />
         <var name="phplist4-ini-config-file-path" value='' />
     </php>
 </phpunit>
