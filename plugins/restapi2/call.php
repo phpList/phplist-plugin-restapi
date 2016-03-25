@@ -9,8 +9,12 @@ require_once 'vendor/autoload.php';
 
 // Disable HTML output as HTML cannot be easily read during HTTP POST testing
 ini_set( 'html_errors', 0 );
-// Disable xdebug HTML output
-if ( function_exists( 'xdebug_disable' ) ) {
+
+// Disable xdebug HTML outputif debug is disabled and function exists
+if (
+    ! isset( $GLOBALS['DEBUG'] ) || $GLOBALS['DEBUG'] == 0
+    && function_exists( 'xdebug_disable' )
+) {
     xdebug_disable();
 }
 
@@ -56,13 +60,14 @@ if ( function_exists( 'api_request_log' ) )
     api_request_log();
 }
 
+// Get necessary objects from container
 $call = $container->get( 'Call' );
 $response = $container->get( 'Response' );
 
 // Check if this is called outside phpList auth, this should never occur!
 if ( empty( $plugin->coderoot ) )
 {
-    $response->outputErrorMessage( 'Not authorized! Please login with [login] and [password] as admin first!' );
+    $response->outputErrorMessage( 'Not authorized! Please login to API with HTTP POST parameters [login] and [password] set' );
 }
 
 // Check if the request received was via HTTP post
@@ -104,7 +109,7 @@ try {
 $resultArray = $call->callResultToArray( $callResult );
 
 // Save output to response
-$response->setData( 'foo', $resultArray );
+$response->setData( 'unspecified', $resultArray );
 
 // Output the response
 $response->output();
