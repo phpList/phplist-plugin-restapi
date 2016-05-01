@@ -29,10 +29,10 @@ class Subscribers
             $order = $_REQUEST['order'];
         }
         if (isset($_REQUEST['limit']) && !empty($_REQUEST['limit'])) {
-            $limit = $_REQUEST['limit'];
+            $limit = intval($_REQUEST['limit']);
         }
         if (isset($_REQUEST['offset']) && !empty($_REQUEST['offset'])) {
-            $offset = $_REQUEST['offset'];
+            $offset = intval($_REQUEST['offset']);
         }
         if ($limit > 100) {
             $limit = 100;
