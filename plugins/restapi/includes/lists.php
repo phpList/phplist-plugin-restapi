@@ -328,4 +328,40 @@ class Lists
         }
         die(0);
     }
+   /**
+     * Get all subscribers from a list
+     * 
+     * <p><strong>Parameters:</strong><br/>
+     * [*list_id] {integer} the List-ID.
+     * <p><strong>Returns:</strong><br/>
+     * Array of subscribers assigned to the list.
+     * </p>
+     */
+    public static function listSubscribers($list_id = 0)
+    {
+        $response = new Response();
+        if ($list_id == 0) {
+            $list_id = sprintf('%d',$_REQUEST['list_id']);
+        }
+        $sql = 'SELECT * FROM '.$GLOBALS['tables']['user'].' WHERE id IN 
+          (SELECT userid FROM '.$GLOBALS['tables']['listuser'].' WHERE listid=:list_id) ORDER BY id;';
+        if (!is_numeric($list_id) || empty($list_id)) {
+            Response::outputErrorMessage('invalid call');
+        }
+        try {
+            $db = PDO::getConnection();
+            $stmt = $db->prepare($sql);
+            $stmt->bindParam('list_id', $list_id, PDO::PARAM_INT);
+            $stmt->execute();
+            $result = $stmt->fetchAll(PDO::FETCH_OBJ);
+            $db = null;
+            $response->setData('Subscribers', $result);
+            $response->output();
+        } catch (\Exception $e) {
+            Response::outputError($e);
+        }
+        die(0);
+    }
+
+
 }
