@@ -178,6 +178,130 @@ class Subscribers
             Response::outputError($e);
         }
     }
+
+
+    /**
+     * Add / Updates multiples Subscribers.
+     *
+     * <p><strong>Parameters:</strong><br/>
+     * [*subscribers] {json}  array of object with this properties (  email, confirmed, htmlemail, foreignkey, subscribepage, password, disabled )
+     * </p>
+     * <p><strong>Returns:</strong><br/>
+     * Array of Subscriber Objects
+     * </p>
+     */
+    public static function subscriberBulkAdd()
+    {
+        $subscribers =  json_decode( stripslashes($_REQUEST['subscribers'] ), true );
+        if(!isset($_REQUEST['subscribers'])){
+            return Response::outputError(new \Exception("subscribers variable not set"));
+        }
+
+        if( !is_array($subscribers ) ){
+            return Response::outputError(new \Exception("subscribers variable is invalid"));
+        }
+
+        $sqlCount = 'SELECT id FROM '.$GLOBALS['tables']['user'].'
+                        WHERE email = :email';
+
+        $sqlInsert = 'INSERT INTO '.$GLOBALS['tables']['user'].'
+          (email, confirmed, foreignkey, htmlemail, password, passwordchanged, subscribepage, disabled, entered, uniqid)
+          VALUES (:email, :confirmed, :foreignkey, :htmlemail, :password, now(), :subscribepage, :disabled, now(), :uniqid);';
+
+        $sqlUpdate = 'UPDATE '.$GLOBALS['tables']['user'].'
+                        SET email = :email,
+                            confirmed=:confirmed,
+                            foreignkey=:foreignkey,
+                            htmlemail=:htmlemail,
+                            password= :password,
+                            passwordchanged:=now(),
+                            subscribepage=:subscribepage,
+                            disabled=:disabled
+                        WHERE id = :id ';
+        $db = PDO::getConnection();
+        try {
+            $db->beginTransaction();
+            $stmtCount  = $db->prepare($sqlCount);
+            $stmtInsert = $db->prepare($sqlInsert);
+            $stmtUpdate = $db->prepare($sqlUpdate);
+            $objs = [];
+            foreach ($subscribers as $subscriber) {
+                if (!validateEmail($subscriber['email'])) {
+                    Response::outputErrorMessage('invalid email address');
+                }
+            }
+            foreach ($subscribers as $subscriber) {
+                $stmtCount->bindParam('email', $subscriber['email'], PDO::PARAM_STR);
+
+                $stmtCount->execute();
+
+                $result = $stmtCount->fetchAll();
+                if ( isset($result[0])) {
+                    $id = $result[0]['id'];
+                }else{
+                    $id = null;
+                }
+
+
+                if ($id){
+                    // update
+                    $uniqueID = Common::createUniqId();
+                    $encPwd = Common::encryptPassword($subscriber['password']);
+                    $stmtUpdate->bindParam('email', $subscriber['email'], PDO::PARAM_STR);
+                    $stmtUpdate->bindParam('confirmed', $subscriber['confirmed'], PDO::PARAM_BOOL);
+                    $stmtUpdate->bindParam('htmlemail', $subscriber['htmlemail'], PDO::PARAM_BOOL);
+                    $stmtUpdate->bindParam('foreignkey', $subscriber['foreignkey'], PDO::PARAM_STR);
+                    $stmtUpdate->bindParam('password', $encPwd, PDO::PARAM_STR);
+                    $stmtUpdate->bindParam('subscribepage', $subscriber['subscribepage'], PDO::PARAM_INT);
+                    $stmtUpdate->bindParam('disabled', $subscriber['disabled'], PDO::PARAM_BOOL);
+                    $stmtUpdate->bindParam('id', $id, PDO::PARAM_INT);
+                    $stmtUpdate->execute();
+                    $obj = new \StdClass();
+                    $obj->id            = $id;
+                    $obj->email         = $subscriber['email'];
+                    $obj->confirmed     = $subscriber['confirmed'];
+                    $obj->htmlemail     = $subscriber['htmlemail'];
+                    $obj->foreignkey    = $subscriber['foreignkey'];
+                    $obj->subscribepage = $subscriber['subscribepage'];
+                    $obj->disabled      = $subscriber['disabled'];
+                    $obj->password      = $encPwd;
+                    $objs[]=$obj;
+                }else{
+                    // insert
+                    $encPwd = Common::encryptPassword($subscriber['password']);
+                    $stmtInsert->bindParam('email', $subscriber['email'], PDO::PARAM_STR);
+                    $stmtInsert->bindParam('confirmed', $subscriber['confirmed'], PDO::PARAM_BOOL);
+                    $stmtInsert->bindParam('htmlemail', $subscriber['htmlemail'], PDO::PARAM_BOOL);
+                    $stmtInsert->bindParam('foreignkey', $subscriber['foreignkey'], PDO::PARAM_STR);
+                    $stmtInsert->bindParam('password', $encPwd, PDO::PARAM_STR);
+                    $stmtInsert->bindParam('subscribepage', $subscriber['subscribepage'], PDO::PARAM_INT);
+                    $stmtInsert->bindParam('disabled', $subscriber['disabled'], PDO::PARAM_BOOL);
+                    $stmtInsert->bindParam('uniqid', $uniqueID, PDO::PARAM_STR);
+                    $stmtInsert->execute();
+                    $id = $db->lastInsertId();
+                    $obj = new \StdClass();
+                    $obj->id            = $id;
+                    $obj->email         = $subscriber['email'];
+                    $obj->confirmed     = $subscriber['confirmed'];
+                    $obj->htmlemail     = $subscriber['htmlemail'];
+                    $obj->foreignkey    = $subscriber['foreignkey'];
+                    $obj->subscribepage = $subscriber['subscribepage'];
+                    $obj->disabled      = $subscriber['disabled'];
+                    $obj->password      = $encPwd;
+                    $objs[]=$obj;
+                }
+            }
+            $db->commit();
+            $response = new Response();
+            $response->setData("Subscribers", $objs);
+            $response->output();
+
+            $db = null;
+        } catch (\Exception $e) {
+            $db->rollBack();
+            Response::outputError($e);
+        }
+    }
     
     /**
      * Add a Subscriber with lists.
