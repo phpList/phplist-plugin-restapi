@@ -79,8 +79,10 @@ class SubscriberHandler
       */
      public function getById( $id )
      {
-        // Get the subscriber & return
-         return $this->subscriberManager->getSubscriberById( $id );
+         $subscriber = $this->subscriberManager->getSubscriberById( $id );
+         unset($subscriber->plainPass);
+         unset($subscriber->plainPasschanged);
+         return $subscriber;
      }
 
      /**

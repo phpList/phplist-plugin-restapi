@@ -8,18 +8,18 @@ use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 require_once 'vendor/autoload.php';
 
 // Disable HTML output as HTML cannot be easily read during HTTP POST testing
-ini_set( 'html_errors', 0 );
+//ini_set( 'html_errors', 0 );
 
 // Disable xdebug HTML outputif debug is disabled and function exists
-if (
+/*if (
     ! isset( $GLOBALS['DEBUG'] ) || $GLOBALS['DEBUG'] == 0
     && function_exists( 'xdebug_disable' )
 ) {
     xdebug_disable();
-}
+}*/
 
 // Check that the plugin has been initiatlised
-defined( 'PHPLISTINIT' ) || die;
+//defined( 'PHPLISTINIT' ) || die;
 
 // No HTML-output, please!
 ob_end_clean();
