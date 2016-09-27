@@ -103,6 +103,8 @@ try {
 } catch ( \Exception $e ) {
     // If call handler encounters error, turn it into a response
     $response->outputErrorMessage( 'Call handler error: ' . $e->getMessage() );
+    //var_dump($e->getLine());
+    //die;
 }
 
 // Format call output for making a response
