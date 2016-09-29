@@ -15,14 +15,14 @@ class Campaigns
         if ($id == 0) {
             $id = $_REQUEST['id'];
         }
-        
+
         $params = array(
             'id' => array($id,PDO::PARAM_INT),
-            );
-        
+        );
+
         Common::select('Campaign', 'SELECT * FROM '.$GLOBALS['tables']['message'].' WHERE id=:id;',$params, true);
     }
-    
+
     public static function campaignsCount()
     {
         Common::select('Campaign', 'SELECT count(id) as total FROM '.$GLOBALS['tables']['message'],array(),true);
@@ -31,7 +31,7 @@ class Campaigns
 
     /**
      * Get all the Campaigns in the system.
-     * 
+     *
      * <p><strong>Parameters:</strong><br/>
      * [order_by] {string} name of column to sort, default "id".<br/>
      * [order] {string} sort order asc or desc, default: asc.<br/>
@@ -51,15 +51,15 @@ class Campaigns
             $order = $_REQUEST['order'];
         }
         if (isset($_REQUEST['limit']) && !empty($_REQUEST['limit'])) {
-            $limit = sprintf('%d',$_REQUEST['limit']);
+            $limit = intval($_REQUEST['limit']);
         }
         if (isset($_REQUEST['offset']) && !empty($_REQUEST['offset'])) {
-            $offset = sprintf('%d',$_REQUEST['offset']);
+            $offset = intval($_REQUEST['offset']);
         }
         if ($limit > 10) {
             $limit = 10;
         }
-        
+
         $params = array (
             'order_by' => array($order_by,PDO::PARAM_STR),
             'order' => array($order,PDO::PARAM_STR),
@@ -71,7 +71,7 @@ class Campaigns
 
     /**
      * Add a new campaign.
-     * 
+     *
      * <p><strong>Parameters:</strong><br/>
      * [*subject] {string} <br/>
      * [*fromfield] {string} <br/>
@@ -120,7 +120,7 @@ class Campaigns
 
     /**
      * Update existing campaign.
-     * 
+     *
      * <p><strong>Parameters:</strong><br/>
      * [*id] {integer} <br/>
      * [*subject] {string} <br/>
