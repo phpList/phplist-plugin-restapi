@@ -45,11 +45,17 @@ class Campaigns
     public static function campaignsGet($order_by = 'modified', $order = 'desc', $limit = 10, $offset = 0)
     {
         if (isset($_REQUEST['order_by']) && !empty($_REQUEST['order_by'])) {
+
             $order_by = $_REQUEST['order_by'];
+            $order_by =  preg_replace('/[^a-zA-Z0-9_$]/', '', $order_by);
+
+            if (isset($_REQUEST['order']) && !empty($_REQUEST['order']) &&
+                (strtolower($_REQUEST['order'] == 'asc') || strtolower($_REQUEST['order'] == 'desc'))) {
+                $order = $_REQUEST['order'];
+            }
+
         }
-        if (isset($_REQUEST['order']) && !empty($_REQUEST['order'])) {
-            $order = $_REQUEST['order'];
-        }
+
         if (isset($_REQUEST['limit']) && !empty($_REQUEST['limit'])) {
             $limit = intval($_REQUEST['limit']);
         }
@@ -61,12 +67,10 @@ class Campaigns
         }
 
         $params = array (
-            'order_by' => array($order_by,PDO::PARAM_STR),
-            'order' => array($order,PDO::PARAM_STR),
             'limit' => array($limit,PDO::PARAM_INT),
             'offset' => array($offset,PDO::PARAM_INT),
         );
-        Common::select('Campaigns', 'SELECT * FROM '.$GLOBALS['tables']['message'].' ORDER BY :order_by :order LIMIT :limit OFFSET :offset;',$params);
+        Common::select('Campaigns', 'SELECT * FROM '.$GLOBALS['tables']['message']." ORDER BY $order_by $order LIMIT :limit OFFSET :offset;",$params);
     }
 
     /**
