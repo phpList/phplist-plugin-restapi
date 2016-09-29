@@ -66,11 +66,22 @@ class Campaigns
             $limit = 10;
         }
 
+        $subsql = "SELECT COUNT(userid) FROM " . $GLOBALS['tables']['usermessage'] . " WHERE viewed IS NOT NULL AND status = 'sent' and messageid = m.id";
+
+        $sql  = "SELECT COALESCE(SUM(clicked), 0) AS clicked, (" . $subsql . ") AS uviews, ";
+        $sql .= "m.* ";
+        $sql .= "FROM " . $GLOBALS['tables']['message'] . " AS m ";
+        $sql .= "LEFT JOIN " . $GLOBALS['tables']['linktrack_uml_click'] . " AS c ON ( c.messageid = m.id ) ";
+        $sql .= "GROUP BY m.id ";
+        $sql .= "ORDER BY $order_by $order ";
+        $sql .= "LIMIT :limit OFFSET :offset ";
+
         $params = array (
             'limit' => array($limit,PDO::PARAM_INT),
             'offset' => array($offset,PDO::PARAM_INT),
         );
-        Common::select('Campaigns', 'SELECT * FROM '.$GLOBALS['tables']['message']." ORDER BY $order_by $order LIMIT :limit OFFSET :offset;",$params);
+
+        Common::select('Campaigns', $sql, $params);
     }
 
     /**
