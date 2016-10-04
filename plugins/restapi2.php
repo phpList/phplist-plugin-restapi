@@ -22,6 +22,8 @@ class restapi2 extends phplistPlugin {
     // Description of the app as displayed in admin pages
     public $description = 'REST API interface to phpList4, work in progress';
 
+    public $authProvider = true;
+
     function restapi2() {
       parent::phplistplugin();
       // Set path to plugin folder
@@ -41,6 +43,19 @@ class restapi2 extends phplistPlugin {
             // Array key determines link URL in dashboard; value sets link label
             'main' => 'RESTAPI'
         );
+    }
+
+    /* login
+     * called on login
+     * @param none
+     * @return true when user is successfully logged by plugin, false instead
+     */
+
+    public function login()
+    {
+        if($_GET['pi'] === strtolower($this->name))
+            return true;
+
     }
 
     // Add settings to admin interface

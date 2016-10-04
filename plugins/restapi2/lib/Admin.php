@@ -9,10 +9,20 @@ class Admin {
 
     // Response object
     protected $response;
+    /**
+     * @var AdminModel
+     */
+    private $admin;
 
-    public function __construct( Response $response )
+    /**
+     * Admin constructor.
+     * @param Response $response
+     * @param AdminModel $adminModel
+     */
+    public function __construct(Response $response, \phpList\Admin $admin )
     {
         $this->response = $response;
+        $this->admin = $admin;
     }
 
     /**
@@ -20,10 +30,24 @@ class Admin {
      * @todo: Finish implementing this method
      * [*login] {string} loginname as an admin to phpList
      * [*password] {string} the password
+     * @return boolean
+     * @throws \Exception
      */
-    public function login( $username, $password )
+    public function login( $password, $username )
     {
-        $this->response->outputMessage( 'Not implemented' );
+        $data = $this->admin->validateLogin($password, $username);
+
+        if($data['result']){
+            $this->admin->setLoginToken($data['admin']->id);
+        }
+    }
+
+    /**
+     * @param $token string
+     * @return bool
+     */
+    public function isLoggedIn( $token ){
+        return $this->admin->checkIfTheTokenIsValid($token);
     }
 
     /**

@@ -18,10 +18,12 @@ class Call {
     public function __construct(
         \Rapi\Handler\ListHandler $listHandler
         , \Rapi\Handler\SubscriberHandler $subscriberHandler
+        , \Rapi\Handler\LoginHandler $loginHandler
     )
     {
         $this->listHandler = $listHandler;
-        $this->subscriberHandler = $subscriberHandler;#
+        $this->subscriberHandler = $subscriberHandler;
+        $this->loginHandler = $loginHandler;
     }
     /**
      * Validate a requested call by checking characters and syntax
