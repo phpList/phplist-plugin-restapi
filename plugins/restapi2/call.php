@@ -15,7 +15,7 @@ if (
     (! isset( $GLOBALS['DEBUG'] ) || $GLOBALS['DEBUG'] == 0)
     && function_exists( 'xdebug_disable' )
 ) {
-    xdebug_disable();
+    //xdebug_disable();
 }
 
 // Check that the plugin has been initiatlised

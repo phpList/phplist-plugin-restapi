@@ -1,6 +1,7 @@
 <?php
 
 namespace Rapi\Handler;
+use phpList\helper\Logger;
 
 /**
  * Class LoginHandler
@@ -13,14 +14,24 @@ class LoginHandler
      * LoginHandler constructor.
      * @param \Rapi\Admin $admin
      */
-    public function __construct( \Rapi\Admin $admin)
+    public function __construct( \Rapi\Admin $admin, Logger $logger)
     {
         $this->admin = $admin;
+        $logger->debug('LoginHandler was called');
     }
 
     public function login($username, $password){
-        $response = $this->admin->login($username, $password);
-        return ["message" => "Success"];
+        $data = $this->admin->login($username, $password);
+        if($data){
+            return [
+                "message" => "Success",
+                "token" => $data
+            ];
+        }else{
+            return [
+                "message" => "Failure"
+            ];
+        }
     }
 
 }

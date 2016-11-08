@@ -39,6 +39,7 @@ class Admin {
 
         if($data['result']){
             $this->admin->setLoginToken($data['admin']->id);
+            return $this->admin->getLoginToken($data['admin']->id);
         }
     }
 

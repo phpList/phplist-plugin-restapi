@@ -33,7 +33,7 @@ services:
     arguments: [@ListEntity, @ListManager, @SubscriberEntity]
   LoginHandler:
     class:     Rapi\Handler\LoginHandler
-    arguments: [@Admin]
+    arguments: [@Admin, @Logger]
 
 # It seems order matters; hence Call{} definition goes last, not alphabetically
   Call:
@@ -44,8 +44,12 @@ services:
   AdminService:
     class: phpList\Admin
     arguments: [@AdminModel, @Pass]
+  LoggerWriterAbstractFactory:
+      class: phpList\helper\Logger\LoggerWriterAbstractFactory
+      arguments: [@Config]
   Logger:
     class: phpList\helper\Logger
+    arguments: [@LoggerWriterAbstractFactory]
   Util:
     class: phpList\helper\Util
     arguments: [@Config, @Logger]

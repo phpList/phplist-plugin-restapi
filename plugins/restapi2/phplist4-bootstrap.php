@@ -12,4 +12,14 @@ $pl4Config->setRunningConfig( 'DATABASE_DSN', 'mysql:host=' . $GLOBALS['database
 $pl4Config->setRunningConfig( 'TABLE_PREFIX', $GLOBALS['table_prefix'] );
 $pl4Config->setRunningConfig( 'USERTABLE_PREFIX', $GLOBALS['usertable_prefix'] );
 // FIXME: Set this hashing algo from phpList3's config instead
-$pl4Config->setRunningConfig( 'ENCRYPTION_ALGO', 'md5' );
+// Fixed: on PHPList 3 we were using constants with define().
+$pl4Config->setRunningConfig( 'ENCRYPTION_ALGO', ENCRYPTION_ALGO );
+
+// Set the folder where the log file should live
+$pl4Config->setRunningConfig( 'LOG_FOLDER', '/tmp/');
+$pl4Config->setRunningConfig( 'LOG_FILENAME', 'phplist-fork.log');
+
+/**
+ * file | database
+ */
+$pl4Config->setRunningConfig( 'LOG_WRITER',  'file');
