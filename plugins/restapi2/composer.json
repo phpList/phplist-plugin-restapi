@@ -3,6 +3,7 @@
         "symfony/dependency-injection": "~2.6"
         , "symfony/yaml": "~2.6"
         , "symfony/config": "~2.6"
+        , "phplist/phplist4-core": "dev-master"
     }
     , "require-dev": {
         "symfony/debug": "2.5.*"
@@ -15,7 +16,6 @@
     , "autoload": {
         "psr-4": {
             "Rapi\\": "lib/"
-            , "phpList\\": "/home/vagrant/Code/phplist_fork/phplist4/core"
         }
     }
 }
