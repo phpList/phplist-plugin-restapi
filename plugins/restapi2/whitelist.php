@@ -28,4 +28,10 @@ $whitelist = array(
             'addSubscriber' => true
         )
     )
+    , 'loginHandler' => array(
+        'enabled' => true
+        , 'methods' => array(
+            'login' => true
+        )
+    )
 );

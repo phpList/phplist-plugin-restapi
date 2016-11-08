@@ -8,7 +8,7 @@ services:
 # Classes with dependencies
   Admin:
     class:     Rapi\Admin
-    arguments: [@Response]
+    arguments: [@Response, @AdminService]
   Common:
     class:     Rapi\Common
     arguments: [@PdoEx, @Response]
@@ -31,15 +31,25 @@ services:
   ListHandler:
     class:     Rapi\Handler\ListHandler
     arguments: [@ListEntity, @ListManager, @SubscriberEntity]
+  LoginHandler:
+    class:     Rapi\Handler\LoginHandler
+    arguments: [@Admin, @Logger]
 
 # It seems order matters; hence Call{} definition goes last, not alphabetically
   Call:
     class:     Rapi\Call
-    arguments: [@ListHandler, @SubscriberHandler]
+    arguments: [@ListHandler, @SubscriberHandler, @LoginHandler]
 
 # phpList 4 services
+  AdminService:
+    class: phpList\Admin
+    arguments: [@AdminModel, @Pass]
+  LoggerWriterAbstractFactory:
+      class: phpList\helper\Logger\LoggerWriterAbstractFactory
+      arguments: [@Config]
   Logger:
     class: phpList\helper\Logger
+    arguments: [@LoggerWriterAbstractFactory]
   Util:
     class: phpList\helper\Util
     arguments: [@Config, @Logger]
@@ -98,6 +108,9 @@ services:
     arguments: [@Config, @Database]
   SubscriberModel:
     class: phpList\Model\SubscriberModel
+    arguments: [@Config, @Database]
+  AdminModel:
+    class: phpList\Model\AdminModel
     arguments: [@Config, @Database]
 
 # Define parameters, to be set in app logic

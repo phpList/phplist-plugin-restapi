@@ -12,10 +12,10 @@ ini_set( 'html_errors', 0 );
 
 // Disable xdebug HTML outputif debug is disabled and function exists
 if (
-    ! isset( $GLOBALS['DEBUG'] ) || $GLOBALS['DEBUG'] == 0
+    (! isset( $GLOBALS['DEBUG'] ) || $GLOBALS['DEBUG'] == 0)
     && function_exists( 'xdebug_disable' )
 ) {
-    xdebug_disable();
+    //xdebug_disable();
 }
 
 // Check that the plugin has been initiatlised
@@ -64,6 +64,26 @@ if ( function_exists( 'api_request_log' ) )
 $call = $container->get( 'Call' );
 $response = $container->get( 'Response' );
 
+// Check if you are calling loginHandler, if you aren't, it checks for a token to see if you are logged in
+if($_GET['className'] !== "loginHandler"){
+
+    $admin = $container->get( 'Admin' );
+
+    if(isset($_POST['token'])){
+
+        if(!$admin->isLoggedIn($_POST['token'])){
+            $response->outputErrorMessage( 'You should login to access the REST API' );
+        }
+
+        unset($_POST['token']);
+
+    }else{
+        $response->outputErrorMessage( 'You should specify you login token as a POST field' );
+    }
+
+
+}
+
 // Check if this is called outside phpList auth, this should never occur!
 if ( empty( $plugin->coderoot ) )
 {
@@ -103,6 +123,8 @@ try {
 } catch ( \Exception $e ) {
     // If call handler encounters error, turn it into a response
     $response->outputErrorMessage( 'Call handler error: ' . $e->getMessage() );
+    //var_dump($e->getLine());
+    //die;
 }
 
 // Format call output for making a response

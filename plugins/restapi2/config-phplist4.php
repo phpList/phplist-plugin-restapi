@@ -144,7 +144,7 @@ ASKFORPASSWORD = 0;
 ; reset the password. They will not be able to request the password from
 ; the system
 ; if you change this, you may have to use the 'Forgot password' system to get back in your installation
-ENCRYPTION_ALGO = "md5";
+ENCRYPTION_ALGO = "sha256";
 
 ; if you also want to force people who unsubscribe to provide a password before
 ; processing their unsubscription, set this to 1. You need to have the above one set

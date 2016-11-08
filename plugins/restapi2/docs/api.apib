@@ -1,0 +1,208 @@
+FORMAT: 1A
+
+# PHPList RestApi
+PHPList RestApi is an easy to use API.
+
+## Login [/admin/?page=call&pi=restapi2&className=loginHandler&method={method}]
+Login Handler
+
++ Parameters
+    + method (required, string)
+
+### Login [POST]
+method=addSubscriber
+
++ Request (application/x-www-form-urlencoded)
+
+        username=username&password=password
+
++ Response 200 (application/json)
+
+        {
+           "status":"success",
+           "type":"unspecified",
+           "data":{
+              "message":"Success",
+              "token":"token_here"
+           }
+        }
+
++ Response 200 (application/json)
+
+        {
+           "status":"success",
+           "type":"unspecified",
+           "data":{
+              "message":"Failure"
+           }
+        }
+
+## List [/admin/?page=call&pi=restapi2&className=listHandler&method={method}]
+List Handler
+
++ Parameters
+    + method (required, string)
+
+### Add subscriber to a list [POST]
+method=addSubscriber
+
++ Request (application/x-www-form-urlencoded)
+
+        listId=list_id&scrId=subscriber_id&token=your_login_token_here
+
++ Response 200 (application/json)
+
+        {
+           "status":"success",
+           "type":"unspecified",
+           "data":[
+
+           ]
+        }
+
++ Response 200 (application/json)
+
+        {
+           "status":"error",
+           "type":"Error",
+           "data":{
+              "code":0,
+              "message":"Call handler error: Subscriber is already subscribed on that list"
+           }
+        }
+
+## Subscriber [/admin/?page=call&pi=restapi2&className=subscriberHandler&method={method}]
+Subscriber Handler
+
++ Parameters
+    + method (required, string)
+
+### Add subscriber only by email [POST]
+method=addEmailOnly
+
++ Request (application/x-www-form-urlencoded)
+
+        emailAddress=email_address&token=your_login_token_here
+
++ Response 200 (application/json)
+
+        {
+            "status":"success",
+            "type":"unspecified",
+            "data":["102307"]
+        }
+
++ Response 200 (application/json)
+
+        {
+            "status" : "error",
+            "type" : "Error",
+            "data" : {
+                        "code" : 0,
+                        "message" : "Call handler error: Subscriber with that email already exists"
+                     }
+        }
+
+
+### Get subscriber by id [POST]
+method=getById
+
++ Request (application/x-www-form-urlencoded)
+
+        id=user_id&token=your_login_token_here
+
++ Response 200 (application/json)
+
+        {
+           "status":"success",
+           "type":"unspecified",
+           "data":{
+              "id":"1",
+              "emailAddress":"email_address",
+              "confirmed":"0",
+              "blacklisted":"0",
+              "optedIn":"",
+              "bounceCount":"",
+              "entered":"2012-08-26 15:04:03",
+              "modified":"2013-01-16 14:34:26",
+              "uniqId":"",
+              "htmlEmail":"",
+              "subscribePage":"",
+              "rssFrequency":"",
+              "disabled":"0",
+              "extraData":"",
+              "foreignKey":"",
+              "optedin":"0",
+              "bouncecount":"0",
+              "uniqid":"unique_id",
+              "htmlemail":"1",
+              "subscribepage":"",
+              "rssfrequency":"",
+              "encPass":"encrypted_password",
+              "passwordchanged":"2012-08-26",
+              "extradata":"",
+              "foreignkey":""
+           }
+        }
+
++ Response 200 (application/json)
+
+        {
+           "status":"error",
+           "type":"Error",
+           "data":{
+              "code":0,
+              "message":"Call handler error: No subscriber found with ID: ID_HERE"
+           }
+        }
+
+### Remove a subscriber [POST]
+
++ Request (application/x-www-form-urlencoded)
+
+        id=user_id&token=your_login_token_here
+
++ Response 200
+        {
+           "status":"success",
+           "type":"unspecified",
+           "data":[
+              true
+           ]
+        }
+
++ Response 200
+
+        {
+           "status":"error",
+           "type":"Error",
+           "data":{
+              "code":0,
+              "message":"Call handler error: Subscriber doesn't exists"
+           }
+        }
+
+### Add a subscriber [POST]
+
++ Request (application/x-www-form-urlencoded)
+
+        token=token_here&blacklisted=0&bounceCount=0&confirmed=1&disabled=0&emailAddress=email_address&encPass=pass&entered=&extraData=&foreigKkey=&htmlEmail=1&modified=&optedIn=0&passwordChanged=&plainPass=&plainPasschanged=&rssFrequency=&subscribePage=
+
++ Response 200
+        {
+           "status":"success",
+           "type":"unspecified",
+           "data":[
+              "id_here"
+           ]
+        }
++ Response 200
+
+        {
+           "status":"error",
+           "type":"Error",
+           "data":{
+              "code":0,
+              "message":"Call handler error: Subscriber with that email already exists"
+           }
+        }
