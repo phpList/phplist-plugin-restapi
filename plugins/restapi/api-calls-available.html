@@ -1,0 +1,278 @@
+<div id="content" class="grid_20 twelve columns">
+<div id="wrapp">
+<div id="progressbar"></div>
+<!-- content start here -->
+
+
+<meta http-equiv="pragma" content="no-cache">
+<meta http-equiv="Cache-Control" content="no-cache, must-revalidate">
+<meta name="License" content="GNU Affero General Public License, http://www.gnu.org/licenses/agpl.html">
+<meta name="Powered-By" content="phplist version 3.2.5-dev">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+
+
+ </div>
+        
+        <style type="text/css">
+.param-required {
+  background-color: #DD5600;
+}
+.param-optional {
+    background-color: #669533;
+}
+.restapi-datatype {
+    background-color: #999;
+}
+
+.restapi-param, .restapi-datatype {
+    border-radius: 3px;
+    display: inline-block;
+    padding: 2px 4px;
+    font-size: 11.844px;
+    font-weight: bold;
+    line-height: 14px;
+    color: #FFF;
+    vertical-align: baseline;
+    white-space: nowrap;
+    text-shadow: 0px -1px 0px rgba(0, 0, 0, 0.25);
+}
+
+        </style>
+
+                    <header class="jumbotron subhead" id="overview">
+                        <div class="row">
+                            <div class="xspan6">
+                                <h1>phpList REST API Plugin v1</h1>
+                            </div>
+                        </div>
+                    </header>
+                    <div class="row">
+                        <div class="xspan12">
+                            <div class="well">
+                                The following methods are called by Body Param [cmd] to the plugin URL via an HTTP POST request.
+                                <p>
+                                    <span class="restapi-param param-required">Required body parameter</span><br>
+                                    <span class="restapi-param param-optional">Optional body parameter</span><br>
+                                    <span class="restapi-datatype">Datatype</span><br>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+        <section><div class="page-header"><h2>login</h2></div><div class="row"><div class="span12">Function to call for login.
+      
+      <p><strong>Parameters:</strong><br>
+      <span class="restapi-param param-required">login</span> <span class="restapi-datatype">string</span> loginname as an admin to phpList<br>
+      <span class="restapi-param param-required">password</span> <span class="restapi-datatype">string</span> the password
+      </p></div></div><br></section><section><div class="page-header"><h2>listsGet</h2></div><div class="row"><div class="span12">Gets all lists in phpList as an array.
+      
+      <p><strong>Parameters:</strong><br>
+      (none)
+      </p><p><strong>Returns:</strong><br>
+      Array of lists. Limited to 50.
+      </p></div></div><br></section><section><div class="page-header"><h2>listGet</h2></div><div class="row"><div class="span12">Gets one (1) list.
+      
+      <p><strong>Parameters:</strong><br>
+      <span class="restapi-param param-required">id</span> <span class="restapi-datatype">integer</span> the ID of the list.
+      </p><p><strong>Returns:</strong><br>
+      One list.
+      </p></div></div><br></section><section><div class="page-header"><h2>listAdd</h2></div><div class="row"><div class="span12">Add a new list.
+      
+      <p><strong>Parameters:</strong><br>
+      <span class="restapi-param param-required">name</span> <span class="restapi-datatype">string</span> the name of the list.<br>
+      <span class="restapi-param param-optional">description</span> <span class="restapi-datatype">string</span> adds a description to the list.<br>
+      <span class="restapi-param param-optional">listorder</span> <span class="restapi-datatype">integer</span> an expression to sortorder, eg 100.<br>
+      <span class="restapi-param param-optional">active</span> <span class="restapi-datatype">integer</span> if list should be active set this one to 1, otherwise it will be disabled.<br>
+      </p><p><strong>Returns:</strong><br>
+      The list added.
+      </p></div></div><br></section><section><div class="page-header"><h2>listUpdate</h2></div><div class="row"><div class="span12">Update existing List.
+      
+      <p><strong>Parameters:</strong><br>
+      <span class="restapi-param param-required">id</span> <span class="restapi-datatype">integer</span> the ID of the list.<br>
+      <span class="restapi-param param-required">name</span> <span class="restapi-datatype">string</span> the name of the list.<br>
+      <span class="restapi-param param-optional">description</span> <span class="restapi-datatype">string</span> adds a description to the list.<br>
+      <span class="restapi-param param-optional">listorder</span> <span class="restapi-datatype">integer</span> an expression to sortorder, eg 100.<br>
+      <span class="restapi-param param-optional">active</span> <span class="restapi-datatype">integer</span> if list should be active set this one to 1, otherwise it will be disabled.<br>
+      </p><p><strong>Returns:</strong><br>
+      The list updated.
+      </p></div></div><br></section><section><div class="page-header"><h2>listDelete</h2></div><div class="row"><div class="span12">Delete a List.
+      
+      <p><strong>Parameters:</strong><br>
+      <span class="restapi-param param-required">id</span> <span class="restapi-datatype">integer</span> the ID of the list.
+      </p><p><strong>Returns:</strong><br>
+      System message of action.
+      </p></div></div><br></section><section><div class="page-header"><h2>listsSubscriber</h2></div><div class="row"><div class="span12">Get Lists a Subscriber is Member of.
+      
+      <p><strong>Parameters:</strong><br>
+      <span class="restapi-param param-required">subscriber_id</span> <span class="restapi-datatype">integer</span> the Subscriber-ID.
+      </p><p><strong>Returns:</strong><br>
+      Array of lists where the subscriber is assigned to.
+      </p></div></div><br></section><section><div class="page-header"><h2>listSubscriberAdd</h2></div><div class="row"><div class="span12">Add a subscriber to a list.
+      
+      <p>The subscriber then subscribes to the list.</p>
+      <p><strong>Parameters:</strong><br>
+      <span class="restapi-param param-required">list_id</span> <span class="restapi-datatype">integer</span> the ID of the list.<br>
+      <span class="restapi-param param-required">subscriber_id</span> <span class="restapi-datatype">integer</span> the ID of the subscriber.<br>
+      </p><p><strong>Returns:</strong><br>
+      Array of lists where the subscriber is assigned to.
+      </p></div></div><br></section><section><div class="page-header"><h2>listSubscriberDelete</h2></div><div class="row"><div class="span12">Remove a subscriber from a list.
+      
+      <p><strong>Parameters:</strong><br>
+      <span class="restapi-param param-required">list_id</span> <span class="restapi-datatype">integer</span> the ID of the list.<br>
+      <span class="restapi-param param-required">subscriber_id</span> <span class="restapi-datatype">integer</span> the ID of the subscriber.
+      </p><p><strong>Returns:</strong><br>
+      System message of action.
+      </p></div></div><br></section><section><div class="page-header"><h2>listCampaignAdd</h2></div><div class="row"><div class="span12">Assigns a list to a campaign.
+      
+      <p><strong>Parameters:</strong><br>
+      <span class="restapi-param param-required">list_id</span> <span class="restapi-datatype">integer</span> the ID of the list.<br>
+      <span class="restapi-param param-required">campaign_id</span> <span class="restapi-datatype">integer</span> the ID of the campaign.
+      </p><p><strong>Returns:</strong><br>
+      The list assigned.
+      </p></div></div><br></section><section><div class="page-header"><h2>listCampaignDelete</h2></div><div class="row"><div class="span12">Unassigns a list from a campaign.
+      
+      <p><strong>Parameters:</strong><br>
+      <span class="restapi-param param-required">list_id</span> <span class="restapi-datatype">integer</span> the ID of the list.<br>
+      <span class="restapi-param param-required">campaign_id</span> <span class="restapi-datatype">integer</span> the ID of the campaign.
+      </p>
+      <p><strong>Returns:</strong><br>
+      System message of action.
+      </p></div></div><br></section><section><div class="page-header"><h2>subscribersGet</h2></div><div class="row"><div class="span12">Get all the Subscribers in the system.
+      
+      <p><strong>Parameters:</strong><br>
+      <span class="restapi-param param-optional">order_by</span> <span class="restapi-datatype">string</span> name of column to sort, default "id".<br>
+      <span class="restapi-param param-optional">order</span> <span class="restapi-datatype">string</span> sort order asc or desc, default: asc.<br>
+      <span class="restapi-param param-optional">limit</span> <span class="restapi-datatype">integer</span> limit the result, default 100 (max 100)<br>
+      <span class="restapi-param param-optional">offset</span> <span class="restapi-datatype">integer</span> offset of the result, default 0.<br>
+      </p>
+      <p><strong>Returns:</strong><br>
+      List of Subscribers.
+      </p></div></div><br></section><section><div class="page-header"><h2>subscribersCount</h2></div><div class="row"><div class="span12">Get the total of Subscribers in the system.
+      
+      <p><strong>Parameters:</strong><br>
+      none
+      </p>
+      <p><strong>Returns:</strong><br>
+      Number of subscribers.
+      </p></div></div><br></section><section><div class="page-header"><h2>subscriberGet</h2></div><div class="row"><div class="span12">Get one Subscriber by ID.
+      
+      <p><strong>Parameters:</strong><br>
+      <span class="restapi-param param-required">id</span> <span class="restapi-datatype">integer</span> the ID of the Subscriber.<br>
+      </p>
+      <p><strong>Returns:</strong><br>
+      One Subscriber only.
+      </p></div></div><br></section><section><div class="page-header"><h2>subscriberGetByEmail</h2></div><div class="row"><div class="span12">Get one Subscriber by email address.
+      
+      <p><strong>Parameters:</strong><br>
+      <span class="restapi-param param-required">email</span> <span class="restapi-datatype">string</span> the email address of the Subscriber.<br>
+      </p>
+      <p><strong>Returns:</strong><br>
+      One Subscriber only.
+      </p></div></div><br></section><section><div class="page-header"><h2>subscriberGetByForeignkey</h2></div><div class="row"><div class="span12">Get one Subscriber by foreign key.
+      
+      <p><strong>Parameters:</strong><br>
+      <span class="restapi-param param-required">foreignkey</span> <span class="restapi-datatype">string</span> the foreign key of the Subscriber.<br>
+      </p>
+      <p><strong>Returns:</strong><br>
+      One Subscriber only.
+      </p></div></div><br></section><section><div class="page-header"><h2>subscriberAdd</h2></div><div class="row"><div class="span12">Add one Subscriber.
+      
+      <p><strong>Parameters:</strong><br>
+      <span class="restapi-param param-required">email</span> <span class="restapi-datatype">string</span> the email address of the Subscriber.<br>
+      <span class="restapi-param param-required">confirmed</span> <span class="restapi-datatype">integer</span> 1=confirmed, 0=unconfirmed.<br>
+      <span class="restapi-param param-required">htmlemail</span> <span class="restapi-datatype">integer</span> 1=html emails, 0=no html emails.<br>
+      <span class="restapi-param param-required">foreignkey</span> <span class="restapi-datatype">string</span> Foreign key.<br>
+      <span class="restapi-param param-required">subscribepage</span> <span class="restapi-datatype">integer</span> subscribe page to sign up to.<br>
+      <span class="restapi-param param-required">password</span> <span class="restapi-datatype">string</span> The password for this Subscriber.<br>
+      <span class="restapi-param param-required">disabled</span> <span class="restapi-datatype">integer</span> 1=disabled, 0=enabled<br>
+      </p>
+      <p><strong>Returns:</strong><br>
+      The added Subscriber.
+      </p></div></div><br></section><section><div class="page-header"><h2>subscribe</h2></div><div class="row"><div class="span12">Add a Subscriber with lists.
+      
+      <p><strong>Parameters:</strong><br>
+      <span class="restapi-param param-required">email</span> <span class="restapi-datatype">string</span> the email address of the Subscriber.<br>
+      <span class="restapi-param param-required">foreignkey</span> <span class="restapi-datatype">string</span> Foreign key.<br>
+      <span class="restapi-param param-required">htmlemail</span> <span class="restapi-datatype">integer</span> 1=html emails, 0=no html emails.<br>
+      <span class="restapi-param param-required">subscribepage</span> <span class="restapi-datatype">integer</span> subscribepage to sign up to.<br>
+      <span class="restapi-param param-required">lists</span> <span class="restapi-datatype">string</span> comma-separated list IDs.<br>
+      </p>
+      <p><strong>Returns:</strong><br>
+      The added Subscriber.
+      </p></div></div><br></section><section><div class="page-header"><h2>subscriberUpdate</h2></div><div class="row"><div class="span12">Update one Subscriber.
+      
+      <p><strong>Parameters:</strong><br>
+      <span class="restapi-param param-required">id</span> <span class="restapi-datatype">integer</span> the ID of the Subscriber.<br>
+      <span class="restapi-param param-required">email</span> <span class="restapi-datatype">string</span> the email address of the Subscriber.<br>
+      <span class="restapi-param param-required">confirmed</span> <span class="restapi-datatype">integer</span> 1=confirmed, 0=unconfirmed.<br>
+      <span class="restapi-param param-required">htmlemail</span> <span class="restapi-datatype">integer</span> 1=html emails, 0=no html emails.<br>
+      <span class="restapi-param param-required">rssfrequency</span> <span class="restapi-datatype">integer</span><br>
+      <span class="restapi-param param-required">password</span> <span class="restapi-datatype">string</span> The password to this Subscriber.<br>
+      <span class="restapi-param param-required">disabled</span> <span class="restapi-datatype">integer</span> 1=disabled, 0=enabled<br>
+      </p>
+      <p><strong>Returns:</strong><br>
+      The updated Subscriber.
+      </p></div></div><br></section><section><div class="page-header"><h2>subscriberDelete</h2></div><div class="row"><div class="span12">Delete a Subscriber.
+      
+      <p><strong>Parameters:</strong><br>
+      <span class="restapi-param param-required">id</span> <span class="restapi-datatype">integer</span> the ID of the Subscriber.<br>
+      </p>
+      <p><strong>Returns:</strong><br>
+      The deleted Subscriber ID.
+      </p></div></div><br></section><section><div class="page-header"><h2>templatesGet</h2></div><div class="row"><div class="span12"></div></div><br></section><section><div class="page-header"><h2>templateGet</h2></div><div class="row"><div class="span12"></div></div><br></section><section><div class="page-header"><h2>templateGetByTitle</h2></div><div class="row"><div class="span12"></div></div><br></section><section><div class="page-header"><h2>templateAdd</h2></div><div class="row"><div class="span12">Add a new template.
+      
+      <p><strong>Parameters:</strong><br>
+      <span class="restapi-param param-required">title</span> <span class="restapi-datatype">string</span> the name of the list.<br>
+      <span class="restapi-param param-optional">template</span> <span class="restapi-datatype">string</span> adds a description to the list.<br>
+      </p><p><strong>Returns:</strong><br>
+      The template added.
+      </p></div></div><br></section><section><div class="page-header"><h2>templateUpdate</h2></div><div class="row"><div class="span12"></div></div><br></section><section><div class="page-header"><h2>templateDelete</h2></div><div class="row"><div class="span12"></div></div><br></section><section><div class="page-header"><h2>campaignGet</h2></div><div class="row"><div class="span12"></div></div><br></section><section><div class="page-header"><h2>campaignsCount</h2></div><div class="row"><div class="span12"></div></div><br></section><section><div class="page-header"><h2>campaignsGet</h2></div><div class="row"><div class="span12">Get all the Campaigns in the system.
+      
+      <p><strong>Parameters:</strong><br>
+      <span class="restapi-param param-optional">order_by</span> <span class="restapi-datatype">string</span> name of column to sort, default "id".<br>
+      <span class="restapi-param param-optional">order</span> <span class="restapi-datatype">string</span> sort order asc or desc, default: asc.<br>
+      <span class="restapi-param param-optional">limit</span> <span class="restapi-datatype">integer</span> limit the result, default 10 (max 10)<br>
+      <span class="restapi-param param-optional">offset</span> <span class="restapi-datatype">integer</span> offset of the result, default 0.<br>
+      </p>
+      <p><strong>Returns:</strong><br>
+      List of Campaigns.
+      </p></div></div><br></section><section><div class="page-header"><h2>campaignAdd</h2></div><div class="row"><div class="span12">Add a new campaign.
+      
+      <p><strong>Parameters:</strong><br>
+      <span class="restapi-param param-required">subject</span> <span class="restapi-datatype">string</span> <br>
+      <span class="restapi-param param-required">fromfield</span> <span class="restapi-datatype">string</span> <br>
+      <span class="restapi-param param-required">replyto</span> <span class="restapi-datatype">string</span> <br>
+      <span class="restapi-param param-required">message</span> <span class="restapi-datatype">string</span> <br>
+      <span class="restapi-param param-required">textmessage</span> <span class="restapi-datatype">string</span> <br>
+      <span class="restapi-param param-required">footer</span> <span class="restapi-datatype">string</span> <br>
+      <span class="restapi-param param-required">status</span> <span class="restapi-datatype">string</span> <br>
+      <span class="restapi-param param-required">sendformat</span> <span class="restapi-datatype">string</span> <br>
+      <span class="restapi-param param-required">template</span> <span class="restapi-datatype">string</span> <br>
+      <span class="restapi-param param-required">embargo</span> <span class="restapi-datatype">string</span> <br>
+      <span class="restapi-param param-required">rsstemplate</span> <span class="restapi-datatype">string</span> <br>
+      <span class="restapi-param param-required">owner</span> <span class="restapi-datatype">string</span> <br>
+      <span class="restapi-param param-optional">htmlformatted</span> <span class="restapi-datatype">string</span> <br>
+      </p><p><strong>Returns:</strong><br>
+      The message added.
+      </p></div></div><br></section><section><div class="page-header"><h2>campaignUpdate</h2></div><div class="row"><div class="span12">Update existing campaign.
+      
+      <p><strong>Parameters:</strong><br>
+      <span class="restapi-param param-required">id</span> <span class="restapi-datatype">integer</span> <br>
+      <span class="restapi-param param-required">subject</span> <span class="restapi-datatype">string</span> <br>
+      <span class="restapi-param param-required">fromfield</span> <span class="restapi-datatype">string</span> <br>
+      <span class="restapi-param param-required">replyto</span> <span class="restapi-datatype">string</span> <br>
+      <span class="restapi-param param-required">message</span> <span class="restapi-datatype">string</span> <br>
+      <span class="restapi-param param-required">textmessage</span> <span class="restapi-datatype">string</span> <br>
+      <span class="restapi-param param-required">footer</span> <span class="restapi-datatype">string</span> <br>
+      <span class="restapi-param param-required">status</span> <span class="restapi-datatype">string</span> <br>
+      <span class="restapi-param param-required">sendformat</span> <span class="restapi-datatype">string</span> <br>
+      <span class="restapi-param param-required">template</span> <span class="restapi-datatype">string</span> <br>
+      <span class="restapi-param param-required">embargo</span> <span class="restapi-datatype">string</span> <br>
+      <span class="restapi-param param-required">rsstemplate</span> <span class="restapi-datatype">string</span> <br>
+      <span class="restapi-param param-optional">owner</span> <span class="restapi-datatype">string</span> <br>
+      <span class="restapi-param param-optional">htmlformatted</span> <span class="restapi-datatype">string</span> <br>
+      </p><p><strong>Returns:</strong><br>
+      The message added.
+      </p></div></div><br></section>
+</div>
+    </div>
