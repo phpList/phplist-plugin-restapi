@@ -11,6 +11,8 @@ Ek](https://twitter.com/ekandreas) of Flowcom AB.
 Commands
 --------
 
+**See also the API blueprint in the /docs folder**
+
 ### Login actions
 
 login
