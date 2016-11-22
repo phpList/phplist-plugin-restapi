@@ -3,13 +3,18 @@ REST API
 
 **License: GPLv3 or later**
 
-The plugin provides a REST API to phpList.\
- Development by [Sam Tuke](http://samtuke.com), [Michiel
+The plugin provides a REST API to phpList.
+Development by [Sam Tuke](http://samtuke.com), [Michiel
 Dethmers](http://phplist.com). Based on work by [Andreas
 Ek](https://twitter.com/ekandreas) of Flowcom AB.
 
 Commands
 --------
+
+### Login actions
+
+login
+:   Login via the API
 
 ### Subscriber actions
 
@@ -37,13 +42,7 @@ phpList admin autentication is required. This can be completed via an
 API call, or via web form login. The session must be authenticated for
 plugin access.
 
-### Login authentication
-
-Logging in via an API call is different to other calls - login is
-handled by the host phpList installation and not by the plugin itself.
-
-Simply send an HTTP POST request with two parameters to login remotely:
-`login` and `password`.
+### Authentication
 
 All requests to the RESTAPI are made by method HTTP POST (GET is not
 allowed). Use of HTTPS is strongly recommended.
