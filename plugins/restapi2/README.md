@@ -49,8 +49,10 @@ allowed). Use of HTTPS is strongly recommended.
 
 ### URL
 
-The URL for making API calls to this server is:\
-**[](<?php%20echo%20$url;%20?>)**
+The URL for making API calls to this server is relative to the host server: 
+`[phplist server address]/lists/admin/?page=call&pi=restapi2`
+
+For convenience, the automatically generated URL can be found in the phpList web interface once the REST API v2 Plugin is installed and enabled, via the System menu -> 'restapi2 - main' page.
 
 Clients and examples
 --------------------
