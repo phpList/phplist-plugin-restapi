@@ -67,8 +67,10 @@ class Campaigns
         }
 
         $subsql = "SELECT COUNT(userid) FROM " . $GLOBALS['tables']['usermessage'] . " WHERE viewed IS NOT NULL AND status = 'sent' and messageid = m.id";
-
+        $sublists = "SELECT GROUP_CONCAT(`listid` SEPARATOR ',') from ".$GLOBALS['tables']['listmessage']." WHERE messageid = m.id";
+        
         $sql  = "SELECT COALESCE(SUM(clicked), 0) AS clicked, (" . $subsql . ") AS uviews, ";
+        $sql .= "(".$sublists.") as lists ,";
         $sql .= "m.* ";
         $sql .= "FROM " . $GLOBALS['tables']['message'] . " AS m ";
         $sql .= "LEFT JOIN " . $GLOBALS['tables']['linktrack_uml_click'] . " AS c ON ( c.messageid = m.id ) ";
