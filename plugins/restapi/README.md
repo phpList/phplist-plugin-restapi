@@ -1,7 +1,9 @@
-#phpList API
+#phpList REST API v1
 REST API as a plugin to [phpList](https://www.phplist.com)
 
-This is the new official location for the plugin as of June 1st 2014
+This plugin has been depreciated by the phpList REST API v2 (a second plugin within this repository).
+
+This is the official location of the first REST API Plugin for phpList as of June 1st 2014.
 
 Two plugins inside this repo: "restapi" and "restapi-test"
 
