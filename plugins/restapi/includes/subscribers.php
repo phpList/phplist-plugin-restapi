@@ -224,7 +224,7 @@ class Subscribers
             $stmtCount  = $db->prepare($sqlCount);
             $stmtInsert = $db->prepare($sqlInsert);
             $stmtUpdate = $db->prepare($sqlUpdate);
-            $objs = [];
+            $objs = array(); # <5.3 compatibility
             foreach ($subscribers as $subscriber) {
                 if (!validateEmail($subscriber['email'])) {
                     Response::outputErrorMessage('invalid email address');
