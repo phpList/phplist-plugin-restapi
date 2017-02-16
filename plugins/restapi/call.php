@@ -16,6 +16,7 @@ include_once 'includes/lists.php';
 include_once 'includes/subscribers.php';
 include_once 'includes/templates.php';
 include_once 'includes/campaigns.php';
+include_once 'includes/blacklist.php';
 //If other than POST then assume documentation report
 if (strcmp($_SERVER['REQUEST_METHOD'], 'POST')) {
     include_once 'doc/doc.php';
@@ -25,6 +26,7 @@ if (strcmp($_SERVER['REQUEST_METHOD'], 'POST')) {
     $doc->addClass('Subscribers');
     $doc->addClass('Templates');
     $doc->addClass('Campaigns');
+    $doc->addClass('Blacklist');
     print $doc->output();
     return;
 }
@@ -82,6 +84,10 @@ if (is_callable(array('phpListRestapi\Templates',   $cmd))) {
 }
 if (is_callable(array('phpListRestapi\Campaigns',    $cmd))) {
     Campaigns::$cmd();
+}
+
+if (is_callable(array('phpListRestapi\Blacklist',    $cmd))) {
+    Blacklist::$cmd();
 }
 
 //If no command found, return error message!
