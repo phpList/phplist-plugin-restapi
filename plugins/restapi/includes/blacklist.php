@@ -6,10 +6,6 @@ defined('PHPLISTINIT') || die;
 
 class Blacklist
 {
-    /**
-     * Check if a email or user (by email) is in blacklist and the reason if exists.
-     * @param string $email Email to check in blacklist
-     */
 
     /**
      * Check if a email or user (by email) is in blacklist and the reason if exists.
@@ -62,6 +58,65 @@ class Blacklist
             Response::outputError($e);
         }
         die(0);
+    }
+
+    /**
+     * Remove an email from blacklist if it is blacklisted
+     *
+     * <p><strong>Parameters:</strong><br/>
+     * [*email] {string} Email to remove from blacklist<br/>
+     * <p><strong>Returns:</strong><br/>
+     * Messages with the actions executed.
+     * </p>
+     */
+    public static function removeBlacklistEmail($email = ''){
+
+        if($email == ''){
+            $email = $_REQUEST['email'];
+        }
+        if ($email == '') {
+            Response::outputErrorMessage('Email param is empty');
+        }
+        $db = PDO::getConnection();
+        $message_arr = array();
+        $response = new Response();
+        $sql = "UPDATE ". $GLOBALS['tables']['user'] . " SET blacklisted = '0' WHERE email = :email";
+        try {
+            $stmt = $db->prepare($sql);
+            $stmt->bindParam("email", $email, PDO::PARAM_STR);
+            $stmt->execute();
+            $message_arr[] = 'User with email '.$email.' is no longer blacklisted if it was previously.';
+        } catch(\Exception $e) {
+            Response::outputError($e);
+        }
+        $sql = "DELETE FROM ". $GLOBALS['tables']['user_blacklist'] . " WHERE email = :email";
+        try {
+            $stmt = $db->prepare($sql);
+            $stmt->bindParam("email", $email, PDO::PARAM_STR);
+            $stmt->execute();
+            $message_arr[] = 'Email '.$email.' is no longer blacklisted if it was previously.';
+        } catch(\Exception $e) {
+            Response::outputError($e);
+        }
+        $sql = "DELETE FROM ". $GLOBALS['tables']['user_blacklist_data'] . " WHERE email = :email";
+        try {
+            $stmt = $db->prepare($sql);
+            $stmt->bindParam("email", $email, PDO::PARAM_STR);
+            $stmt->execute();
+            $db = null;
+            $message_arr[] = 'Reason for being blacklisted has been removed if it existed before.';
+        } catch(\Exception $e) {
+            Response::outputError($e);
+        }
+
+        if(count($message_arr) == 0){
+            $message_arr[] = 'No message';
+        }
+
+
+        $response->setData('remove_blacklist', $message_arr);
+        $response->output();
+
     }
 
 
