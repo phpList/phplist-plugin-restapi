@@ -69,7 +69,7 @@ class Blacklist
      * Messages with the actions executed.
      * </p>
      */
-    public static function removeBlacklistEmail($email = ''){
+    public static function removeEmailFromBlacklist($email = ''){
 
         if($email == ''){
             $email = $_REQUEST['email'];
