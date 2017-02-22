@@ -483,7 +483,7 @@ class Subscribers
      *
      * <p><strong>Parameters:</strong><br/>
      * [*userid] {integer} the ID of the Subscriber.<br/>
-     * [*attributes] {array} list of attributes pairs to update [{'attributeid': value}].<br/>
+     * [*attributes] {array} list of attributes pairs to update [{"attributeid": value}].<br/>
      * </p>
      * <p><strong>Returns:</strong><br/>
      * Return all attributes of userid, be updated or not.
