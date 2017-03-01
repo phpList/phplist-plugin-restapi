@@ -428,4 +428,72 @@ class Subscribers
             Response::outputError($e);
         }
     }
+
+    /**
+     * Get messages (campaigns) sent to a user or an email address (userid param is preferred)
+     * <p><strong>Parameters (only one required):</strong><br/>
+     * [*userid] {integer} the ID of the Subscriber that received the messages<br/>
+     * [*email] {string} email that received the messages
+     * </p>
+     * <p><strong>Returns:</strong><br/>
+     * List of received campaigns.
+     * </p>
+     */
+    public static function subscriberMessages($userid=0, $email=''){
+        $email = ($email == '') ? trim($_REQUEST['email']) : trim($email);
+
+        if((int)$userid == 0){
+            $userid = (int)$_REQUEST['userid'];
+        }
+
+
+        if($email == '' && $userid == 0){
+            Response::outputErrorMessage( 'Invalid params' );
+        }
+
+        $sql = "SELECT
+                messageid,
+                `subject`,
+                userid,".
+            $GLOBALS['tables']['usermessage'].".entered as entered,".
+            $GLOBALS['tables']['usermessage'].".viewed as viewed,".
+            $GLOBALS['tables']['usermessage'].".`status` as `status`,
+                email
+                FROM (".$GLOBALS['tables']['message']."
+                INNER JOIN ".$GLOBALS['tables']['usermessage']." ON ".$GLOBALS['tables']['message'].".id=".$GLOBALS['tables']['usermessage'].".messageid)
+                INNER JOIN ".$GLOBALS['tables']['user']." ON ".$GLOBALS['tables']['usermessage'].".userid = ".$GLOBALS['tables']['user'].".id
+        ";
+
+        if($userid) {
+            $sql .= " WHERE userid = :userid";
+            $bind_param = array(
+                'key' => 'userid',
+                'value', $userid,
+                'type' => PDO::PARAM_INT
+            );
+
+        } else { // At this points there is a user or email
+            $sql .= " WHERE email = :email";
+            $bind_param = array(
+                'key' => 'email',
+                'value' => $email,
+                'type' => PDO::PARAM_STR
+            );
+        }
+        $sql .= " ORDER BY entered DESC";
+        try {
+            $response = new Response();
+            $db = PDO::getConnection();
+            $stmt = $db->prepare($sql);
+            $stmt->bindParam($bind_param['key'], $bind_param['value'], $bind_param['type']);
+            $stmt->execute();
+            $result = $stmt->fetchAll(PDO::FETCH_OBJ);
+            $response->setData('messages', $result);
+            $db = null;
+            $response->output();
+        } catch(\PDOException $e) {
+            Response::outputError($e);
+        }
+        die(0);
+    }
 }
