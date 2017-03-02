@@ -429,6 +429,89 @@ class Subscribers
         }
     }
 
+
+    /** Update an attribute to a subscriber
+     *
+     * <p><strong>Parameters:</strong><br/>
+     * [*userid] {integer} the ID of the Subscriber.<br/>
+     * [*attributeid] {integer} the ID of the Attribute. You should know it.<br/>
+     * [*value] {string}<br/>
+     * [many] {boolean} If many is True, nothing will be returned in case of success because
+     * .. it will handle the subscriberUpdateAttributes method
+     * </p>
+     * <p><strong>Returns:</strong><br/>
+     * {userid, attributeid, value} from DB (if many=False)
+     * </p>
+     */
+    public static function subscriberUpdateAttribute ($userid=0, $attributeid=0, $value='', $many=False) {
+        if($userid == 0){
+            $userid = $_REQUEST['userid'];
+        }
+        if($attributeid == 0){
+            $attributeid = $_REQUEST['attributeid'];
+        }
+
+        if(isset($_REQUEST['value'])){ //The desired value may be empty
+            $value = $_REQUEST['value'];
+        }
+
+        $sql = "REPLACE INTO " . $GLOBALS['tables']['user_attribute'] . " SET attributeid=:attributeid, userid=:userid, value=:value";
+        try {
+            $db = PDO::getConnection();
+            $stmt = $db->prepare($sql);
+            $stmt->bindParam("attributeid", $attributeid, PDO::PARAM_INT);
+            $stmt->bindParam("userid", $userid, PDO::PARAM_INT);
+            $stmt->bindParam("value", $value, PDO::PARAM_STR);
+            $stmt->execute();
+            $params = array(
+                "attributeid" => array($attributeid, PDO::PARAM_INT),
+                "userid" => array($userid, PDO::PARAM_INT)
+            );
+
+            if(!$many){
+                Common::select('Attribute', 'SELECT * FROM '.$GLOBALS['tables']['user_attribute']
+                    ." WHERE attributeid =:attributeid AND userid=:userid;",$params, true);
+            }
+
+            $db = null;
+        } catch(\PDOException $e) {
+            Response::outputError($e);
+        }
+    }
+
+    /** Update attributes to a subscriber
+     *
+     * <p><strong>Parameters:</strong><br/>
+     * [*userid] {integer} the ID of the Subscriber.<br/>
+     * [*attributes] {array} list of attributes pairs to update [{"attributeid": value}].<br/>
+     * </p>
+     * <p><strong>Returns:</strong><br/>
+     * Return all attributes of userid, be updated or not.
+     * </p>
+     */
+    public static function subscriberUpdateAttributes($userid=0, $attributes=array()) {
+        if($userid == 0){
+            $userid = $_REQUEST['userid'];
+        }
+
+        if(count($attributes) == 0){
+            // $_REQUEST['attributes'] is a JSON with slashes, it is necessary to decode it.
+            $attributes = json_decode(stripslashes($_REQUEST['attributes']));
+        }
+
+        foreach($attributes as $attributeid=>$value){
+            self::subscriberUpdateAttribute($userid, $attributeid, $value, true);
+        }
+
+        $params = array(
+            "userid" => array($userid, PDO::PARAM_INT)
+        );
+
+        Common::select('Attribute', 'SELECT * FROM '.$GLOBALS['tables']['user_attribute']
+            ." WHERE userid=:userid;",$params, false);
+        die(0);
+    }
+
     /**
      * Get messages (campaigns) sent to a user or an email address (userid param is preferred)
      * <p><strong>Parameters (only one required):</strong><br/>
