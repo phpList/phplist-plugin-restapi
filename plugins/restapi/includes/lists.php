@@ -363,5 +363,38 @@ class Lists
         die(0);
     }
 
+    /**
+     * Get num of subscribers from a list
+     *
+     * <p><strong>Parameters:</strong><br/>
+     * [*list_id] {integer} the List-ID.
+     * <p><strong>Returns:</strong><br/>
+     * List_id and count of subscriber.
+     * </p>
+     */
+    public static function listSubscribersCount($list_id = 0)
+    {
+        $response = new Response();
+        if($list_id == 0) {
+            $list_id = sprintf('%d', $_REQUEST['list_id']);
+        }
+        $sql = 'SELECT listid, COUNT(*) AS count  FROM '.$GLOBALS['tables']['listuser'].' WHERE listid=:list_id;';
+        if(!is_numeric($list_id) || empty($list_id)){
+            Response::outputErrorMessage('invalid call');
+        }
+        try {
+            $db = PDO::getConnection();
+            $stmt = $db->prepare($sql);
+            $stmt->bindParam('list_id', $list_id, PDO::PARAM_INT);
+            $stmt->execute();
+            $result = $stmt->fetch(PDO::FETCH_OBJ);
+            $db = null;
+            $response->setData('SubscribersCount', $result);
+            $response->output();
+        } catch(\Exception $e) {
+            Response::outputError($e);
+        }
+    }
+
 
 }
