@@ -2,6 +2,9 @@
 
 namespace Rapi\Handler;
 
+use phpList\Entity\SubscriberEntity;
+use phpList\SubscriberManager;
+
 /**
  * Class to handle API calls to SubscriberManager{}
  */
@@ -13,35 +16,54 @@ class SubscriberHandler
      * @param SubscriberManager $subscriberManager
      */
      public function __construct(
-        \phpList\Entity\SubscriberEntity $scrEntity
-        , \phpList\SubscriberManager $subscriberManager )
+        SubscriberEntity $scrEntity,
+        SubscriberManager $subscriberManager )
      {
          $this->scrEntity = $scrEntity;
          $this->subscriberManager = $subscriberManager;
      }
 
-     /**
-      * Insert a new subscriber with complete subscriber details
-      * @return int ID of new subscriber
-      */
+    /**
+     * Insert a new subscriber with complete subscriber details
+     *
+     * @param int $blacklisted
+     * @param int $bounceCount
+     * @param int $confirmed
+     * @param int $disabled
+     * @param string $emailAddress
+     * @param string $encPass
+     * @param string $entered
+     * @param string $extraData
+     * @param string $foreigKkey
+     * @param int $htmlEmail
+     * @param string $modified
+     * @param int $optedIn
+     * @param string $passwordChanged
+     * @param string $plainPass
+     * @param string $plainPasschanged
+     * @param string $rssFrequency
+     * @param string $subscribePage
+     *
+     * @return int ID of new subscriber
+     */
      public function add(
-        $blacklisted = 0
-        , $bounceCount = 0
-        , $confirmed = 1
-        , $disabled = 0
-        , $emailAddress = ""
-        , $encPass = ""
-        , $entered = ""
-        , $extraData = ""
-        , $foreigKkey = ""
-        , $htmlEmail = 1
-        , $modified = ""
-        , $optedIn = 0
-        , $passwordChanged = ""
-        , $plainPass = ""
-        , $plainPasschanged = ""
-        , $rssFrequency = ""
-        , $subscribePage = ""
+        $blacklisted = 0,
+        $bounceCount = 0,
+        $confirmed = 1,
+        $disabled = 0,
+        $emailAddress = "",
+        $encPass = "",
+        $entered = "",
+        $extraData = "",
+        $foreigKkey = "",
+        $htmlEmail = 1,
+        $modified = "",
+        $optedIn = 0,
+        $passwordChanged = "",
+        $plainPass = "",
+        $plainPasschanged = "",
+        $rssFrequency = "",
+        $subscribePage = ""
     )
      {
         // Make an array of all those function arguments for easier handling
@@ -60,7 +82,9 @@ class SubscriberHandler
 
      /**
      * Insert a new subscriber with only an email address
+      *
      * @param string $emailAddress Address of the new subscriber
+      *
      * @return int ID of new subscriber
      */
      public function addEmailOnly( $emailAddress )
@@ -73,10 +97,13 @@ class SubscriberHandler
 
      }
 
-     /**
-      * Get a subscriber by their ID
-      * @param int $id ID of the subscriber to fetch
-      */
+    /**
+     * Get a subscriber by their ID
+     *
+     * @param int $id ID of the subscriber to fetch
+     *
+     * @return SubscriberEntity
+     */
      public function getById( $id )
      {
          $subscriber = $this->subscriberManager->getSubscriberById( $id );
@@ -85,10 +112,13 @@ class SubscriberHandler
          return $subscriber;
      }
 
-     /**
-      * Delete a subscriber by their ID
-      * @param int $id ID of the subscriber to delete
-      */
+    /**
+     * Delete a subscriber by their ID
+     *
+     * @param int $id ID of the subscriber to delete
+     *
+     * @return bool
+     */
      public function delete( $id )
      {
          // delete the subscriber and return

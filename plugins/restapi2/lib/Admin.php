@@ -6,20 +6,21 @@ namespace Rapi;
  * Class for account related commands
  */
 class Admin {
-
-    // Response object
+    /**
+     * @var Response
+     */
     protected $response;
     /**
-     * @var AdminModel
+     * @var \phpListAdminAuthentication
      */
     private $admin;
 
     /**
      * Admin constructor.
      * @param Response $response
-     * @param AdminModel $adminModel
+     * @param \phpListAdminAuthentication $admin
      */
-    public function __construct(Response $response, \phpList\Admin $admin )
+    public function __construct(Response $response, \phpListAdminAuthentication $admin)
     {
         $this->response = $response;
         $this->admin = $admin;
@@ -27,11 +28,13 @@ class Admin {
 
     /**
      * Function to call for login.
+     *
      * @todo: Finish implementing this method
-     * [*login] {string} loginname as an admin to phpList
-     * [*password] {string} the password
-     * @return boolean
-     * @throws \Exception
+     *
+     * @param string $password login name as an admin to phpList
+     * @param string $username the password
+     *
+     * @return bool
      */
     public function login( $password, $username )
     {
@@ -41,10 +44,13 @@ class Admin {
             $this->admin->setLoginToken($data['admin']->id);
             return $this->admin->getLoginToken($data['admin']->id);
         }
+
+        return false;
     }
 
     /**
-     * @param $token string
+     * @param string $token
+     *
      * @return bool
      */
     public function isLoggedIn( $token ){
@@ -55,7 +61,6 @@ class Admin {
      * Processes the Message Queue in phpList.
      * @todo: Finish implementing this method
      * @note: Perhaps this is done via CRON or manually through the admin interface?
-     * [*login] {string} loginname as an admin to phpList
      */
     public function processQueue()
     {

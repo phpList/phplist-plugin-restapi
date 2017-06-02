@@ -61,12 +61,15 @@ if ( function_exists( 'api_request_log' ) )
 }
 
 // Get necessary objects from container
+/** @var \Rapi\Call $call */
 $call = $container->get( 'Call' );
+/** @var \Rapi\Response $response */
 $response = $container->get( 'Response' );
 
 // Check if you are calling loginHandler, if you aren't, it checks for a token to see if you are logged in
 if($_GET['className'] !== "loginHandler"){
 
+    /** @var \Rapi\Admin $admin */
     $admin = $container->get( 'Admin' );
 
     if(isset($_POST['token'])){

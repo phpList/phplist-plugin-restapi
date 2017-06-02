@@ -4,10 +4,28 @@ namespace Rapi;
 
 class Subscribers {
 
+    /**
+     * @var Common
+     */
     protected $common;
+
+    /**
+     * @var PdoEx
+     */
     protected $pdoEx;
+
+    /**
+     * @var Response
+     */
     protected $response;
 
+    /**
+     * Subscribers constructor.
+     *
+     * @param Common $common
+     * @param PdoEx $pdoEx
+     * @param Response $response
+     */
     public function __construct( Common $common, PdoEx $pdoEx, Response $response )
     {
         $this->common = $common;
@@ -17,16 +35,16 @@ class Subscribers {
 
     /**
      * <p>Get all the Subscribers in the system.</p>
-		 * <p><strong>Parameters:</strong><br/>
-		 * [order_by] {string} name of column to sort, default 'id'.<br/>
-		 * [order] {string} sort order asc or desc, default: asc.<br/>
-		 * [limit] {integer} limit the result, default 100.<br/>
-		 * </p>
+     *
      * <p><strong>Returns:</strong><br/>
      * List of Subscribers.
      * </p>
+     *
+     * @param string $order_by name of column to sort, default 'id'
+     * @param string $order sort order asc or desc, default: asc
+     * @param int $limit limit the result, default 100
      */
-    static function subscribersGet( $order_by='id', $order='asc', $limit=100 ) {
+    public function subscribersGet( $order_by='id', $order='asc', $limit=100 ) {
 
         //getting optional values
         if ( isset( $_REQUEST['order_by'] ) && !empty( $_REQUEST['order_by'] ) ) $order_by = $_REQUEST['order_by'];
@@ -38,28 +56,28 @@ class Subscribers {
 
     /**
      * <p>Gets one given Subscriber.</p>
-     * <p><strong>Parameters:</strong><br/>
-     * [*id] {integer} the ID of the Subscriber.<br/>
-     * </p>
+     *
      * <p><strong>Returns:</strong><br/>
      * One Subscriber only.
      * </p>
+     *
+     * @param int $id the ID of the Subscriber
      */
-    static function subscriberGet( $id=0 ) {
+    public function subscriberGet( $id=0 ) {
         if ( $id==0 ) $id = $_REQUEST['id'];
         $this->common->select( 'User', 'SELECT * FROM ' . $GLOBALS['usertable_prefix'] . 'user WHERE id = $id;', true );
     }
 
     /**
      * <p>Gets one Subscriber via email address.</p>
-     * <p><strong>Parameters:</strong><br/>
-     * [*email] {string} the email address of the Subscriber.<br/>
-     * </p>
+     *
      * <p><strong>Returns:</strong><br/>
      * One Subscriber only.
      * </p>
+     *
+     * @param string $email the email address of the Subscriber
      */
-    static function subscriberGetByEmail( $email = '') {
+    public function subscriberGetByEmail( $email = '') {
         if ( empty( $email ) ) {
             $email = $_REQUEST['email'];
         }
@@ -81,11 +99,11 @@ class Subscribers {
      * The added Subscriber.
      * </p>
      */
-    static function subscriberAdd(){
+    public function subscriberAdd(){
 
         $sql = 'INSERT INTO ' . $GLOBALS['usertable_prefix'] . 'user (email, confirmed, htmlemail, rssfrequency, password, passwordchanged, disabled, entered, uniqid) VALUES (:email, :confirmed, :htmlemail, :rssfrequency, :password, now(), :disabled, now(), :uniqid);';
         try {
-            $stmt = $pdoEx->prepare($sql);
+            $stmt = $this->pdoEx->prepare($sql);
             $stmt->bindParam('email', $_REQUEST['email']);
             $stmt->bindParam('confirmed', $_REQUEST['confirmed']);
             $stmt->bindParam('htmlemail', $_REQUEST['htmlemail']);
@@ -101,7 +119,7 @@ class Subscribers {
             $stmt->execute();
             $id = $db->lastInsertId();
             $db = null;
-            $this->SubscriberGet( $id );
+            $this->subscriberGet( $id );
         } catch(\PDOException $e) {
             $this->response->outputError($e);
         }
@@ -123,7 +141,7 @@ class Subscribers {
         * The updated Subscriber.
         * </p>
         */
-    static function subscriberUpdate(){
+    public function subscriberUpdate(){
 
         $sql = 'UPDATE ' . $GLOBALS['usertable_prefix'] . 'user SET email=:email, confirmed=:confirmed, htmlemail=:htmlemail, rssfrequency=:rssfrequency, password=:password, passwordchanged=now(), disabled=:disabled WHERE id=:id;';
 
@@ -139,7 +157,7 @@ class Subscribers {
             $stmt->bindParam('disabled', $_REQUEST['disabled'] );
             $stmt->execute();
             $db = null;
-            $this->SubscriberGet( $_REQUEST['id'] );
+            $this->subscriberGet( $_REQUEST['id'] );
         } catch(\PDOException $e) {
             $this->response->outputError($e);
         }
@@ -147,15 +165,15 @@ class Subscribers {
     }
 
     /**
-        * <p>Deletes a Subscriber.</p>
-        * <p><strong>Parameters:</strong><br/>
-        * [*id] {integer} the ID of the Subscriber.<br/>
-        * </p>
-        * <p><strong>Returns:</strong><br/>
-        * The deleted Subscriber ID.
-        * </p>
-        */
-    static function subscriberDelete(){
+     * <p>Deletes a Subscriber.</p>
+     * <p><strong>Parameters:</strong><br/>
+     * [*id] {integer} the ID of the Subscriber.<br/>
+     * </p>
+     * <p><strong>Returns:</strong><br/>
+     * The deleted Subscriber ID.
+     * </p>
+     */
+    public function subscriberDelete(){
 
         $sql = 'DELETE FROM ' . $GLOBALS['usertable_prefix'] . 'user WHERE id=:id;';
         try {

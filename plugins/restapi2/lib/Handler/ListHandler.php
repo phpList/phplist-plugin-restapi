@@ -2,6 +2,10 @@
 
 namespace Rapi\Handler;
 
+use phpList\Entity\ListEntity;
+use phpList\Entity\SubscriberEntity;
+use phpList\ListManager;
+
 /**
 * Class to handle API calls to ListManager{}
 */
@@ -13,9 +17,9 @@ class ListHandler
     * @param ListManager $listManager
     */
     public function __construct(
-        \phpList\Entity\ListEntity $listEntity
-        , \phpList\ListManager $listManager
-        , \phpList\Entity\SubscriberEntity $scrEntity
+        ListEntity $listEntity,
+        ListManager $listManager,
+        SubscriberEntity $scrEntity
     )
     {
         $this->listEntity = $listEntity;
@@ -23,6 +27,12 @@ class ListHandler
         $this->scrEntity = $scrEntity;
     }
 
+    /**
+     * @param int $listId
+     * @param int $scrId
+     *
+     * @return \PDOStatement|null
+     */
     public function addSubscriber( $listId, $scrId )
     {
         // Save the id to the subscriber entity

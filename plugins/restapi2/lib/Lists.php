@@ -6,11 +6,28 @@ namespace Rapi;
  * Class for handling lists
  */
 class Lists {
-
+    /**
+     * @var Common
+     */
     protected $common;
-    protected $response;
-    protected $request; // HTTP request variables
 
+    /**
+     * @var Response
+     */
+    protected $response;
+
+    /**
+     * @var array
+     */
+    protected $request;
+
+    /**
+     * Lists constructor.
+     *
+     * @param Common $common
+     * @param PdoEx $pdoEx
+     * @param Response $response
+     */
     public function __construct( Common $common, PdoEx $pdoEx, Response $response )
     {
         // FIXME: Common{} probably isn't required any more
@@ -25,9 +42,8 @@ class Lists {
      * Gets all lists in phpList as an array.
      * Parameters:
      * (none)
-     * Returns:
-     * Array of lists.
      *
+     * @return array Lists
      */
     public function multiListGet()
     {
@@ -42,9 +58,10 @@ class Lists {
      * Gets one (1) list.
      * Parameters:
      * [*id] {integer} the ID of the list.
-     * Returns:
-     * One list.
      *
+     * @param array $params
+     *
+     * @return Response one List
      */
     public function listGet( array $params )
     {
@@ -78,9 +95,8 @@ class Lists {
      * [prefix] {string} adds a prefix to the list (?).
      * [rssfeed] {string} the url to the feed for this list (?).
      * [active] {integer} if list should be active set this one to 1, otherwise it will be disabled.
-     * Returns:
-     * The list added.
      *
+     * @return Response the List added
      */
     public function listAdd()
     {
@@ -114,9 +130,8 @@ class Lists {
      * [prefix] {string} adds a prefix to the list (?).
      * [rssfeed] {string} the url to the feed for this list (?).
      * [active] {integer} if list should be active set this one to 1, otherwise it will be disabled.
-     * Returns:
-     * The list updated.
      *
+     * @return Response the List updated
      */
     public function listUpdate()
     {
@@ -145,9 +160,8 @@ class Lists {
      * Deletes a list.
      * Parameters:
      * [*id] {integer} the ID of the list.
-     * Returns:
-     * System message of action.
      *
+     * @return Response system message of action
      */
     public function listDelete()
     {
@@ -167,11 +181,10 @@ class Lists {
 
     /**
      * Lists assigned to Subscriber.
-     * Parameters:
-     * [*user_id] {integer} the Subscriber-ID.
-     * Returns:
-     * Array of lists where the subscriber is assigned to.
      *
+     * @param int $subscriber_id the Subscriber ID
+     *
+     * @return array Lists to which the subscriber is assigned
      */
     public function listsSubscriber ( $subscriber_id=0 )
     {
@@ -192,12 +205,11 @@ class Lists {
     /**
      * Adds a subscriber to a list.
      * The subscriber then subscribes to the list.
-     * Parameters:
-     * [*list_id] {integer} the ID of the list.
-     * [*subscriber_id] {integer} the ID of the subscriber.
-     * Returns:
-     * Array of lists where the subscriber is assigned to.
      *
+     * @param int $list_id ID of the list
+     * @param int $subscriber_id ID of the subscriber
+     *
+     * @return Response Lists to which the subscriber is
      */
     public function listSubscriberAdd( $list_id=0, $subscriber_id=0 )
     {
@@ -219,12 +231,11 @@ class Lists {
 
     /**
      * Unassigns a subscriber from a list.
-     * Parameters:
-     * [*list_id] {integer} the ID of the list.
-     * [*subscriber_id] {integer} the ID of the subscriber.
-     * Returns:
-     * System message of action.
      *
+     * @param int $list_id the ID of the list
+     * @param int $subscriber_id the ID of the subscriber
+     *
+     * @return Response System message of action
      */
     public function listSubscriberDelete( $list_id=0, $subscriber_id=0 )
     {
@@ -246,12 +257,11 @@ class Lists {
 
     /**
      * Assigns a list to a message.
-     * Parameters:
-     * [*list_id] {integer} the ID of the list.
-     * [*message_id] {integer} the ID of the message.
-     * Returns:
-     * The list assigned.
      *
+     * @param int $list_id the ID of the list
+     * @param int $message_id the ID of the message
+     *
+     * @return Response the list assigned
      */
     public function listMessageAdd( $list_id=0, $message_id=0 )
     {
@@ -274,13 +284,11 @@ class Lists {
 
     /**
      * Unassigns a list from a message.
-     * Parameters:
-     * [*list_id] {integer} the ID of the list.
-     * [*message_id] {integer} the ID of the message.
      *
-     * Returns:
-     * System message of action.
+     * @param int $list_id the ID of the list
+     * @param int $message_id the ID of the message
      *
+     * @return Response System message of action
      */
     public function listMessageDelete( $list_id=0, $message_id=0 )
     {

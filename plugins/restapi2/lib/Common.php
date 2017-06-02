@@ -3,10 +3,17 @@
 namespace Rapi;
 
 class Common {
-
-    // Extended pdo object
+    /**
+     * @var PdoEx
+     */
     protected $pdoEx;
 
+    /**
+     * Common constructor.
+     *
+     * @param PdoEx $pdoEx
+     * @param Response $response
+     */
     public function __construct( PdoEx $pdoEx, Response $response )
     {
         $this->pdoEx = $pdoEx;
@@ -14,7 +21,12 @@ class Common {
 
     /**
      * Generate a URL for executing API calls
-     * @param [type] $website [description]
+     *
+     * @param string $website
+     * @param string $pageRoot
+     * @param string $adminDir
+     *
+     * @return string
      */
     public function apiUrl( $website, $pageRoot, $adminDir )
     {
