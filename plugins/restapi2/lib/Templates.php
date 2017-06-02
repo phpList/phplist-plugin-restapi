@@ -2,6 +2,8 @@
 
 namespace phpListRestapi;
 
+use PDOException;
+
 defined('PHPLISTINIT') || die;
 
 /**
@@ -15,6 +17,9 @@ class Templates
         Common::select('Templates', 'SELECT * FROM '.$GLOBALS['table_prefix'].'template ORDER BY listorder;');
     }
 
+    /**
+     * @param int $id
+     */
     public static function templateGet($id = 0)
     {
         if ($id == 0) {
@@ -23,6 +28,9 @@ class Templates
         Common::select('Template', 'SELECT * FROM '.$GLOBALS['table_prefix'].'template WHERE id='.$id.';', true);
     }
 
+    /**
+     * @param string $title
+     */
     public static function templateGetByTitle($title = '')
     {
         if (empty($title)) {
@@ -33,7 +41,7 @@ class Templates
 
     /**
      * Add a new template.
-     * 
+     *
      * <p><strong>Parameters:</strong><br/>
      * [*title] {string} the name of the list.<br/>
      * [template] {string} adds a description to the list.<br/>

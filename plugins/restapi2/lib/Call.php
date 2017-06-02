@@ -2,6 +2,11 @@
 
 namespace Rapi;
 
+use phpList\Entity\SubscriberEntity;
+use Rapi\Handler\ListHandler;
+use Rapi\Handler\LoginHandler;
+use Rapi\Handler\SubscriberHandler;
+
 /**
  * Class to handle API call functionality and execution
  * @note This class is ignorant of call output and forwards it transparently --
@@ -11,24 +16,30 @@ class Call {
 
     /**
      * Constructor requires all classes that may handle calls as arguments
+     *
      * @note To add support for an API call, add it's parent class to arguments
-     * @param Lists             $lists
-     * @param SubscriberHandler $subscriberHandler
+     * @param Handler\ListHandler $listHandler
+     * @param Handler\SubscriberHandler|SubscriberHandler $subscriberHandler
+     * @param Handler\LoginHandler $loginHandler
+     * @internal param Lists $lists
      */
     public function __construct(
-        \Rapi\Handler\ListHandler $listHandler
-        , \Rapi\Handler\SubscriberHandler $subscriberHandler
-        , \Rapi\Handler\LoginHandler $loginHandler
+        ListHandler $listHandler,
+        SubscriberHandler $subscriberHandler,
+        LoginHandler $loginHandler
     )
     {
         $this->listHandler = $listHandler;
         $this->subscriberHandler = $subscriberHandler;
         $this->loginHandler = $loginHandler;
     }
+
     /**
      * Validate a requested call by checking characters and syntax
+     *
      * @param string $className Name of class to validate
      * @param string $method Name of method to validate
+     *
      * @return bool $result
      */
     public function validateCall( $className, $method )
@@ -55,7 +66,10 @@ class Call {
 
     /**
      * Get API call configuraiton whitelist
+     *
      * @param string $whitelistPath Path to whitelist configuration file
+     *
+     * @return mixed
      */
     public function getWhitelistConfig( $whitelistPath = NULL )
     {
@@ -83,7 +97,11 @@ class Call {
 
     /**
      * Check if the supplied class name is permitted by the whitelist
+     *
      * @param string $className Class name to check
+     * @param string $method
+     *
+     * @return bool
      */
     public function isCallWhitelisted( $className, $method )
     {
@@ -107,10 +125,12 @@ class Call {
 
     /**
      * Validate an API call and execute the requested method on handler object
+     *
      * @param string $className to execute method on
      * @param string $method name of method to execute
      * @param array $argumentsArray arguments to pass to method
-     * @return \phpList\Entity\SubscriberEntity Data object
+     *
+     * @return SubscriberEntity Data object
      */
     public function doCall( $className, $method, array $argumentsArray )
     {
@@ -143,7 +163,10 @@ class Call {
 
     /**
      * Format raw user-privded API call parameters for passing to handler object
+     *
      * @param array $argumentsArray user-supplied API call parameters
+     *
+     * @return array
      */
     public function formatParams( array $argumentsArray ) {
 
@@ -159,7 +182,10 @@ class Call {
 
     /**
      * Convert any var type to an array suitable for passing to a response
+     *
      * @param mixed $callResult Returned value of an executed API call
+     *
+     * @return array|mixed
      */
     public function callResultToArray( $callResult )
     {
@@ -191,10 +217,12 @@ class Call {
     * This function converts an object into an associative array by iterating
     * over its public properties. Because this function uses the foreach
     * construct, Iterators are respected. It also works on arrays of objects.
+     *
     * @param object $object The object to be converted
+     *
     * @return array $result Converted object
     */
-    function objectToArray( $object )
+    public function objectToArray( $object )
     {
         $result = array();
         $references = array();

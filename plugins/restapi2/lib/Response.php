@@ -6,23 +6,26 @@ namespace Rapi;
  * Class to handle generation of responses to API calls over HTTP
  */
 class Response {
-
+    /**
+     * @var array
+     */
     private $result;
 
     /**
      * Initialise empty vars
      */
-    function __construct()
+    public function __construct()
     {
         $this->result = array();
     }
 
     /**
      * Save error and error code inside response
+     *
      * @param string $code error code to store
      * @param string $message error message to store
      */
-    function setError( $code, $message )
+    public function setError( $code, $message )
     {
         $this->result['status'] = 'error';
         $this->result['type'] = 'Error';
@@ -34,11 +37,13 @@ class Response {
 
     /**
      * Save data inside response
+     *
      * @param string $type data type
      * @param string $data data to be stored
-     * @return NULL
+     *
+     * @return void
      */
-    function setData( $type, $data )
+    public function setData( $type, $data )
     {
         $this->result['status'] = 'success';
         $this->result['type'] = $type;
@@ -47,9 +52,10 @@ class Response {
 
     /**
      * Print error message as JSON and die
-     * @return NULL
+     *
+     * @return void
      */
-    function output()
+    public function output()
     {
         header( 'Content-Type: application/json' );
         echo $this->jsonEncodeIm( $this->result );
@@ -64,17 +70,22 @@ class Response {
      * associative arrays first. This way, objects that do not expose (all) their
      * properties directly but only through an Iterator interface are also encoded
      * correctly.
+     *
+     * @param array $param
+     *
+     * @return string
      */
-    function jsonEncodeIm( array $param )
+    public function jsonEncodeIm( array $param )
     {
         return json_encode( $param );
     }
 
     /**
      * Take an Exception and output it to an error response
-     * @param Exception $e Exception object
+     *
+     * @param \Exception $e Exception object
      */
-    static function outputError( \Exception $e ){
+    public static function outputError( \Exception $e ){
         $response = new Response();
         $response->setError( $e->getCode(), $e->getMessage() );
         $response->output();
@@ -83,9 +94,10 @@ class Response {
     /**
      * Generate and output an error response from an error message
      * @note Wraps other error handling methods for convenience
+     *
      * @param string $message Error message
      */
-    static function outputErrorMessage( $message ){
+    public function outputErrorMessage( $message ){
         $response = new Response();
         $response->setError( 0, $message );
         $response->output();
@@ -93,10 +105,11 @@ class Response {
 
     /**
      * Generate and output a response for successful deletion of something
-     * @param [type] $type [description]
-     * @param [type] $id   [description]
+     *
+     * @param string $type
+     * @param int $id
      */
-    static function outputDeleted( $type, $id ){
+    public static function outputDeleted( $type, $id ){
         $response = new Response();
         $response->setData( $type, 'Item with ' . $id . ' is successfully deleted!' );
         $response->output();
@@ -104,9 +117,10 @@ class Response {
 
     /**
      * Generate and output a generic system message as a response
+     *
      * @param string $message System message
      */
-    static function outputMessage( $message ){
+    public static function outputMessage( $message ){
         $response = new Response();
         $response->setData( 'SystemMessage', $message );
         $response->output();

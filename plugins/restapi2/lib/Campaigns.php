@@ -10,6 +10,9 @@ defined('PHPLISTINIT') || die;
  */
 class Messages
 {
+    /**
+     * @param int $id
+     */
     public static function messageGet($id = 0)
     {
         if ($id == 0) {
@@ -17,7 +20,7 @@ class Messages
         }
         Common::select('Message', 'SELECT * FROM '.$GLOBALS['table_prefix'].'message WHERE id='.$id.';', true);
     }
-    
+
     public static function messagesCount()
     {
         Common::select('Messages', 'SELECT count(id) as total FROM '.$GLOBALS['table_prefix'].'message',true);
@@ -31,7 +34,7 @@ class Messages
 
     /**
      * Add a new campaign.
-     * 
+     *
      * <p><strong>Parameters:</strong><br/>
      * [*subject] {string} <br/>
      * [*fromfield] {string} <br/>
@@ -80,7 +83,7 @@ class Messages
 
     /**
      * Update existing message/campaign.
-     * 
+     *
      * <p><strong>Parameters:</strong><br/>
      * [*id] {integer} <br/>
      * [*subject] {string} <br/>
@@ -99,6 +102,8 @@ class Messages
      * <p><strong>Returns:</strong><br/>
      * The message added.
      * </p>
+     *
+     * @param int $id
      */
     public static function messageUpdate($id = 0)
     {
