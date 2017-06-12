@@ -1,12 +1,24 @@
-# phplist-plugin-restapi
-### REST API plugins for phpList
-
-This repository contains two separate API plugins for phpList, the REST API Plugin v1 and v2. 
+# phpList REST API plugin
 
 [![Build Status](https://travis-ci.org/phpList/phplist-plugin-restapi.svg?branch=master)](https://travis-ci.org/phpList/phplist-plugin-restapi)
 
-v1 is stable and will take PRs and bugfixes. 
 
-v2 is under active development and should be used and extended where possible.
+## About this plugin
 
-Both plugins are contained within the `plugins` folder, along with respective documentation and plugin-specific tests.
+This repository contains the REST API Plugin v1 for phpList 3. It is contained
+within the `plugins` folder, along with respective documentation and
+plugin-specific tests.
+
+v1 is stable and will take pull requests and bugfixes.
+
+
+## About the REST API plugin v2
+
+v2 of the REST API plugin builds on phpList 4. It is under active development
+and should be used and extended where possible.
+
+It lives in a [separate repository](https://github.com/phpList/rest-api).
+
+There also is an old, unfinished implementation of the REST API plugin v2 in
+the directory [plugins/restapi2/](plugins/restapi2). This implementation will
+be removed soon.

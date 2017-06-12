@@ -1,12 +1,22 @@
-REST API
-========
+# REST API v2 (old implementation)
 
-**License: GPLv3 or later**
+
+## License
+
+GPLv3 or later
+
+
+## About this plugin
 
 The plugin provides a REST API to phpList.
 Development by [Sam Tuke](http://samtuke.com), [Michiel
 Dethmers](http://phplist.com). Based on work by [Andreas
 Ek](https://twitter.com/ekandreas) of Flowcom AB.
+
+Note: This is an old, unfinished implementation of the REST API plugin v2. It
+will be removed soon. Instead, there is the new implementation in a
+[separate repository](https://github.com/phpList/rest-api)
+
 
 Commands
 --------
