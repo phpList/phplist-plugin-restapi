@@ -1,3 +1,6 @@
+### Depreciated
+
+
 # phpList REST API plugin
 
 [![Build Status](https://travis-ci.org/phpList/phplist-plugin-restapi.svg?branch=master)](https://travis-ci.org/phpList/phplist-plugin-restapi)
@@ -9,7 +12,7 @@ This repository contains the REST API Plugin v1 for phpList 3. It is contained
 within the `plugins` folder, along with respective documentation and
 plugin-specific tests.
 
-v1 is stable and will take pull requests and bugfixes.
+
 
 
 ## About the REST API plugin v2
