@@ -579,4 +579,39 @@ class Subscribers
         }
         die(0);
     }
+
+    /**
+     * Insert a new registry to user history
+     * <p><strong>Parameters (two required):</strong><br/>
+     * [*email] {string} email of the subscriber<br/>
+     * [*msg] {string}
+     * [*detail] {string}
+     * </p>
+     * <p><strong>Returns:</strong><br/>
+     * Nothing
+     * </p>
+     */
+
+    public static function subscriberAddHistory()
+    {
+        if (!validateEmail($_REQUEST['email'])) {
+            Response::outputErrorMessage('invalid email address');
+        }
+
+        $msg = filter_var($_REQUEST['msg'], FILTER_SANITIZE_STRING);
+        if (empty($msg)) {
+            Response::outputErrorMessage('msg is empty');
+        }
+        $detail = filter_var($_REQUEST['detail'], FILTER_SANITIZE_STRING);
+
+
+        try {
+            $response = new Response();
+            $result = addUserHistory($_REQUEST['email'], $msg, $detail);
+            $response->setData('messages', $result);
+            $response->output();
+        } catch (\Exception $e) {
+            Response::outputError($e);
+        }
+    }
 }
