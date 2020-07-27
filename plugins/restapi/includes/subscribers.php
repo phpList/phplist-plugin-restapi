@@ -614,4 +614,40 @@ class Subscribers
             Response::outputError($e);
         }
     }
+    
+    
+	
+		
+		    /** Update attributes to a subscriber
+     *
+     * <p><strong>Parameters:</strong><br/>
+     * [*userid] {integer} the ID of the Subscriber.<br/>
+     * [*attributes] {array} list of attributes pairs to update [{"attributeid": value}].<br/>
+     * </p>
+     * <p><strong>Returns:</strong><br/>
+     * Return all attributes of userid, be updated or not.
+     * </p>
+     */
+    public static function subscriberUpdateAttributesMultiple($userid=0, $attributes=array()) {
+        if($userid == 0){
+            $userid = $_REQUEST['userid'];
+        }
+
+        if(count($attributes) == 0){
+            // $_REQUEST['attributes'] is a JSON with slashes, it is necessary to decode it.
+            $attributes = json_decode(stripslashes($_REQUEST['attributes']),true);
+        }
+        foreach($attributes as $attributes2){
+        foreach($attributes2 as $attributeid=>$value){
+            self::subscriberUpdateAttribute($userid, $attributeid, $value, true);
+        }
+}
+        $params = array(
+            "userid" => array($userid, PDO::PARAM_INT)
+        );
+
+        Common::select('Attribute', 'SELECT * FROM '.$GLOBALS['tables']['user_attribute']
+            ." WHERE userid=:userid;",$params, false);
+        die(0);
+    }
 }
