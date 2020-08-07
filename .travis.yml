@@ -2,14 +2,16 @@
 # whitelist
 language: php
 php:
+  - 7.4
+  - 7.3
+  - 7.2
+  - 7.1
   - 7.0
   - 5.6
-  - 5.5
-  - 5.4
 
 before_script:
   - sudo apt-get update > /dev/null
-  - sudo apt-get install -y --force-yes apache2 libapache2-mod-php5 php5-curl php5-mysql php5-intl
+  - sudo apt-get install -y --force-yes apache2 libapache2-mod-php php-curl php-mysql php-intl
   # Set a custom vhost
   - sudo sed -i -e "s,/var/www,$(pwd)/vendor/phpList/phplist3/public_html,g" /etc/apache2/sites-available/default
   - sudo sed -i -e "/DocumentRoot/i\ServerName phplist.dev" /etc/apache2/sites-available/default
