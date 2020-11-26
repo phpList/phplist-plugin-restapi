@@ -1,4 +1,4 @@
-# Configuration file for running the test suite. Results will be at https://travis-ci.org/phpList/phplist-plugin-restapi
+# Configuration file for running the test suite. Results will be at https://travis-ci.com/phpList/phplist-plugin-restapi
 # whitelist
 language: php
 php:
