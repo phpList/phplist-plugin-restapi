@@ -6,7 +6,7 @@
         }
     ],
     "require": {
-        "phpList/phplist3": "master"
+        "phplist/phplist3": "master"
     },
     "require-dev": {
         "behat/mink": "~1.4",
