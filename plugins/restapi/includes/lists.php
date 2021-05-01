@@ -12,7 +12,7 @@ class Lists
 {
     /**
      * Gets all lists in phpList as an array.
-     * 
+     *
      * <p><strong>Parameters:</strong><br/>
      * (none)
      * <p><strong>Returns:</strong><br/>
@@ -26,7 +26,7 @@ class Lists
 
     /**
      * Gets one (1) list.
-     * 
+     *
      * <p><strong>Parameters:</strong><br/>
      * [*id] {integer} the ID of the list.
      * <p><strong>Returns:</strong><br/>
@@ -38,18 +38,18 @@ class Lists
         if ($id == 0) {
             $id = $_REQUEST['id'];
         }
-        
+
         $params = array(
             'id'=> array($id,PDO::PARAM_INT),
             );
-        
-        
+
+
         Common::select('List', 'SELECT * FROM '.$GLOBALS['tables']['list']." WHERE id = :id;",$params,true);
     }
 
     /**
      * Add a new list.
-     * 
+     *
      * <p><strong>Parameters:</strong><br/>
      * [*name] {string} the name of the list.<br/>
      * [description] {string} adds a description to the list.<br/>
@@ -61,10 +61,10 @@ class Lists
      */
     public static function listAdd()
     {
-        $sql = 'INSERT INTO '.$GLOBALS['tables']['list'].' 
-          (name, description, listorder, category, active) 
+        $sql = 'INSERT INTO '.$GLOBALS['tables']['list'].'
+          (name, description, listorder, category, active)
           VALUES (:name, :description, :listorder, :category, :active);';
-          
+
         // allow for an empty category, which didn't exist before
         if (!isset($_REQUEST['category'])) {
             $_REQUEST['category'] = '';
@@ -89,7 +89,7 @@ class Lists
 
     /**
      * Update existing List.
-     * 
+     *
      * <p><strong>Parameters:</strong><br/>
      * [*id] {integer} the ID of the list.<br/>
      * [*name] {string} the name of the list.<br/>
@@ -103,7 +103,7 @@ class Lists
     public static function listUpdate()
     {
         $sql = 'UPDATE '.$GLOBALS['tables']['list'].'
-          SET name=:name, description=:description, listorder=:listorder, category=:category, active=:active 
+          SET name=:name, description=:description, listorder=:listorder, category=:category, active=:active
           WHERE id=:id;';
 
         // allow for an empty category, which didn't exist before
@@ -129,9 +129,9 @@ class Lists
         die(0);
     }
 
-    /**    
+    /**
      * Delete a List.
-     * 
+     *
      * <p><strong>Parameters:</strong><br/>
      * [*id] {integer} the ID of the list.
      * <p><strong>Returns:</strong><br/>
@@ -159,7 +159,7 @@ class Lists
 
     /**
      * Get Lists a Subscriber is Member of.
-     * 
+     *
      * <p><strong>Parameters:</strong><br/>
      * [*subscriber_id] {integer} the Subscriber-ID.
      * <p><strong>Returns:</strong><br/>
@@ -172,7 +172,7 @@ class Lists
         if ($subscriber_id == 0) {
             $subscriber_id = sprintf('%d',$_REQUEST['subscriber_id']);
         }
-        $sql = 'SELECT * FROM '.$GLOBALS['tables']['list'].' WHERE id IN 
+        $sql = 'SELECT * FROM '.$GLOBALS['tables']['list'].' WHERE id IN
           (SELECT listid FROM '.$GLOBALS['tables']['listuser'].' WHERE userid=:subscriber_id) ORDER BY listorder;';
         if (!is_numeric($subscriber_id) || empty($subscriber_id)) {
             Response::outputErrorMessage('invalid call');
@@ -194,7 +194,7 @@ class Lists
 
     /**
      * Add a subscriber to a list.
-     * 
+     *
      * <p>The subscriber then subscribes to the list.</p>
      * <p><strong>Parameters:</strong><br/>
      * [*list_id] {integer} the ID of the list.<br/>
@@ -231,7 +231,7 @@ class Lists
 
     /**
      * Remove a subscriber from a list.
-     * 
+     *
      * <p><strong>Parameters:</strong><br/>
      * [*list_id] {integer} the ID of the list.<br/>
      * [*subscriber_id] {integer} the ID of the subscriber.
@@ -264,7 +264,7 @@ class Lists
 
     /**
      * Assigns a list to a campaign.
-     * 
+     *
      * <p><strong>Parameters:</strong><br/>
      * [*list_id] {integer} the ID of the list.<br/>
      * [*campaign_id] {integer} the ID of the campaign.
@@ -297,7 +297,7 @@ class Lists
 
     /**
      * Unassigns a list from a campaign.
-     * 
+     *
      * <p><strong>Parameters:</strong><br/>
      * [*list_id] {integer} the ID of the list.<br/>
      * [*campaign_id] {integer} the ID of the campaign.
@@ -330,7 +330,7 @@ class Lists
     }
    /**
      * Get all subscribers from a list
-     * 
+     *
      * <p><strong>Parameters:</strong><br/>
      * [*list_id] {integer} the List-ID.
      * <p><strong>Returns:</strong><br/>
@@ -343,7 +343,7 @@ class Lists
         if ($list_id == 0) {
             $list_id = sprintf('%d',$_REQUEST['list_id']);
         }
-        $sql = 'SELECT * FROM '.$GLOBALS['tables']['user'].' WHERE id IN 
+        $sql = 'SELECT * FROM '.$GLOBALS['tables']['user'].' WHERE id IN
           (SELECT userid FROM '.$GLOBALS['tables']['listuser'].' WHERE listid=:list_id) ORDER BY id;';
         if (!is_numeric($list_id) || empty($list_id)) {
             Response::outputErrorMessage('invalid call');
@@ -396,5 +396,24 @@ class Lists
         }
     }
 
-
+   /**
+     * Get all lists within a category
+     *
+     * <p><strong>Parameters:</strong><br/>
+     * [*category] {string} the category.
+     * <p><strong>Returns:</strong><br/>
+     * Array of lists that are in the category.
+     * </p>
+     */
+    public static function listsByCategory($category = '')
+    {
+        if ($category == '') {
+            $category = sprintf('%s', $_REQUEST['category']);
+        }
+        $sql = 'SELECT * FROM '.$GLOBALS['tables']['list'].' WHERE category = :category';
+        $params = [
+            'category' => [$category, PDO::PARAM_STR]
+        ];
+        Common::select('Lists', $sql, $params);
+    }
 }

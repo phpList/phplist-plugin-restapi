@@ -2,11 +2,11 @@
 
 /**
  * Plugin that implements a REST API.
- * 
+ *
  * Documentation: http://resources.phplist.com/plugin/restapi
- * 
+ *
  * version history:
- * 
+ *
  * v 3 2015-11-19
  * - updated some calls
  * - added more security checks
@@ -16,11 +16,11 @@
  * - added limit to campaign retrieval
  * - renamed messages to campaigns
  * - renamed users to subscribers
- * 
+ *
  * v 2 * phpList Api Team https://github.com/orgs/phpList/teams/api
  * - renamed plugin repository to phplist-plugin-restapi
  * - https://github.com/phpList/phplist-plugin-restapi
- * 
+ *
  * v 1 * Andreas Ek, 2012-12-26
  * https://github.com/EkAndreas/phplistapi
  */
@@ -34,6 +34,9 @@ class restapi extends phplistPlugin
     public $documentationUrl = 'https://resources.phplist.com/plugin/restapi';
     public $topMenuLinks = array(
       'main' => array('category' => 'system'),
+    );
+    public $pageTitles = array(
+        'main' => 'RESTAPI Main',
     );
 
     public $DBstruct = array(
