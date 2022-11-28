@@ -52,20 +52,20 @@ if ($cmd != 'login') {
 }
 $ipAddress = getConfig('restapi_ipaddress');
 if (!empty($ipAddress) && ($GLOBALS['remoteAddr'] != $ipAddress)) {
-    $response->outputErrorMessage('Incorrect ip address for request. Check your settings.');
+    Response::outputErrorMessage('Incorrect ip address for request. Check your settings.');
     die(0);
-} 
+}
 $requireSecret = getConfig('restapi_usesecret');
 if ($requireSecret) {
   $secret = getConfig('remote_processing_secret');
   if (empty($_REQUEST['secret']) || $_REQUEST['secret'] != $secret) {
-    $response->outputErrorMessage('Incorrect processing secret. Check your settings.');
+    Response::outputErrorMessage('Incorrect processing secret. Check your settings.');
     die(0);
   }
-} 
+}
 $enforceSSL = getConfig('restapi_enforcessl');
 if ($enforceSSL && empty($_SERVER['HTTPS'])) {
-    $response->outputErrorMessage('Invalid API request. Request is not using SSL, which is enforced by the plugin settings.');
+    Response::outputErrorMessage('Invalid API request. Request is not using SSL, which is enforced by the plugin settings.');
     die(0);
 }
 
