@@ -27,9 +27,9 @@ class restapi_test extends phplistPlugin
     ),
   );
 
-    public function restapi_test()
+    public function __construct()
     {
-        parent::phplistplugin();
+        parent::__construct();
         $this->coderoot = dirname(__FILE__).'/restapi_test/';
     }
 
