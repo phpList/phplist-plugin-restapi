@@ -18,12 +18,12 @@ $password = getConfig('restapi_test_password');
 if (empty($login)) {
     print Error('Please configure the login details in the settings page<br/>Parameters: <strong>restapi_test_login</strong> and <strong>restapi_test_password</strong> for admin login.');
     ?>
-		<form method="POST">
-			<input type="text" placeholder="restapi_test_login" name="restapi_test_login" /><br/>
-			<input type="password" placeholder="restapi_test_password" name="restapi_test_password" /><br/>
-			<input type="submit" value="Save" />
-		</form>
-	<?php
+        <form method="POST">
+            <input type="text" placeholder="restapi_test_login" name="restapi_test_login" /><br/>
+            <input type="password" placeholder="restapi_test_password" name="restapi_test_password" /><br/>
+            <input type="submit" value="Save" />
+        </form>
+    <?php
 
   return;
 }
@@ -187,8 +187,8 @@ $step = 1;
 
     ?>
 
-		<h2>Step <?php echo $step++; ?> - Count subscribers / subscribers AGAIN!</h2>
-		<?php
+        <h2>Step <?php echo $step++; ?> - Count subscribers / subscribers AGAIN!</h2>
+        <?php
 
         $result = $api->subscribersGet();
         if ($result->status != 'success') {
@@ -395,7 +395,7 @@ $step = 1;
 
     ?>
 
-		<h2>The test completed successfully!</h2>
+        <h2>The test completed successfully!</h2>
 
 </html>
 
@@ -406,28 +406,27 @@ $step = 1;
      */
     function apiUrl($website)
     {
-        $url = '';
+        global $adminpages, $website;
 
         if (!empty($_SERVER['HTTPS'])) {
 
             // Check which protocol to use
             if ($_SERVER['HTTPS'] !== 'off') {
-                $url = 'https://'; //https
+                $scheme = 'https'; //https
             } else {
-                $url = 'http://'; //http
+                $scheme = 'http'; //http
             }
         } else {
-            $url = 'http://'; //http
+            $scheme = 'http'; //http
         }
+        $params = ['page' => 'call', 'pi' => 'restapi'];
 
-        $api_url = str_replace('page=main&pi=restapi_test', 'page=call&pi=restapi', $_SERVER['REQUEST_URI']);
-        $api_url = preg_replace('/\&tk\=[^&]*/', '', $api_url);
-        $api_url1 = str_replace('page=main&pi=restapi', 'page=call&pi=restapi', $api_url);
+        if (getConfig('restapi_usesecret')) {
+            $params['secret'] = getConfig('remote_processing_secret');
+        }
+        $url = sprintf('%s://%s%s/?%s', $scheme, $website, $adminpages, http_build_query($params));
 
-        $concatenatedUrl = $url.$website.$api_url1;
-        $trimmedUrl = rtrim($concatenatedUrl, '/');
-
-        return $trimmedUrl;
+        return $url;
     }
 
 ?>
